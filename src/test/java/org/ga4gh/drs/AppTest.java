@@ -4,9 +4,10 @@
 package org.ga4gh.drs;
 
 import org.testng.annotations.*;
-import static org.testng.Assert.*;
+import org.testng.Assert;
 
 public class AppTest {
-    @Test public void appHasAGreeting() {
+    @Test public void helloWorldTest() {
+        Assert.assertEquals("helloworld", "helloworld");
     }
 }
