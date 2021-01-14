@@ -12,6 +12,10 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application.
     id 'application'
+
+    // Apply the plugins to add support for Spring Boot
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 }
 
 repositories {
@@ -26,10 +30,20 @@ dependencies {
 
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation 'org.testng:testng:7.0.0'
+
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile ("org.springframework.security:spring-security-test")
 }
 
 application {
     // Define the main class for the application.
+    mainClassName = 'org.ga4gh.drs.App'
+}
+
+bootJar {
     mainClassName = 'org.ga4gh.drs.App'
 }
 
