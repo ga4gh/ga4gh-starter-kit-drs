@@ -18,7 +18,7 @@ public class ContentsObject {
     // Optional
     private List<ContentsObject> contents;
 
-    private List<URI> drsUris;
+    private List<URI> drsUri;
 
     private String id;
 
@@ -42,12 +42,12 @@ public class ContentsObject {
         this.name = name;
     }
 
-    public List<URI> getDrsUris() {
-        return drsUris;
+    public List<URI> getDrsUri() {
+        return drsUri;
     }
 
-    public void setDrsUris(List<URI> drsUris) {
-        this.drsUris = drsUris;
+    public void setDrsUri(List<URI> drsUri) {
+        this.drsUri = drsUri;
     }
 
     public String getId() {

@@ -1,26 +1,25 @@
 package org.ga4gh.drs.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Error extends Exception {
-    private String message;
+    private String msg;
 
     private int statusCode;
 
     public Error(String message, int statusCode) {
-        this.message = message;
+        this.msg = message;
         this.statusCode = statusCode;
     }
 
     public String getMessage() {
-        return message;
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public int getStatusCode() {
