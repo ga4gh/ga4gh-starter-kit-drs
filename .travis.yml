@@ -1,0 +1,8 @@
+git:
+  depth: false
+language: java
+jdk: oraclejdk11
+script: "./gradlew test"
+after_success:
+    - "./gradlew jacocoTestReport"
+    - bash <(curl -s https://codecov.io/bash)

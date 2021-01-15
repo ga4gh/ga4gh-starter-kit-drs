@@ -16,6 +16,9 @@ plugins {
     // Apply the plugins to add support for Spring Boot
     id 'org.springframework.boot' version '2.0.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+
+    // Apply the plugin to add support for jacoco test coverage report
+    id 'jacoco'
 }
 
 repositories {
@@ -50,4 +53,16 @@ bootJar {
 test {
     // Use TestNG for unit tests
     useTestNG()
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
