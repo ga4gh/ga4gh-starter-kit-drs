@@ -16,6 +16,9 @@ plugins {
     // Apply the plugins to add support for Spring Boot
     id 'org.springframework.boot' version '2.0.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+
+    // OpenAPI generator
+    id "org.openapi.generator" version "5.0.0"
 }
 
 repositories {
@@ -31,16 +34,16 @@ dependencies {
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation 'org.testng:testng:7.0.0'
 
-    compile 'org.springframework.boot:spring-boot-starter-aop'
-    compile 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile ("org.springframework.security:spring-security-test")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation ("org.springframework.security:spring-security-test")
 }
 
 application {
     // Define the main class for the application.
-    mainClassName = 'org.ga4gh.drs.App'
+    mainClass = 'org.ga4gh.drs.App'
 }
 
 bootJar {
@@ -50,4 +53,14 @@ bootJar {
 test {
     // Use TestNG for unit tests
     useTestNG()
+}
+
+// https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-gradle-plugin/README.adoc#configuration
+openApiGenerate {
+    validateSpec = true
+    generatorName = "java"
+    modelPackage = "org.ga4gh.drs.model"
+    apiPackage = "org.ga4gh.drs.api"
+    inputSpec = "openapi/data_repository_service.swagger.yaml"
+    //outputDir = "src/main/java/org/ga4gh/drs/openapi"
 }
