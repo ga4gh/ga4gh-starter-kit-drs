@@ -18,6 +18,14 @@ public class ServiceInfo {
 
     @GetMapping()
     public String getServiceInfo() {
-        return drsConfigContainer.getDrsConfig().getServiceInfo().toString();
+        // TODO: method is currently a stub to test merging of Service Info
+        // properties from config file. Update to real method
+        org.ga4gh.drs.model.ServiceInfo serviceInfo = drsConfigContainer.getDrsConfig().getServiceInfo();
+        String result = serviceInfo.toString()
+            + " createdAt: " + serviceInfo.getCreatedAt().toString()
+            + " updatedAt: " + serviceInfo.getUpdatedAt().toString()
+            + " organizationName: " + serviceInfo.getOrganization().getName()
+            + " organizationUrl: " + serviceInfo.getOrganization().getUrl();
+        return result;
     }
 }

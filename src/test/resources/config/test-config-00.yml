@@ -1,6 +1,9 @@
 drsConfig:
   serviceInfo:
-    id: incoming ID
-    name: incoming NAME
+    id: org.ga4gh.drs-server.test
+    name: GA4GH DRS server test deployment
+    organization:
+      name: GA4GH
+      url: https://ga4gh.org
   dataSourceRegistry:
     dataSources: []

@@ -1,8 +1,6 @@
 package org.ga4gh.drs.model;
 
-import java.util.Date;
-
-import com.google.common.util.concurrent.Service;
+import java.time.LocalDateTime;
 
 public class ServiceInfo {
 
@@ -11,8 +9,8 @@ public class ServiceInfo {
     private String description;
     private String contactUrl;
     private String documentationUrl;
-    private Date createdAt;
-    private Date updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String environment;
     private String version;
     private ServiceType type;
@@ -24,8 +22,8 @@ public class ServiceInfo {
     }
 
     public ServiceInfo(String id, String name, String description, 
-        String contactUrl, String documentationUrl, Date createdAt,
-        Date updatedAt, String environment, String version, ServiceType type,
+        String contactUrl, String documentationUrl, LocalDateTime createdAt,
+        LocalDateTime updatedAt, String environment, String version, ServiceType type,
         Organization organization) {
 
         this.id = id;
@@ -81,19 +79,19 @@ public class ServiceInfo {
         return documentationUrl;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 

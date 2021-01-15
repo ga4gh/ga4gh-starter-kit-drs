@@ -3,10 +3,11 @@ package org.ga4gh.drs;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.constant.DataSourceDefaults;
+import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
 import org.ga4gh.drs.utils.DeepObjectMerger;
 import org.springframework.context.annotation.Bean;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -55,11 +56,20 @@ public class AppConfig implements WebMvcConfigurer {
         @Qualifier (AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
         ServiceInfo serviceInfo = drsConfigContainer.getDrsConfig().getServiceInfo();
-        serviceInfo.setId("default ID");
-        serviceInfo.setName("default NAME");
-        serviceInfo.setDescription("default DESCRIPTION");
+        serviceInfo.setId(ServiceInfoDefaults.ID);
+        serviceInfo.setName(ServiceInfoDefaults.NAME);
+        serviceInfo.setDescription(ServiceInfoDefaults.DESCRIPTION);
+        serviceInfo.setContactUrl(ServiceInfoDefaults.CONTACT_URL);
+        serviceInfo.setDocumentationUrl(ServiceInfoDefaults.DOCUMENTATION_URL);
+        serviceInfo.setCreatedAt(ServiceInfoDefaults.CREATED_AT);
+        serviceInfo.setUpdatedAt(ServiceInfoDefaults.UPDATED_AT);
+        serviceInfo.setEnvironment(ServiceInfoDefaults.ENVIRONMENT);
+        serviceInfo.setVersion(ServiceInfoDefaults.VERSION);
+        serviceInfo.getOrganization().setName(ServiceInfoDefaults.ORGANIZATION_NAME);
+        serviceInfo.getOrganization().setUrl(ServiceInfoDefaults.ORGANIZATION_URL);
 
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
+        dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
         
         return drsConfigContainer;
     }
@@ -79,7 +89,6 @@ public class AppConfig implements WebMvcConfigurer {
             if (configFilePath != null) {
                 File configFile = new File(configFilePath);
                 if (configFile.exists() && !configFile.isDirectory()) {
-                    System.out.println("USING JACKSON");
                     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
                     drsConfigContainer = mapper.readValue(configFile, DrsConfigContainer.class);
                 } else {
@@ -92,7 +101,6 @@ public class AppConfig implements WebMvcConfigurer {
             System.out.println("ERROR: problem encountered setting config, config file not found");
         } catch (IOException e) {
             System.out.println("ERROR: problem encountered setting config, config YAML could not be parsed");
-            System.out.println(e.getMessage());
         }
 
         return drsConfigContainer;
