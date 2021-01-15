@@ -14,8 +14,12 @@ public class Error extends Exception {
         this.statusCode = statusCode;
     }
 
-    public String getMessage() {
+    public String getMsg() {
         return msg;
+    }
+
+    public String getMessage() {
+        return "status_code: " + statusCode + " message: " + msg;
     }
 
     public void setMsg(String msg) {
