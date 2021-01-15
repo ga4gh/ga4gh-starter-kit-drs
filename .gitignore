@@ -28,12 +28,9 @@ hs_err_pid*
 # Ignore Gradle build output directory
 build
 
-<<<<<<< HEAD
 # Ignore IntelliJ IDE files
 .idea/
-=======
 .project
 .classpath
 .settings
 bin
->>>>>>> 6da018d... object merging class overwrites default config properties with config file properties
