@@ -2,6 +2,8 @@ package org.ga4gh.drs.model;
 
 import java.util.Date;
 
+import com.google.common.util.concurrent.Service;
+
 public class ServiceInfo {
 
     private String id;
@@ -17,7 +19,8 @@ public class ServiceInfo {
     private Organization organization;
 
     public ServiceInfo() {
-
+        type = new ServiceType();
+        organization = new Organization();
     }
 
     public ServiceInfo(String id, String name, String description, 

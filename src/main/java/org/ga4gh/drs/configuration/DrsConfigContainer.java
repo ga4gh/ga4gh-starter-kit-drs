@@ -5,7 +5,7 @@ public class DrsConfigContainer {
     private DrsConfig drsConfig;
 
     public DrsConfigContainer() {
-
+        drsConfig = new DrsConfig();
     }
 
     public DrsConfigContainer(DrsConfig drsConfig) {

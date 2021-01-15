@@ -14,10 +14,10 @@ public class ServiceInfo {
 
     @Autowired
     @Qualifier(AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER)
-    DrsConfigContainer defaultDrsConfigContainer;
+    DrsConfigContainer drsConfigContainer;
 
     @GetMapping()
     public String getServiceInfo() {
-        return defaultDrsConfigContainer.getDrsConfig().getServiceInfo().toString();
+        return drsConfigContainer.getDrsConfig().getServiceInfo().toString();
     }
 }

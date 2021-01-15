@@ -1,0 +1,6 @@
+drsConfig:
+  serviceInfo:
+    id: incoming ID
+    name: incoming NAME
+  dataSourceRegistry:
+    dataSources: []

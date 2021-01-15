@@ -8,7 +8,8 @@ public class DrsConfig {
     private DataSourceRegistry dataSourceRegistry;
 
     public DrsConfig() {
-
+        serviceInfo = new ServiceInfo();
+        dataSourceRegistry = new DataSourceRegistry();
     }
 
     public DrsConfig(ServiceInfo serviceInfo, DataSourceRegistry dataSourceRegistry) {
