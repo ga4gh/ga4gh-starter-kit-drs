@@ -43,11 +43,17 @@ public class DeepObjectMerger {
                     if (sourceProperty != null) {
                         field.set(target, sourceProperty);
                     }
-                }
-                // If the field is a complex class (i.e. non-primitive), then
-                // this method is recursively called on the field value
-                else {
-                    merge(sourceProperty, targetProperty);
+                } else {
+                    // If the field is a complex class (i.e. non-primitive),
+                    // and both source and target are non-null, then
+                    // this method is recursively called on the field value
+                    if (sourceProperty != null && targetProperty != null) {
+                        merge(sourceProperty, targetProperty);
+                    }
+                    // Null target field can be set with source field value
+                    else if (sourceProperty != null) {
+                        field.set(target, sourceProperty);
+                    }
                 }
             } catch (IllegalAccessException e) {
                 System.out.println("illegal access exception");

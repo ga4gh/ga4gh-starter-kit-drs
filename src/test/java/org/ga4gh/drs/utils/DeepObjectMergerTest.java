@@ -44,7 +44,7 @@ public class DeepObjectMergerTest {
     }
 
     @Test
-    public void testNullSourceIgnored() {
+    public void testNullPrimitiveSourceIgnored() {
         LocalDateTime dt = LocalDateTime.now();
 
         Simple target = new Simple("s", dt, false);
@@ -58,7 +58,7 @@ public class DeepObjectMergerTest {
     }
 
     @Test
-    public void testNonNullSourceCopied() {
+    public void testNonNullPrimitiveSourceCopied() {
         LocalDateTime dt = LocalDateTime.now();
 
         Simple target = new Simple("s", null, false);
@@ -72,7 +72,25 @@ public class DeepObjectMergerTest {
     }
 
     @Test
-    public void testComplexFieldsMerged() {
+    public void testNullComplexSourceIgnored() {
+        LocalDateTime dt = LocalDateTime.now();
+
+        Simple simpleTarget = new Simple("s", dt, true);
+
+        Complex complexTarget = new Complex(simpleTarget);
+        Complex complexSource = new Complex(null);
+
+        DeepObjectMerger.merge(complexSource, complexTarget);
+
+        Simple mergedTarget = complexTarget.getS();
+
+        Assert.assertEquals(mergedTarget.getS(), "s");
+        Assert.assertEquals(mergedTarget.getDt(), dt);
+        Assert.assertTrue(mergedTarget.isB());
+    }
+
+    @Test
+    public void testNonNullComplexSourceMerged() {
         LocalDateTime dt = LocalDateTime.now();
 
         Simple simpleTarget = new Simple("s", null, false);
