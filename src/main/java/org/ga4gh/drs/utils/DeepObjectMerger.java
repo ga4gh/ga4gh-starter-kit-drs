@@ -2,13 +2,13 @@ package org.ga4gh.drs.utils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class DeepObjectMerger {
 
-    private static final Set<Class<?>> primClasses = new HashSet<>(Arrays.asList(
+    private static final Set<Class<?>> classesToSet = new HashSet<>(Arrays.asList(
+        List.class,
+        ArrayList.class,
         String.class,
         LocalDateTime.class,
         boolean.class,
@@ -35,11 +35,10 @@ public class DeepObjectMerger {
                 Object sourceProperty = field.get(source);
                 Object targetProperty = field.get(target);
 
-
                 // If the field is a 'primitive' type, then the target field
                 // can be set with the source field value (provided source
                 // field value is not null)
-                if (primClasses.contains(fieldClass)) {
+                if (classesToSet.contains(fieldClass)) {
                     if (sourceProperty != null) {
                         field.set(target, sourceProperty);
                     }

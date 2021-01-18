@@ -4,6 +4,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 public class DeepObjectMergerTest {
 
@@ -106,5 +108,28 @@ public class DeepObjectMergerTest {
         Assert.assertEquals(mergedTarget.getS(), "t");
         Assert.assertEquals(mergedTarget.getDt(), dt);
         Assert.assertTrue(mergedTarget.isB());
+    }
+
+    private static class HasList {
+        List<String> strings;
+
+        public HasList(List<String> strings) {
+            this.strings = strings;
+        }
+
+        public List<String> getStrings() {
+            return strings;
+        }
+    }
+
+    @Test
+    public void testCollectionsCopied() {
+        HasList target = new HasList(Arrays.asList("a", "b"));
+        HasList source = new HasList(Arrays.asList("c", "d"));
+
+        DeepObjectMerger.merge(source, target);
+
+        Assert.assertEquals(target.getStrings().get(0), "c");
+        Assert.assertEquals(target.getStrings().get(1), "d");
     }
 }
