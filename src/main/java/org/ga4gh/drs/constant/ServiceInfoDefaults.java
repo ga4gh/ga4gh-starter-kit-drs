@@ -32,4 +32,10 @@ public class ServiceInfoDefaults {
     public static final String ORGANIZATION_NAME = "Global Alliance for Genomics and Health";
 
     public static final String ORGANIZATION_URL = "https://ga4gh.org";
+
+    public static final String SERVICE_TYPE_GROUP = "org.ga4gh";
+
+    public static final String SERVICE_TYPE_ARTIFACT = "drs";
+
+    public static final String SERVICE_TYPE_VERSION = "1.1.0";
 }

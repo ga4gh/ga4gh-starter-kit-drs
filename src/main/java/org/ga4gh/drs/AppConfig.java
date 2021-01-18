@@ -7,6 +7,7 @@ import org.ga4gh.drs.constant.DataSourceDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
 import org.ga4gh.drs.utils.DeepObjectMerger;
+import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,9 +16,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.cli.CommandLine;
@@ -42,6 +45,11 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public ApplicationArguments args() {
+        return new DefaultApplicationArguments(new String[]{});
+    }
+
+    @Bean
     @Scope(AppConfigConstants.PROTOTYPE)
     @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER)
     public DrsConfigContainer emptyDrsConfigContainer() {
@@ -53,7 +61,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Qualifier(AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER)
     public DrsConfigContainer defaultDrsConfigContainer(
-        @Qualifier (AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+        @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
         ServiceInfo serviceInfo = drsConfigContainer.getDrsConfig().getServiceInfo();
         serviceInfo.setId(ServiceInfoDefaults.ID);
@@ -68,9 +76,13 @@ public class AppConfig implements WebMvcConfigurer {
         serviceInfo.getOrganization().setName(ServiceInfoDefaults.ORGANIZATION_NAME);
         serviceInfo.getOrganization().setUrl(ServiceInfoDefaults.ORGANIZATION_URL);
 
+        serviceInfo.getType().setArtifact(ServiceInfoDefaults.SERVICE_TYPE_ARTIFACT);
+        serviceInfo.getType().setGroup(ServiceInfoDefaults.SERVICE_TYPE_GROUP);
+        serviceInfo.getType().setVersion(ServiceInfoDefaults.SERVICE_TYPE_VERSION);
+
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
         dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
-        
+
         return drsConfigContainer;
     }
 
@@ -78,8 +90,8 @@ public class AppConfig implements WebMvcConfigurer {
     @Qualifier(AppConfigConstants.RUNTIME_DRS_CONFIG_CONTAINER)
     public DrsConfigContainer runtimeDrsConfigContainer(
         @Autowired ApplicationArguments args,
-        @Autowired () Options options,
-        @Qualifier (AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+        @Autowired() Options options,
+        @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
 
         try {
@@ -109,8 +121,8 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER)
     public DrsConfigContainer mergedDrsConfigContainer(
-        @Qualifier (AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER) DrsConfigContainer defaultContainer,
-        @Qualifier (AppConfigConstants.RUNTIME_DRS_CONFIG_CONTAINER) DrsConfigContainer runtimeContainer
+        @Qualifier(AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER) DrsConfigContainer defaultContainer,
+        @Qualifier(AppConfigConstants.RUNTIME_DRS_CONFIG_CONTAINER) DrsConfigContainer runtimeContainer
     ) {
         DeepObjectMerger.merge(runtimeContainer, defaultContainer);
         return defaultContainer;
