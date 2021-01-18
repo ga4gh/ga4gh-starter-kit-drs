@@ -30,3 +30,7 @@ build
 
 # Ignore IntelliJ IDE files
 .idea/
+.project
+.classpath
+.settings
+bin

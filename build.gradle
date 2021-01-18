@@ -36,6 +36,9 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-aop'
     compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'commons-cli:commons-cli:1.4'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.12.1'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile ("org.springframework.security:spring-security-test")

@@ -23,4 +23,5 @@ Dependencies:
 
 ```
 ./gradlew bootRun
+./gradlew bootRun --args="--config ./src/test/resources/config/test-config-00.yml"
 ```
