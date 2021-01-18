@@ -112,8 +112,7 @@ public class AppConfig implements WebMvcConfigurer {
         @Qualifier (AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER) DrsConfigContainer defaultContainer,
         @Qualifier (AppConfigConstants.RUNTIME_DRS_CONFIG_CONTAINER) DrsConfigContainer runtimeContainer
     ) {
-        DeepObjectMerger merger = new DeepObjectMerger();
-        merger.merge(runtimeContainer, defaultContainer);
+        DeepObjectMerger.merge(runtimeContainer, defaultContainer);
         return defaultContainer;
     }
 }
