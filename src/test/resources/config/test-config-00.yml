@@ -6,4 +6,7 @@ drsConfig:
       name: GA4GH
       url: https://ga4gh.org
   dataSourceRegistry:
-    dataSources: []
+    dataSources:
+      - drsIdPattern: ^testdata\.(?<accession>.+)$
+        objectPathTemplate: ./src/test/resources/data/{accession}
+        protocol: FILE

@@ -9,14 +9,17 @@ import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.constant.DataSourceDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
+import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.DeepObjectMerger;
+import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
@@ -102,6 +105,7 @@ public class AppConfig implements WebMvcConfigurer {
             System.out.println("ERROR: problem encountered setting config, config file not found");
         } catch (IOException e) {
             System.out.println("ERROR: problem encountered setting config, config YAML could not be parsed");
+            System.out.println(e);
         }
 
         return drsConfigContainer;
@@ -115,5 +119,24 @@ public class AppConfig implements WebMvcConfigurer {
     ) {
         DeepObjectMerger.merge(runtimeContainer, defaultContainer);
         return defaultContainer;
+    }
+
+    /* ******************************
+     * REQUEST HANDLER BEANS
+     * ****************************** */
+
+    @Bean
+    @RequestScope
+    public ObjectRequestHandler objectRequestHandler() {
+        return new ObjectRequestHandler();
+    }
+
+    /* ******************************
+     * OTHER UTILS BEANS
+     * ****************************** */
+
+    @Bean
+    public DataSourceLookup dataSourceLookup() {
+        return new DataSourceLookup();
     }
 }
