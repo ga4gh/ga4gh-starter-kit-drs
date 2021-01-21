@@ -4,6 +4,7 @@ import org.ga4gh.drs.App;
 import org.ga4gh.drs.AppConfig;
 import org.ga4gh.drs.testutils.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -17,7 +18,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test
+@SpringBootTest
 @ContextConfiguration(classes={App.class, AppConfig.class, ServiceInfo.class})
 @WebAppConfiguration
 public class ServiceInfoTest extends AbstractTestNGSpringContextTests {

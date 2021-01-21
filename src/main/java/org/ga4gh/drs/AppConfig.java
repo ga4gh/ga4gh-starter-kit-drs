@@ -1,5 +1,8 @@
 package org.ga4gh.drs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.apache.commons.cli.*;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
@@ -7,12 +10,11 @@ import org.ga4gh.drs.constant.DataSourceDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
 import org.ga4gh.drs.utils.DeepObjectMerger;
-import org.springframework.boot.DefaultApplicationArguments;
-import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,14 +22,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 
 @Configuration
 @ConfigurationProperties
@@ -42,11 +36,6 @@ public class AppConfig implements WebMvcConfigurer {
         final Options options = new Options();
         options.addOption("c", "config", true, "Path to YAML config file");
         return options;
-    }
-
-    @Bean
-    public ApplicationArguments args() {
-        return new DefaultApplicationArguments(new String[]{});
     }
 
     @Bean
