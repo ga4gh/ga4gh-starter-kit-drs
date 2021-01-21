@@ -2,7 +2,7 @@ package org.ga4gh.drs.utils.objectloader;
 
 import org.ga4gh.drs.model.DrsObject;
 
-public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
+public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
 
     //TODO populate this class
 

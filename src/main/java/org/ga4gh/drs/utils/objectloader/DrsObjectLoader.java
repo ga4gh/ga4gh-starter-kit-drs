@@ -7,4 +7,5 @@ public interface DrsObjectLoader {
     public boolean exists();
     public DrsObject getImputedProperties();
     public DrsObject getExplicitProperties();
+    public void setObjectPath(String objectPath);
 }
