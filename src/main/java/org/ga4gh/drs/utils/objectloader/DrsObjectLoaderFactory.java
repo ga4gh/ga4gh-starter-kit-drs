@@ -19,13 +19,7 @@ public class DrsObjectLoaderFactory {
         try {
             Class<? extends DrsObjectLoader> loaderClass = objectLoaderDict.get(accessType);
             loader = loaderClass.getConstructor().newInstance();
-        } catch (NoSuchMethodException e) {
-            return loader;
-        } catch (IllegalAccessException e) {
-            return loader;
-        } catch (InstantiationException e) {
-            return loader;
-        } catch (InvocationTargetException e) {
+        } catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             return loader;
         }
         return loader;
