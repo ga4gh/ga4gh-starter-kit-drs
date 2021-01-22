@@ -3,7 +3,6 @@ package org.ga4gh.drs.utils;
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DataSource;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
-import org.ga4gh.drs.exception.ResourceNotFoundException;
 import org.ga4gh.drs.model.AccessType;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;

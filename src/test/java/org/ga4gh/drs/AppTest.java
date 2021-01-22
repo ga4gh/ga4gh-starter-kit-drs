@@ -3,11 +3,12 @@
  */
 package org.ga4gh.drs;
 
-import org.testng.annotations.*;
+import org.junit.Test;
 import org.testng.Assert;
 
 public class AppTest {
-    @Test public void helloWorldTest() {
+    @Test
+    public void helloWorldTest() {
         Assert.assertEquals("helloworld", "helloworld");
     }
 }

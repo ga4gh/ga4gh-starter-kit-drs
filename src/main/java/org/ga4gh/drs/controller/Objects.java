@@ -2,7 +2,12 @@ package org.ga4gh.drs.controller;
 
 import org.ga4gh.drs.model.DrsObject;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import javax.annotation.Resource;
 

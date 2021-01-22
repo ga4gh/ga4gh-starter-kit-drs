@@ -10,6 +10,7 @@ public class DrsObjectLoaderFactory {
     }
 
     public DrsObjectLoader createDrsObjectLoader(AccessType accessType) {
+        if (accessType == null) return null;
         switch (accessType) {
             case FILE:
                 return new FileDrsObjectLoader();
