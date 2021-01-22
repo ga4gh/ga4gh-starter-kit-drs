@@ -43,7 +43,6 @@ public class DataSourceLookup {
 
     public DrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
         DrsObjectLoader drsObjectLoader = null;
-
         int match = findDataSourceMatch(objectId);
         if (match == -1) {
             return drsObjectLoader;
@@ -56,9 +55,7 @@ public class DataSourceLookup {
     private int findDataSourceMatch(String objectId) {
         int match = -1; // -1 indicates no match
         for (int i = 0; i < dataSources.size(); i++) {
-            System.out.println("pattern " + i);
             Pattern pattern = patterns.get(i);
-            System.out.println(pattern.toString());
             Matcher matcher = pattern.matcher(objectId);
             if (matcher.find()) {
                 match = i;
@@ -68,7 +65,7 @@ public class DataSourceLookup {
         return match;
     }
 
-    public String renderObjectPath(int match, String objectId) {
+    private String renderObjectPath(int match, String objectId) {
         DataSource dataSource = dataSources.get(match);
         String drsIdPatternString = dataSource.getDrsIdPattern();
 

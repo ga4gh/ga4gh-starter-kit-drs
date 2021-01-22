@@ -10,10 +10,24 @@ public class DataSourceDefaults {
 
     public static final List<DataSource> REGISTRY = Arrays.asList(
         new DataSource(
-            "test.id",
+            "^test\\.htsjdk\\.samtools\\.(?<subdir>.+?)\\.(?<filename>.+)\\.(?<ext>.+)$",
             AccessType.FILE,
-            "./src/test/resources/data"
+            "./src/test/resources/data/htsjdk/samtools/{subdir}/{filename}.{ext}"
+        ),
+        new DataSource(
+            "^test\\.htsjdk\\.samtools\\.(?<filename>.+)\\.(?<ext>.+)$",
+            AccessType.FILE,
+            "./src/test/resources/data/htsjdk/samtools/{filename}.{ext}"
+        ),
+        new DataSource(
+            "^test.phenopackets.(?<lastName>.+?)\\.(?<patientNumber>\\d)$",
+            AccessType.FILE,
+            "./src/test/resources/data/phenopackets/{lastName}/{lastName}-Patient-{patientNumber}.json"
+        ),
+        new DataSource(
+            "^test.phenopackets.(?<lastName>.+?)$",
+            AccessType.FILE,
+            "./src/test/resources/data/phenopackets/{lastName}"
         )
     );
-    
 }

@@ -2,7 +2,6 @@ package org.ga4gh.drs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.apache.commons.cli.*;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
@@ -25,11 +24,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import java.util.HashMap;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -116,7 +110,6 @@ public class AppConfig implements WebMvcConfigurer {
             System.out.println("ERROR: problem encountered setting config, config file not found");
         } catch (IOException e) {
             System.out.println("ERROR: problem encountered setting config, config YAML could not be parsed");
-            System.out.println(e);
         }
 
         return drsConfigContainer;

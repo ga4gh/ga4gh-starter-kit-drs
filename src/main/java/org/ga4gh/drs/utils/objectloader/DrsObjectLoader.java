@@ -8,4 +8,5 @@ public interface DrsObjectLoader {
     public DrsObject getImputedProperties();
     public DrsObject getExplicitProperties();
     public void setObjectPath(String objectPath);
+    public String getObjectPath();
 }
