@@ -25,3 +25,9 @@ Dependencies:
 ./gradlew bootRun
 ./gradlew bootRun --args="--config ./src/test/resources/config/test-config-00.yml"
 ```
+
+# Test Datasets
+
+The following datasets are currently contained in this repo for testing:
+* Test data from the [htsjdk](https://github.com/samtools/htsjdk)
+* Open dataset of 384 Phenopackets: [Paper](https://pubmed.ncbi.nlm.nih.gov/32755546/), [Dataset](https://zenodo.org/record/3905420#.YArkBzpKhPZ)
