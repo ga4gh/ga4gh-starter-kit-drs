@@ -1,32 +1,50 @@
 package org.ga4gh.drs.configuration;
 
+import org.ga4gh.drs.model.AccessType;
+
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
+
 public class DataSource {
 
-    private String pattern;
-    private String path;
+    // Lazily compile the regex
+    private Supplier<Pattern> drsIdPattern;
+
+    private AccessType protocol;
+    
+    private String objectPathTemplate;
 
     public DataSource() {
 
     }
 
-    public DataSource(String pattern, String path) {
-        this.pattern = pattern;
-        this.path = path;
+    public DataSource(String drsIdPattern, AccessType protocol, String objectPathTemplate) {
+        this.drsIdPattern = () -> Pattern.compile(drsIdPattern);
+        this.protocol = protocol;
+        this.objectPathTemplate = objectPathTemplate;
     }
 
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
+    public void setDrsIdPattern(String drsIdPattern) {
+        this.drsIdPattern = () -> Pattern.compile(drsIdPattern);
     }
 
-    public String getPattern() {
-        return pattern;
+    public Pattern getDrsIdPattern() {
+        return drsIdPattern.get();
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setProtocol(AccessType protocol) {
+        this.protocol = protocol;
     }
 
-    public String getPath() {
-        return path;
+    public AccessType getProtocol() {
+        return protocol;
+    }
+
+    public void setObjectPathTemplate(String objectPathTemplate) {
+        this.objectPathTemplate = objectPathTemplate;
+    }
+
+    public String getObjectPathTemplate() {
+        return objectPathTemplate;
     }
 }
