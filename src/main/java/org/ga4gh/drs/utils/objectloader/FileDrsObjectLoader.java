@@ -2,10 +2,14 @@ package org.ga4gh.drs.utils.objectloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.List;
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ga4gh.drs.model.AccessMethod;
+import org.ga4gh.drs.model.Checksum;
+import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
 
 public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
@@ -25,6 +29,26 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
         return getFile().isDirectory();
     }
 
+    public List<AccessMethod> generateAccessMethods() {
+        // TODO fill out stub method
+        return null;
+    }
+
+    public List<ContentsObject> generateContents() {
+        // TODO fill out stub method
+        return null;
+    }
+
+    public String generateId() {
+        // TODO fill out stub method
+        return null;
+    }
+
+    public URI generateSelfURI() {
+        // TODO fill out stub method
+        return null;
+    }
+
     public DrsObject generateCustomDrsObjectProperties() {
         DrsObject customDrsObject = null;
         String customDrsObjectFilePath = getObjectPath() + ".drsmeta.json";
@@ -38,6 +62,31 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
             }
         }
         return customDrsObject;
+    }
+
+    public List<Checksum> imputeChecksums() {
+        // TODO fill out stub method
+        return null;
+    }
+
+    public int imputeSize() {
+        // TODO fill out stub method
+        return 0;
+    }
+
+    public String imputeName() {
+        // TODO fill out stub method
+        return null;
+    }
+
+    public String imputeMimeType() {
+        // TODO fill out stub method
+        return null;
+    }
+
+    public LocalDateTime imputeCreatedTime() {
+        // TODO fill out stub method
+        return null;
     }
 
     public File getFile() {

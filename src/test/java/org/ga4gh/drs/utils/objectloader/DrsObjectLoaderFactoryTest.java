@@ -22,15 +22,15 @@ public class DrsObjectLoaderFactoryTest extends AbstractTestNGSpringContextTests
     @DataProvider(name = "cases")
     public Object[][] getData() {
         return new Object[][]{
-            {AccessType.FILE, true, "FileDrsObjectLoader"},
-            {AccessType.HTTPS, true, "HttpsDrsObjectLoader"},
-            {null, false, null}
+            {AccessType.FILE, "/path/to/the/file.bam", true, "FileDrsObjectLoader"},
+            {AccessType.HTTPS, "datasite.com/path/to/object.bam", true, "HttpsDrsObjectLoader"},
+            {null, null, false, null}
         };
     }
 
     @Test(dataProvider = "cases")
-    public void testCreateDrsObjectLoader(AccessType accessType, boolean expLoaded, String expClassName) {
-        DrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType);
+    public void testCreateDrsObjectLoader(AccessType accessType, String objectPath, boolean expLoaded, String expClassName) {
+        DrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType, objectPath);
         if (expLoaded) {
             Assert.assertNotNull(drsObjectLoader);
             String className = drsObjectLoader.getClass().getSimpleName();

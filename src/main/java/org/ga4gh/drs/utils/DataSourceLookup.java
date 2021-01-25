@@ -36,7 +36,7 @@ public class DataSourceLookup {
         dataSources = drsConfigContainer.getDrsConfig().getDataSourceRegistry().getDataSources();
     }
 
-    public DrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
+    public AbstractDrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
         DataSource source = findDataSourceMatch(objectId);
 
         if (source == null) {
@@ -78,10 +78,9 @@ public class DataSourceLookup {
         });
     }
 
-    private AbstractDrsObjectLoader newDrsObjectLoader(int match, String objectPath) {
-        AccessType accessType = dataSources.get(match).getProtocol();
+    private AbstractDrsObjectLoader newDrsObjectLoader(DataSource source, String objectPath) {
+        AccessType accessType = source.getProtocol();
         AbstractDrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType, objectPath);
-        // drsObjectLoader.setObjectPath(objectPath);
         return drsObjectLoader;
     }
 }
