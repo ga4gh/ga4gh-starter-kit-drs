@@ -6,15 +6,23 @@ public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
 
     //TODO populate this class
 
+    public HttpsDrsObjectLoader(String objectPath) {
+        super(objectPath);
+    }
+
     public boolean exists() {
         return false;
     }
 
-    public DrsObject getImputedProperties() {
+    public boolean isBundle() {
+        return false;
+    }
+
+    public DrsObject getImputedDrsObject() {
         return null;
     }
 
-    public DrsObject getExplicitProperties() {
+    public DrsObject getDefiniteDrsObject() {
         return null;
     }
     

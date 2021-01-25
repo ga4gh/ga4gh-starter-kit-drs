@@ -44,6 +44,10 @@ public class DrsObject {
 
     private String version;
 
+    public DrsObject() {
+        
+    }
+
     public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, int size) {
         this.setId(id);
         this.setSelfURI(selfURI);

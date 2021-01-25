@@ -22,25 +22,14 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     }
 
     public DrsObject handleRequest() {
-
         DrsObjectLoader drsObjectLoader = dataSourceLookup.getDrsObjectLoaderFromId(objectId);
         if (drsObjectLoader == null) {
             throw new ResourceNotFoundException("Could not locate data source associated with requested object_id");
         }
-
-        //TODO: complete object handling function
-        /*
         if (!drsObjectLoader.exists()) {
             throw new ResourceNotFoundException("No object found for the provided id");
         }
-
-        DrsObject imputedDrsObject = drsObjectLoader.getImputedProperties();
-        DrsObject explicitDrsObject = drsObjectLoader.getExplicitProperties();
-        DeepObjectMerger.merge(explicitDrsObject, imputedDrsObject);
-        return imputedDrsObject;
-        */
-
-        return null;
+        return drsObjectLoader.generateDrsObject();
     }
 
     public void setObjectId(String objectId) {
@@ -50,5 +39,4 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     public String getObjectId() {
         return objectId;
     }
-    
 }

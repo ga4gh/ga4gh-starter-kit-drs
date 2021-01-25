@@ -4,6 +4,7 @@ import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DataSource;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.model.AccessType;
+import org.ga4gh.drs.utils.objectloader.AbstractDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,10 +78,10 @@ public class DataSourceLookup {
         });
     }
 
-    private DrsObjectLoader newDrsObjectLoader(DataSource source, String objectPath) {
-        AccessType accessType = source.getProtocol();
-        DrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType);
-        drsObjectLoader.setObjectPath(objectPath);
+    private AbstractDrsObjectLoader newDrsObjectLoader(int match, String objectPath) {
+        AccessType accessType = dataSources.get(match).getProtocol();
+        AbstractDrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType, objectPath);
+        // drsObjectLoader.setObjectPath(objectPath);
         return drsObjectLoader;
     }
 }
