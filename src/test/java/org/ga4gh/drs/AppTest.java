@@ -3,8 +3,8 @@
  */
 package org.ga4gh.drs;
 
-import org.junit.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class AppTest {
     @Test
