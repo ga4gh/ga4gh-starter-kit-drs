@@ -9,13 +9,13 @@ public class DrsObjectLoaderFactory {
 
     }
 
-    public AbstractDrsObjectLoader createDrsObjectLoader(AccessType accessType, String objectPath) {
+    public AbstractDrsObjectLoader createDrsObjectLoader(AccessType accessType, String objectId, String objectPath) {
         if (accessType == null) return null;
         switch (accessType) {
             case FILE:
-                return new FileDrsObjectLoader(objectPath);
+                return new FileDrsObjectLoader(objectId, objectPath);
             case HTTPS:
-                return new HttpsDrsObjectLoader(objectPath);
+                return new HttpsDrsObjectLoader(objectId, objectPath);
             default:
                 throw new ResourceNotFoundException();
         }

@@ -5,13 +5,20 @@ import org.ga4gh.drs.utils.DeepObjectMerger;
 
 public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
 
+    private String objectId;
     private String objectPath;
 
-    public AbstractDrsObjectLoader(String objectPath) {
+    public AbstractDrsObjectLoader(String objectId, String objectPath) {
+        this.objectId = objectId;
         this.objectPath = objectPath;
     }
 
+    public String generateId() {
+        return getObjectId();
+    }
+
     public DrsObject generateDrsObject() {
+        System.out.println("Generating DRS Object");
         
         // set mandatory properties that cannot be 
         // overriden by custom property files 
@@ -51,6 +58,14 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
         }
         
         return finalProps;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getObjectId() {
+        return objectId;
     }
 
     public void setObjectPath(String objectPath) {

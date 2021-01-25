@@ -11,8 +11,8 @@ import org.ga4gh.drs.model.DrsObject;
 
 public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
 
-    public HttpsDrsObjectLoader(String objectPath) {
-        super(objectPath);
+    public HttpsDrsObjectLoader(String objectId, String objectPath) {
+        super(objectId, objectPath);
     }
 
     public boolean exists() {
