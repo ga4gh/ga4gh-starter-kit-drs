@@ -1,12 +1,19 @@
 package org.ga4gh.drs.utils.objectloader;
 
+import java.net.URI;
+
+import org.ga4gh.drs.AppConfigConstants;
+import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.model.DrsObject;
 import org.ga4gh.drs.utils.DeepObjectMerger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
 
     private String objectId;
     private String objectPath;
+    private DrsConfigContainer drsConfigContainer;
 
     public AbstractDrsObjectLoader(String objectId, String objectPath) {
         this.objectId = objectId;
@@ -15,6 +22,11 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
 
     public String generateId() {
         return getObjectId();
+    }
+
+    public URI generateSelfURI() {
+        String hostname = getDrsConfigContainer().getDrsConfig().getServerProps().getHostname();
+        return URI.create("drs://" + hostname + "/" + getObjectId());
     }
 
     public DrsObject generateDrsObject() {
@@ -74,5 +86,15 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
 
     public String getObjectPath() {
         return objectPath;
+    }
+
+    @Autowired
+    @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER)
+    public final void setDrsConfigContainer(DrsConfigContainer drsConfigContainer) {
+        this.drsConfigContainer = drsConfigContainer;
+    }
+
+    public final DrsConfigContainer getDrsConfigContainer() {
+        return drsConfigContainer;
     }
 }

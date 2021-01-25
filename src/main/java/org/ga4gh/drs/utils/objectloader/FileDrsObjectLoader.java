@@ -2,11 +2,8 @@ package org.ga4gh.drs.utils.objectloader;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
-import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -42,11 +39,6 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public List<ContentsObject> generateContents() {
-        // TODO fill out stub method
-        return null;
-    }
-
-    public URI generateSelfURI() {
         // TODO fill out stub method
         return null;
     }
@@ -109,6 +101,5 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
 
     public void setFile(File file) {
         this.file = file;
-
     }
 }
