@@ -80,7 +80,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public long imputeSize() {
-        return (int)getFile().length();
+        return getFile().length();
     }
 
     public String imputeName() {
