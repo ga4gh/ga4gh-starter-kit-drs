@@ -13,13 +13,13 @@ import org.testng.annotations.Test;
 @Test
 public class DrsObjectTest {
 
-    private class TestCase {
+    private static class TestCase {
         
         protected String id;
         protected URI selfURI;
         protected List<Checksum> checksums;
         protected LocalDateTime createdTime;
-        protected int size;
+        protected long size;
         protected List<AccessMethod> accessMethods;
         protected List<String> aliases;
         protected List<ContentsObject> contents;
@@ -30,7 +30,7 @@ public class DrsObjectTest {
         protected String version;
 
         public TestCase(String id, URI selfURI, List<Checksum> checksums,
-            LocalDateTime createdTime, int size, List<AccessMethod> accessMethods,
+            LocalDateTime createdTime, long size, List<AccessMethod> accessMethods,
             List<String> aliases, List<ContentsObject> contents, LocalDateTime updatedTime,
             String description, String mimeType, String name, String version) {
             

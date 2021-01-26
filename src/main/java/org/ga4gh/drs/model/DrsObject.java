@@ -25,7 +25,7 @@ public class DrsObject {
     @NonNull
     private LocalDateTime createdTime;
 
-    private int size;
+    private long size;
 
     // Optional
     private List<AccessMethod> accessMethods;
@@ -44,7 +44,7 @@ public class DrsObject {
 
     private String version;
 
-    public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, int size) {
+    public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, long size) {
         this.setId(id);
         this.setSelfURI(selfURI);
         this.setChecksums(checksums);
@@ -84,11 +84,11 @@ public class DrsObject {
         this.createdTime = createdTime;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
