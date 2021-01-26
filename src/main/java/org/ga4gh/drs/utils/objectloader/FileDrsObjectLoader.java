@@ -60,7 +60,8 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
                 ObjectMapper mapper = new ObjectMapper(new JsonFactory());
                 customDrsObject = mapper.readValue(customDrsObjectFile, DrsObject.class);
             } catch (IOException e) {
-                System.out.println("AN EXCEPTION WAS CAUGHT " + e.getMessage());
+                // TODO log the exception
+                return customDrsObject;
             }
         }
         return customDrsObject;
@@ -97,6 +98,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
             FileTime creationTime = (FileTime) Files.getAttribute(getFile().toPath(), "creationTime");
             createdTime = LocalDateTime.ofInstant(creationTime.toInstant(), ZoneId.of("UTC"));
         } catch (IOException e) {
+            return createdTime;
         }
         return createdTime;
     }

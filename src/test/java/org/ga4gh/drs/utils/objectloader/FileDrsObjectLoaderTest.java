@@ -1,10 +1,18 @@
 package org.ga4gh.drs.utils.objectloader;
 
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 import org.ga4gh.drs.App;
 import org.ga4gh.drs.AppConfig;
+import org.ga4gh.drs.model.AccessMethod;
 import org.ga4gh.drs.model.AccessType;
 import org.ga4gh.drs.model.Checksum;
+import org.ga4gh.drs.model.DrsObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,6 +28,8 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private DrsObjectLoaderFactory factory;
+
+    private final String timestampPattern = "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d$";
 
     /* DATA PROVIDERS */
 
@@ -58,14 +68,29 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     @DataProvider(name = "generateAccessMethodsCases")
     public Object[][] generateAccessMethodsCases() {
         return new Object[][] {
-            {}
+            {"test.phenopackets.Cao.1", "./src/test/resources/data/phenopackets/Cao/Cao-Patient-1.json"}
         };
     }
 
     @DataProvider(name = "generateCustomDrsObjectPropertiesCases")
     public Object[][] generateCustomDrsObjectPropertiesCases() {
         return new Object[][] {
-            {}
+            {
+                "test.phenopackets.Zapata.1",
+                "./src/test/resources/data/phenopackets/Zapata/Zapata-Patient-1.json",
+                false,
+                new ArrayList<String>() {{add("Zapata1");}},
+                "11.12.13",
+                new ArrayList<Checksum>() {{add(new Checksum("67e8dabdcc47969974bfb48855cea9ff", "md5"));}}
+            },
+            {
+                "test.phenopackets.Zapata.4",
+                "./src/test/resources/data/phenopackets/Zapata/Zapata-Patient-4.json",
+                true,
+                null,
+                null,
+                null
+            }
         };
     }
 
@@ -108,7 +133,33 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     @DataProvider(name = "imputeCreatedTimeCases")
     public Object[][] imputeCreatedTimeCases() {
         return new Object[][] {
-            {}
+            {"test.phenopackets.Zapata.1", "./src/test/resources/data/phenopackets/Zapata/Zapata-Patient-1.json", false},
+            {"test.phenopackets.Zapata.2", "./src/test/resources/data/phenopackets/Zapata/Zapata-Patient-2.json", false},
+            {"test.phenopackets.Zapata.4", "./src/test/resources/data/phenopackets/Zapata/Zapata-Patient-4.json", true},
+        };
+    }
+
+    @DataProvider(name = "generateDrsObjectCases")
+    public Object[][] generateDrsObjectCases() {
+        return new Object[][] {
+            {
+                "test.phenopackets.Zapata.1",
+                "./src/test/resources/data/phenopackets/Zapata/Zapata-Patient-1.json",
+                "test.phenopackets.Zapata.1",
+                URI.create("drs://localhost:8080/test.phenopackets.Zapata.1"),
+                15826,
+                "Zapata-Patient-1.json",
+                "application/json"
+            },
+            {
+                "test.phenopackets.Zapata.2",
+                "./src/test/resources/data/phenopackets/Zapata/Zapata-Patient-2.json",
+                "test.phenopackets.Zapata.2",
+                URI.create("drs://localhost:8080/test.phenopackets.Zapata.2"),
+                9561,
+                "Zapata-Patient-2.json",
+                "application/json"
+            }
         };
     }
 
@@ -136,6 +187,35 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     public void testGenerateSelfURI(String objectId, String objectPath, String expSelfURI) {
         String selfURI = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).generateSelfURI().toString();
         Assert.assertEquals(selfURI, expSelfURI);
+    }
+
+    @Test(dataProvider = "generateAccessMethodsCases")
+    public void testGenerateAccessMethods(String objectId, String objectPath) {
+        List<AccessMethod> accessMethods = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).generateAccessMethods();
+        Assert.assertEquals(accessMethods.size(), 1);
+        Assert.assertEquals(accessMethods.get(0).getType(), AccessType.HTTPS);
+    }
+
+    @Test(dataProvider = "generateCustomDrsObjectPropertiesCases")
+    public void testGenerateCustomDrsObjectProperties(String objectId, String objectPath, boolean expException, List<String> expAliases, String expVersion, List<Checksum> expChecksums) {
+        DrsObject customDrsObject = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).generateCustomDrsObjectProperties();
+        if (expException) {
+            Assert.assertNull(customDrsObject.getAliases());
+            Assert.assertNull(customDrsObject.getVersion());
+            Assert.assertNull(customDrsObject.getChecksums());
+
+        } else {
+            Assert.assertEquals(customDrsObject.getAliases(), expAliases);
+            Assert.assertEquals(customDrsObject.getVersion(), expVersion);
+
+            // assert checksums list
+            List<Checksum> actualChecksums = customDrsObject.getChecksums();
+            Assert.assertEquals(actualChecksums.size(), expChecksums.size());
+            for (int i = 0; i < actualChecksums.size(); i++) {
+                Assert.assertEquals(actualChecksums.get(i).getChecksum(), expChecksums.get(i).getChecksum());
+                Assert.assertEquals(actualChecksums.get(i).getType(), expChecksums.get(i).getType());
+            }
+        }
     }
 
     @Test(dataProvider = "imputeChecksumsCases")
@@ -167,5 +247,29 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     public void testImputeMimeType(String objectId, String objectPath, String expMimeType) {
         String mimeType = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeMimeType();
         Assert.assertEquals(mimeType, expMimeType);
+    }
+
+    @Test(dataProvider = "imputeCreatedTimeCases")
+    public void testImputeCreatedTime(String objectId, String objectPath, boolean expNull) {
+        // cannot assert to an actual time, assert that output matches a pattern
+        LocalDateTime createdTime = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeCreatedTime();
+        if (expNull) {
+            Assert.assertNull(createdTime);
+        } else {
+            Assert.assertNotNull(createdTime);
+            String timestamp = createdTime.toString();
+            boolean matches = timestamp.matches(timestampPattern);
+            Assert.assertTrue(matches);
+        }
+    }
+
+    @Test(dataProvider = "generateDrsObjectCases")
+    public void testGenerateDrsObject(String objectId, String objectPath, String expId, URI expSelfURI, int expSize, String expName, String expMimeType) {
+        DrsObject drsObject = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).generateDrsObject();
+        Assert.assertEquals(drsObject.getId(), expId);
+        Assert.assertEquals(drsObject.getSelfURI(), expSelfURI);
+        Assert.assertEquals(drsObject.getSize(), expSize);
+        Assert.assertEquals(drsObject.getName(), expName);
+        Assert.assertEquals(drsObject.getMimeType(), expMimeType);
     }
 }
