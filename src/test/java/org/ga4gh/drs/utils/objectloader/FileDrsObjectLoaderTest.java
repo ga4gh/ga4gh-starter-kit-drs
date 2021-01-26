@@ -153,7 +153,7 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
 
     @Test(dataProvider = "imputeSizeCases")
     public void testImputeSize(String objectId, String objectPath, int expSize) {
-        int size = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeSize();
+        long size = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeSize();
         Assert.assertEquals(size, expSize);
     }
 

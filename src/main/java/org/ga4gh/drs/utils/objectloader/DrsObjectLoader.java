@@ -19,7 +19,7 @@ public interface DrsObjectLoader {
     public URI generateSelfURI();
     public DrsObject generateCustomDrsObjectProperties();
     public List<Checksum> imputeChecksums();
-    public int imputeSize();
+    public long imputeSize();
     public String imputeName();
     public String imputeMimeType();
     public LocalDateTime imputeCreatedTime();
