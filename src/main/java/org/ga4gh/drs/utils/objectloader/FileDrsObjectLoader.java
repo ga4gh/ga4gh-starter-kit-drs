@@ -2,19 +2,24 @@ package org.ga4gh.drs.utils.objectloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FilenameUtils;
 import org.ga4gh.drs.model.AccessMethod;
+import org.ga4gh.drs.model.AccessType;
 import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
 import org.ga4gh.drs.utils.MimeTypeImputer;
+import org.springframework.util.DigestUtils;
 
 public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
 
@@ -34,8 +39,11 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public List<AccessMethod> generateAccessMethods() {
-        // TODO fill out stub method
-        return null;
+        // TODO currently access ID has no meaning within the app, should be
+        // used to populate a lookup cache
+        String accessID = UUID.randomUUID().toString();
+        AccessMethod accessMethod = new AccessMethod(accessID, AccessType.HTTPS);
+        return new ArrayList<AccessMethod>() {{add(accessMethod);}};
     }
 
     public List<ContentsObject> generateContents() {
@@ -44,7 +52,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public DrsObject generateCustomDrsObjectProperties() {
-        DrsObject customDrsObject = null;
+        DrsObject customDrsObject = new DrsObject();
         String customDrsObjectFilePath = getObjectPath() + ".drsmeta.json";
         File customDrsObjectFile = new File(customDrsObjectFilePath);
         if (customDrsObjectFile.exists() && !customDrsObjectFile.isDirectory()) {
@@ -59,17 +67,15 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public List<Checksum> imputeChecksums() {
-        /*
-        try {
-            InputStream is = Files.newInputStream(getFile().toPath());
-            MessageDigest foo = MessageDigest.getInstance("MD5");
-            foo.digest(is);
-        } catch () {
-
+        List<Checksum> checksums = new ArrayList<>();
+        try (InputStream is = Files.newInputStream(getFile().toPath())) {
+            String digest = DigestUtils.md5DigestAsHex(is);
+            Checksum md5Checksum = new Checksum(digest, "md5");
+            checksums.add(md5Checksum);
+        } catch (IOException e) {
+            return checksums;
         }
-        */
-        
-        return null;
+        return checksums;
     }
 
     public int imputeSize() {
@@ -95,11 +101,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
         return createdTime;
     }
 
-    public File getFile() {
+    private File getFile() {
         return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
     }
 }

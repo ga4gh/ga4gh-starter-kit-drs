@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.system.SystemProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
@@ -63,12 +62,8 @@ public class AppConfig implements WebMvcConfigurer {
     public DrsConfigContainer defaultDrsConfigContainer(
         @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
-        System.out.println("ATTEMPTING TO LOAD DEFAULT DRS CONFIG CONTAINER");
         ServerProps serverProps = drsConfigContainer.getDrsConfig().getServerProps();
-        System.out.println("A");
-        System.out.println(serverProps);
         serverProps.setHostname(ServerPropsDefaults.HOSTNAME);
-        System.out.println("B");
 
         ServiceInfo serviceInfo = drsConfigContainer.getDrsConfig().getServiceInfo();
         serviceInfo.setId(ServiceInfoDefaults.ID);
@@ -88,7 +83,6 @@ public class AppConfig implements WebMvcConfigurer {
 
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
         dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
-        System.out.println("Z");
         return drsConfigContainer;
     }
 

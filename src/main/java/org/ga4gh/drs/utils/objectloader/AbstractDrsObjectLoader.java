@@ -30,7 +30,6 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
     }
 
     public DrsObject generateDrsObject() {
-        System.out.println("Generating DRS Object");
         
         // set mandatory properties that cannot be 
         // overriden by custom property files 
