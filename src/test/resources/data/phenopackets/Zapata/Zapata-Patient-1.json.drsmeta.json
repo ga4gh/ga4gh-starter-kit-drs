@@ -1,4 +1,13 @@
 {
-  "id": "7df8a0e7-70b6-4f39-a1c8-3aa43fee8d54",
-  "description": "phenopacket of patient 1 of Zapata family study"
+  "description": "phenopacket of patient 1 of Zapata family study",
+  "aliases": [
+    "Zapata1"
+  ],
+  "version": "11.12.13",
+  "checksums": [
+    {
+      "checksum": "67e8dabdcc47969974bfb48855cea9ff",
+      "type": "md5"
+    }
+  ]
 }

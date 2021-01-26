@@ -9,6 +9,10 @@ public class Checksum {
     @NonNull
     private String type;
 
+    public Checksum() {
+        
+    }
+
     public Checksum(String checksum, String type) {
         this.checksum = checksum;
         this.type = type;
