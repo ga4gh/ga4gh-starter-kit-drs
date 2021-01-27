@@ -4,9 +4,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
 import org.ga4gh.drs.App;
 import org.ga4gh.drs.AppConfig;
 import org.ga4gh.drs.model.AccessMethod;
