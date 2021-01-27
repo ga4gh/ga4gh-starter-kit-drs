@@ -26,8 +26,6 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private DrsObjectLoaderFactory factory;
 
-    private final String timestampPattern = "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d";
-
     /* DATA PROVIDERS */
 
     @DataProvider(name = "existsCases")
@@ -248,20 +246,12 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
 
     @Test(dataProvider = "imputeCreatedTimeCases")
     public void testImputeCreatedTime(String objectId, String objectPath, boolean expNull) {
-        // cannot assert to an actual time, assert that output matches a pattern
-        System.out.println("TESTING IMPUTE CREATED TIME");
-        System.out.println(objectId);
+        // cannot assert to an actual time, assert that createdTime is not null (loaded successfully)
         LocalDateTime createdTime = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeCreatedTime();
-        System.out.println(createdTime);
         if (expNull) {
             Assert.assertNull(createdTime);
         } else {
             Assert.assertNotNull(createdTime);
-            String timestamp = createdTime.toString();
-            System.out.println("TIMESTAMP IS");
-            System.out.println(timestamp);
-            boolean matches = timestamp.matches(timestampPattern);
-            Assert.assertTrue(matches);
         }
     }
 
