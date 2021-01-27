@@ -249,7 +249,10 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     @Test(dataProvider = "imputeCreatedTimeCases")
     public void testImputeCreatedTime(String objectId, String objectPath, boolean expNull) {
         // cannot assert to an actual time, assert that output matches a pattern
+        System.out.println("TESTING IMPUTE CREATED TIME");
+        System.out.println(objectId);
         LocalDateTime createdTime = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeCreatedTime();
+        System.out.println(createdTime);
         if (expNull) {
             Assert.assertNull(createdTime);
         } else {
