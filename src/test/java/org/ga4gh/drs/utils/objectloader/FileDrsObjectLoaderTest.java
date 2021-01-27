@@ -258,6 +258,8 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
         } else {
             Assert.assertNotNull(createdTime);
             String timestamp = createdTime.toString();
+            System.out.println("TIMESTAMP IS");
+            System.out.println(timestamp);
             boolean matches = timestamp.matches(timestampPattern);
             Assert.assertTrue(matches);
         }
