@@ -1,0 +1,10 @@
+{
+  "description": "This is a phenopackets file describing...",
+  "name": "Phenopackets Test Dataset: Chebly Patient 1",
+  "aliases": [
+    "phenopacket.12345"
+  ],
+  "created_time": "2020-12-01T09:25:55Z",
+  "updated_time": "2021-12-30T08:52:30Z",
+  "version": "1.2.0"
+}
