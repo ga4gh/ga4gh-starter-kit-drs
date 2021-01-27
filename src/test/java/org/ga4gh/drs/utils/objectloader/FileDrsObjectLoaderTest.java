@@ -26,7 +26,7 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private DrsObjectLoaderFactory factory;
 
-    private final String timestampPattern = "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d$";
+    private final String timestampPattern = "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d";
 
     /* DATA PROVIDERS */
 
