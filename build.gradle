@@ -40,6 +40,7 @@ dependencies {
     compile 'commons-io:commons-io:2.8.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.12.1'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile ("org.springframework.security:spring-security-test")
@@ -55,6 +56,9 @@ bootJar {
 }
 
 test {
+    testLogging {
+        showStandardStreams = false // make true for log output to console
+    }
     // Use TestNG for unit tests
     useTestNG()
 }

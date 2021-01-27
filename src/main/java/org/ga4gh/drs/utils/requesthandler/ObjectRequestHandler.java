@@ -17,12 +17,8 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         
     }
 
-    public ObjectRequestHandler(String objectId) {
-        this.objectId = objectId;
-    }
-
     public DrsObject handleRequest() {
-        DrsObjectLoader drsObjectLoader = dataSourceLookup.getDrsObjectLoaderFromId(objectId);
+        DrsObjectLoader drsObjectLoader = dataSourceLookup.getDrsObjectLoaderFromId(getObjectId());
         if (drsObjectLoader == null) {
             throw new ResourceNotFoundException("Could not locate data source associated with requested object_id");
         }
