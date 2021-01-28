@@ -55,7 +55,7 @@ public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
         return null;
     }
 
-    public int imputeSize() {
+    public long imputeSize() {
         // TODO fill out stub method
         return 0;
     }
