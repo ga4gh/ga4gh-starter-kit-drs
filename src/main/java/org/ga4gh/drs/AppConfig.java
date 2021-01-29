@@ -2,6 +2,7 @@ package org.ga4gh.drs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.cache.LoadingCache;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
@@ -12,9 +13,12 @@ import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
 import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.DeepObjectMerger;
+import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
+import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
+import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +142,18 @@ public class AppConfig implements WebMvcConfigurer {
         return new ObjectRequestHandler();
     }
 
+    @Bean
+    @RequestScope
+    public AccessRequestHandler accessRequestHandler() {
+        return new AccessRequestHandler();
+    }
+
+    @Bean
+    @RequestScope
+    public FileStreamRequestHandler fileStreamRequestHandler() {
+        return new FileStreamRequestHandler();
+    }
+
     /* ******************************
      * DRS OBJECT LOADER BEANS
      * ****************************** */
@@ -166,5 +182,10 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public DrsObjectLoaderFactory drsObjectLoaderFactory() {
         return new DrsObjectLoaderFactory();
+    }
+
+    @Bean
+    public AccessCache accessCache() {
+        return new AccessCache();
     }
 }

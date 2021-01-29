@@ -44,7 +44,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
         // TODO currently access ID has no meaning within the app, should be
         // used to populate a lookup cache
         String accessID = UUID.randomUUID().toString();
-        AccessMethod accessMethod = new AccessMethod(accessID, AccessType.HTTPS);
+        AccessMethod accessMethod = new AccessMethod(accessID, AccessType.FILE);
         return Collections.singletonList(accessMethod);
     }
 
@@ -105,6 +105,10 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
             return createdTime;
         }
         return createdTime;
+    }
+
+    public AccessType getAccessType() {
+        return AccessType.FILE;
     }
 
     private File getFile() {

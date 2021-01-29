@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.ga4gh.drs.model.AccessMethod;
+import org.ga4gh.drs.model.AccessType;
 import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
@@ -73,5 +74,9 @@ public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
     public LocalDateTime imputeCreatedTime() {
         // TODO fill out stub method
         return null;
+    }
+
+    public AccessType getAccessType() {
+        return AccessType.HTTPS;
     }
 }

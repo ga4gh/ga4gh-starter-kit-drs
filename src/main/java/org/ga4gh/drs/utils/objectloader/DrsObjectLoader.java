@@ -5,6 +5,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.ga4gh.drs.model.AccessMethod;
+import org.ga4gh.drs.model.AccessType;
 import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.ContentsObject;
 
@@ -25,4 +26,5 @@ public interface DrsObjectLoader {
     public LocalDateTime imputeCreatedTime();
     public void setObjectPath(String objectPath);
     public String getObjectPath();
+    public AccessType getAccessType();
 }
