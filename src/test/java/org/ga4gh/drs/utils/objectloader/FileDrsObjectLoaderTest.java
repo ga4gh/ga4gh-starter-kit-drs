@@ -249,7 +249,10 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
         // cannot assert to an actual time, assert that createdTime is not null (loaded successfully)
         LocalDateTime createdTime = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeCreatedTime();
         if (expNull) {
-            Assert.assertNull(createdTime);
+            Assert.assertNotNull(createdTime);
+            Assert.assertEquals(createdTime.getYear(), 1970);
+            Assert.assertEquals(createdTime.getMonthValue(), 1);
+            Assert.assertEquals(createdTime.getDayOfMonth(), 1);
         } else {
             Assert.assertNotNull(createdTime);
         }

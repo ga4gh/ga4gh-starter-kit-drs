@@ -7,7 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -43,7 +45,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
         // used to populate a lookup cache
         String accessID = UUID.randomUUID().toString();
         AccessMethod accessMethod = new AccessMethod(accessID, AccessType.HTTPS);
-        return new ArrayList<AccessMethod>() {{add(accessMethod);}};
+        return Collections.singletonList(accessMethod);
     }
 
     public List<ContentsObject> generateContents() {
@@ -93,7 +95,9 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public LocalDateTime imputeCreatedTime() {
-        LocalDateTime createdTime = null;
+        // initialize to the UNIX epoch date, to conform to DRS spec even if 
+        // file creation attributes cannot be loaded
+        LocalDateTime createdTime = LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC);
         try {
             FileTime creationTime = (FileTime) Files.getAttribute(getFile().toPath(), "creationTime");
             createdTime = LocalDateTime.ofInstant(creationTime.toInstant(), ZoneId.of("UTC"));
