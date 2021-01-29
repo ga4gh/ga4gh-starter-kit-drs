@@ -1,7 +1,7 @@
 package org.ga4gh.drs.model;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -14,7 +14,7 @@ public class AccessMethodTest {
         return new Object[][] {
             {
                 "access_id:00001",
-                new AccessURL(new URL("https", "s3.somebucket.com", "00001.bam")),
+                new AccessURL(URI.create("https://s3.somebucket.com/00001.bam")),
                 AccessType.HTTPS,
                 "us-east-2"
             }

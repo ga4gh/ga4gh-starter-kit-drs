@@ -188,7 +188,7 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     public void testGenerateAccessMethods(String objectId, String objectPath) {
         List<AccessMethod> accessMethods = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).generateAccessMethods();
         Assert.assertEquals(accessMethods.size(), 1);
-        Assert.assertEquals(accessMethods.get(0).getType(), AccessType.HTTPS);
+        Assert.assertEquals(accessMethods.get(0).getType(), AccessType.FILE);
     }
 
     @Test(dataProvider = "generateCustomDrsObjectPropertiesCases")
