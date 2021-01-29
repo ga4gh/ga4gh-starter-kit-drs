@@ -22,6 +22,10 @@ public class AccessMethod {
     // Optional
     private String region;
 
+    public AccessMethod() {
+        
+    }
+
     public AccessMethod(String accessID, AccessType type) {
         this.accessId = accessID;
         this.type = type;
