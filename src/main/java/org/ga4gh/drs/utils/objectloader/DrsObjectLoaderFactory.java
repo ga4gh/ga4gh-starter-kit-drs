@@ -12,7 +12,7 @@ public class DrsObjectLoaderFactory implements ApplicationContextAware {
     public DrsObjectLoaderFactory() {
 
     }
-    
+
     public FileDrsObjectLoader createFileDrsObjectLoader(LocalFileDataSource dataSource, String objectId) {
         return context.getBean(FileDrsObjectLoader.class, objectId, dataSource.renderObjectPath(objectId));
     }

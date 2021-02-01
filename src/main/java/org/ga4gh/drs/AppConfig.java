@@ -39,7 +39,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 
 @Configuration
@@ -183,7 +182,7 @@ public class AppConfig implements WebMvcConfigurer {
     public HttpsDrsObjectLoader HttpsDrsObjectLoader(String objectId, String objectPath) {
         try {
             return new HttpsDrsObjectLoader(objectId, objectPath);
-        } catch (MalformedURLException e) {
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }

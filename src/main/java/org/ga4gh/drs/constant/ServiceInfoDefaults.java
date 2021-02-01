@@ -23,7 +23,7 @@ public class ServiceInfoDefaults {
 
     public static final LocalDateTime CREATED_AT = LocalDateTime.parse("2020-01-15T12:00:00Z", DATE_FORMATTER);
 
-    public static final LocalDateTime UPDATED_AT = LocalDateTime.parse("2020-01-15T12:00:00Z", DATE_FORMATTER);;
+    public static final LocalDateTime UPDATED_AT = LocalDateTime.parse("2020-01-15T12:00:00Z", DATE_FORMATTER);
 
     public static final String ENVIRONMENT = "test";
 

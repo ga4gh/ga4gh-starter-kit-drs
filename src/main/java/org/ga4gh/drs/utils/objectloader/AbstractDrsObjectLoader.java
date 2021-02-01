@@ -32,7 +32,7 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
     public DrsObject generateDrsObject() {
         
         // set mandatory properties that cannot be 
-        // overriden by custom property files 
+        // overridden by custom property files
         DrsObject mandatoryProps = new DrsObject();
         mandatoryProps.setId(generateId());
         mandatoryProps.setSelfURI(generateSelfURI());

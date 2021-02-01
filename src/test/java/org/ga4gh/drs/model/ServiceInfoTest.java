@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 public class ServiceInfoTest {
 
-    private class TestCase {
+    private static class TestCase {
 
         protected String id;
         protected String name;

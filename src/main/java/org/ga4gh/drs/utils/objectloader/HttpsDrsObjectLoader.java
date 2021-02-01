@@ -18,9 +18,13 @@ public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
 
     private URL url;
 
-    public HttpsDrsObjectLoader(String objectId, String objectPath) throws MalformedURLException {
+    public HttpsDrsObjectLoader(String objectId, String objectPath) {
         super(objectId, objectPath);
-        url = new URL(objectPath);
+        try {
+            url = new URL(objectPath);
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public boolean exists() {
