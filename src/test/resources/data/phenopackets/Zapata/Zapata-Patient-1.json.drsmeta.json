@@ -1,0 +1,15 @@
+{
+  "description": "phenopacket of patient 1 of Zapata family study",
+  "aliases": [
+    "Zapata1"
+  ],
+  "created_time": "2021-01-25T17:29:53Z",
+  "version": "11.12.13",
+  "checksums": [
+    {
+      "checksum": "67e8dabdcc47969974bfb48855cea9ff",
+      "type": "md5"
+    }
+  ],
+  "updated_time": "2021-01-26T09:10:11Z"
+}

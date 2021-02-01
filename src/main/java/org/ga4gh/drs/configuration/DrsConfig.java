@@ -4,17 +4,22 @@ import org.ga4gh.drs.model.ServiceInfo;
 
 public class DrsConfig {
 
+    private ServerProps serverProps;
     private ServiceInfo serviceInfo;
     private DataSourceRegistry dataSourceRegistry;
 
     public DrsConfig() {
+        serverProps = new ServerProps();
         serviceInfo = new ServiceInfo();
         dataSourceRegistry = new DataSourceRegistry();
     }
 
-    public DrsConfig(ServiceInfo serviceInfo, DataSourceRegistry dataSourceRegistry) {
-        this.serviceInfo = serviceInfo;
-        this.dataSourceRegistry = dataSourceRegistry;
+    public void setServerProps(ServerProps serverProps) {
+        this.serverProps = serverProps;
+    }
+
+    public ServerProps getServerProps() {
+        return serverProps;
     }
 
     public void setServiceInfo(ServiceInfo serviceInfo) {

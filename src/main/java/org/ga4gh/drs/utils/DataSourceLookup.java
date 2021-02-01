@@ -4,11 +4,10 @@ import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DataSource;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.model.AccessType;
-import org.ga4gh.drs.utils.objectloader.DrsObjectLoader;
+import org.ga4gh.drs.utils.objectloader.AbstractDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,7 +34,7 @@ public class DataSourceLookup {
         dataSources = drsConfigContainer.getDrsConfig().getDataSourceRegistry().getDataSources();
     }
 
-    public DrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
+    public AbstractDrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
         DataSource source = findDataSourceMatch(objectId);
 
         if (source == null) {
@@ -43,7 +42,7 @@ public class DataSourceLookup {
         }
 
         String objectPath = renderObjectPath(source, objectId);
-        return newDrsObjectLoader(source, objectPath);
+        return newDrsObjectLoader(source, objectId, objectPath);
     }
 
     private DataSource findDataSourceMatch(String objectId) {
@@ -77,10 +76,9 @@ public class DataSourceLookup {
         });
     }
 
-    private DrsObjectLoader newDrsObjectLoader(DataSource source, String objectPath) {
+    private AbstractDrsObjectLoader newDrsObjectLoader(DataSource source, String objectId, String objectPath) {
         AccessType accessType = source.getProtocol();
-        DrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType);
-        drsObjectLoader.setObjectPath(objectPath);
+        AbstractDrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType, objectId, objectPath);
         return drsObjectLoader;
     }
 }

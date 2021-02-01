@@ -5,12 +5,16 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.configuration.ServerProps;
 import org.ga4gh.drs.constant.DataSourceDefaults;
+import org.ga4gh.drs.constant.ServerPropsDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
 import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.DeepObjectMerger;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
+import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
+import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +54,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Scope(AppConfigConstants.PROTOTYPE)
     @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER)
     public DrsConfigContainer emptyDrsConfigContainer() {
-        ServiceInfo serviceInfo = new ServiceInfo();
-        DataSourceRegistry dataSourceRegistry = new DataSourceRegistry();
-        return new DrsConfigContainer(new DrsConfig(serviceInfo, dataSourceRegistry));
+        return new DrsConfigContainer(new DrsConfig());
     }
 
     @Bean
@@ -60,6 +62,9 @@ public class AppConfig implements WebMvcConfigurer {
     public DrsConfigContainer defaultDrsConfigContainer(
         @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
+        ServerProps serverProps = drsConfigContainer.getDrsConfig().getServerProps();
+        serverProps.setHostname(ServerPropsDefaults.HOSTNAME);
+
         ServiceInfo serviceInfo = drsConfigContainer.getDrsConfig().getServiceInfo();
         serviceInfo.setId(ServiceInfoDefaults.ID);
         serviceInfo.setName(ServiceInfoDefaults.NAME);
@@ -72,14 +77,12 @@ public class AppConfig implements WebMvcConfigurer {
         serviceInfo.setVersion(ServiceInfoDefaults.VERSION);
         serviceInfo.getOrganization().setName(ServiceInfoDefaults.ORGANIZATION_NAME);
         serviceInfo.getOrganization().setUrl(ServiceInfoDefaults.ORGANIZATION_URL);
-
         serviceInfo.getType().setArtifact(ServiceInfoDefaults.SERVICE_TYPE_ARTIFACT);
         serviceInfo.getType().setGroup(ServiceInfoDefaults.SERVICE_TYPE_GROUP);
         serviceInfo.getType().setVersion(ServiceInfoDefaults.SERVICE_TYPE_VERSION);
 
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
         dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
-
         return drsConfigContainer;
     }
 
@@ -133,6 +136,22 @@ public class AppConfig implements WebMvcConfigurer {
     @RequestScope
     public ObjectRequestHandler objectRequestHandler() {
         return new ObjectRequestHandler();
+    }
+
+    /* ******************************
+     * DRS OBJECT LOADER BEANS
+     * ****************************** */
+
+    @Bean
+    @Scope(value = AppConfigConstants.PROTOTYPE)
+    public FileDrsObjectLoader fileDrsObjectLoader(String objectId, String objectPath) {
+        return new FileDrsObjectLoader(objectId, objectPath);
+    }
+
+    @Bean
+    @Scope(value = AppConfigConstants.PROTOTYPE)
+    public HttpsDrsObjectLoader HttpsDrsObjectLoader(String objectId, String objectPath) {
+        return new HttpsDrsObjectLoader(objectId, objectPath);
     }
 
     /* ******************************
