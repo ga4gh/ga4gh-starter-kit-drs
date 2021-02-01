@@ -22,6 +22,7 @@ import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
+import org.ga4gh.drs.utils.objectloader.S3DrsObjectLoader;
 import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
@@ -38,6 +39,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 
 @Configuration
@@ -179,7 +181,21 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Scope(value = AppConfigConstants.PROTOTYPE)
     public HttpsDrsObjectLoader HttpsDrsObjectLoader(String objectId, String objectPath) {
-        return new HttpsDrsObjectLoader(objectId, objectPath);
+        try {
+            return new HttpsDrsObjectLoader(objectId, objectPath);
+        } catch (MalformedURLException e) {
+            return null;
+        }
+    }
+
+    @Bean
+    @Scope(value = AppConfigConstants.PROTOTYPE)
+    public S3DrsObjectLoader S3DrsObjectLoader(String objectId, String objectPath) {
+        try {
+            return new S3DrsObjectLoader(objectId, objectPath);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /* ******************************

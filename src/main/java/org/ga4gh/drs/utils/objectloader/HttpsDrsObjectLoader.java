@@ -1,6 +1,8 @@
 package org.ga4gh.drs.utils.objectloader;
 
-import java.net.URI;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,15 +12,27 @@ import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
 
-    public HttpsDrsObjectLoader(String objectId, String objectPath) {
+    private URL url;
+
+    public HttpsDrsObjectLoader(String objectId, String objectPath) throws MalformedURLException {
         super(objectId, objectPath);
+        url = new URL(objectPath);
     }
 
     public boolean exists() {
-        // TODO fill out stub method
-        return false;
+        try {
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            conn.connect();
+            int responseCode = conn.getResponseCode();
+            // TODO: possibly handling HTTPS -> HTTP redirecting?
+            return 200 <= responseCode && responseCode < 300;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public boolean isBundle() {
@@ -37,11 +51,6 @@ public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public String generateId() {
-        // TODO fill out stub method
-        return null;
-    }
-
-    public URI generateSelfURI() {
         // TODO fill out stub method
         return null;
     }
