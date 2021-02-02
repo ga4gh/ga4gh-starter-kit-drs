@@ -19,6 +19,9 @@ plugins {
 
     // OpenAPI generator
     id "org.openapi.generator" version "5.0.0"
+
+    // Apply the plugin to add support for jacoco test coverage report
+    id 'jacoco'
 }
 
 repositories {
@@ -36,6 +39,11 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    compile 'commons-cli:commons-cli:1.4'
+    compile 'commons-io:commons-io:2.8.0'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.12.1'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation ("org.springframework.security:spring-security-test")
@@ -51,6 +59,9 @@ bootJar {
 }
 
 test {
+    testLogging {
+        showStandardStreams = false // make true for log output to console
+    }
     // Use TestNG for unit tests
     useTestNG()
 }
@@ -63,4 +74,16 @@ openApiGenerate {
     apiPackage = "org.ga4gh.drs.api"
     inputSpec = "openapi/data_repository_service.swagger.yaml"
     //outputDir = "src/main/java/org/ga4gh/drs/openapi"
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }

@@ -1,0 +1,12 @@
+drsConfig:
+  serviceInfo:
+    id: org.ga4gh.drs-server.test
+    name: GA4GH DRS server test deployment
+    organization:
+      name: GA4GH
+      url: https://ga4gh.org
+  dataSourceRegistry:
+    dataSources:
+      - drsIdPattern: ^testdata\.(?<acc1>.+?)\.(?<acc2>.+?)\.(?<acc3>.+?)$
+        objectPathTemplate: ./src/test/resources/data/{acc1}/{acc2}/{acc3}
+        protocol: FILE
