@@ -51,7 +51,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.ga4gh.drs.App'
+    mainClassName = 'org.ga4gh.drs.App'
 }
 
 bootJar {
