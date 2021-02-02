@@ -2,7 +2,7 @@ git:
   depth: false
 language: java
 jdk: oraclejdk11
-script: "gradle openApiGenerate && ./gradlew test"
+script: "./gradlew openApiGenerate && ./gradlew test"
 after_success:
     - "./gradlew jacocoTestReport"
     - bash <(curl -s https://codecov.io/bash)
