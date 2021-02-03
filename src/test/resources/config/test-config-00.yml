@@ -9,6 +9,7 @@ drsConfig:
       group: org.test
       artifact: test
   dataSourceRegistry:
+<<<<<<< HEAD
     local:
       - idPrefix: TestDataPhenopackets.
         rootDir: ./src/test/resources/data/phenopackets
@@ -19,3 +20,11 @@ drsConfig:
         rootDir: /
         region: us-east-2
         bucket: ga4gh-demo-data
+=======
+    dataSources:
+      - drsIdPattern: ^testdata\.(?<acc1>.+?)\.(?<acc2>.+?)\.(?<acc3>.+?)$
+        objectPathTemplate: ./src/test/resources/data/{acc1}/{acc2}/{acc3}
+        protocol: FILE
+  S3:
+    region: us-east-1
+>>>>>>> Make default AWS region configurable, address PR comments

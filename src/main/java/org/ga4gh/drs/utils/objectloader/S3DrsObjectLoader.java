@@ -65,7 +65,7 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         URI uri = URI.create(objectPath);
         bucket = uri.getHost();
         // Strip leading /
-        key = uri.getPath().substring(1);
+        key = uri.getPath().replaceAll("^/+$", "");
         // Get client based on region
         client = S3ClientRegionBasedProvider.getClient(bucket);
 

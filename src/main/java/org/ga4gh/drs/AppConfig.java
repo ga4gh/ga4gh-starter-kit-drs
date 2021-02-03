@@ -10,8 +10,10 @@ import org.apache.commons.cli.ParseException;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.configuration.S3;
 import org.ga4gh.drs.configuration.ServerProps;
 import org.ga4gh.drs.constant.DataSourceDefaults;
+import org.ga4gh.drs.constant.S3Defaults;
 import org.ga4gh.drs.constant.ServerPropsDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
@@ -35,6 +37,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import software.amazon.awssdk.regions.Region;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,6 +93,10 @@ public class AppConfig implements WebMvcConfigurer {
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
         dataSourceRegistry.setLocal(DataSourceDefaults.LOCAL);
         dataSourceRegistry.setS3(DataSourceDefaults.S3);
+        dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
+
+        S3 s3 = drsConfigContainer.getDrsConfig().getS3();
+        s3.setRegion(S3Defaults.S3_REGION);
         return drsConfigContainer;
     }
 
@@ -214,5 +221,11 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public AccessCache accessCache() {
         return new AccessCache();
+    }
+
+    public Region defaultRegion(
+        @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+    ) {
+        return Region.of(drsConfigContainer.getDrsConfig().getS3().getRegion());
     }
 }

@@ -1,5 +1,6 @@
 package org.ga4gh.drs.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
@@ -10,12 +11,15 @@ import java.util.Map;
 
 public class S3ClientRegionBasedProvider {
 
+    @Autowired
+    private static Region DEFAULT_REGION;
+
     public S3ClientRegionBasedProvider() {
 
     }
 
     private static S3Client mainClient = S3Client.builder()
-        .region(Region.US_EAST_1)
+        .region(DEFAULT_REGION)
         .build();
 
     private static Map<Region, S3Client> clients = new HashMap<>();
@@ -47,6 +51,6 @@ public class S3ClientRegionBasedProvider {
             }
         }
         // Default US_EAST_1
-        return Region.US_EAST_1;
+        return DEFAULT_REGION;
     }
 }
