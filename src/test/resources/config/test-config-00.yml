@@ -5,8 +5,17 @@ drsConfig:
     organization:
       name: GA4GH
       url: https://ga4gh.org
+    type:
+      group: org.test
+      artifact: test
   dataSourceRegistry:
-    dataSources:
-      - drsIdPattern: ^testdata\.(?<acc1>.+?)\.(?<acc2>.+?)\.(?<acc3>.+?)$
-        objectPathTemplate: ./src/test/resources/data/{acc1}/{acc2}/{acc3}
-        protocol: FILE
+    local:
+      - id_prefix: TestDataPhenopackets
+        root_dir: ./src/test/resources/data/phenopackets
+      - id_prefix: TestDataHtsjdkSamtools
+        root_dir: ./src/test/resources/data/htsjdk
+    s3:
+      - id_prefix: S3DemoData
+        root_dir: /
+        region: us-east-2
+        bucket: ga4gh-demo-data

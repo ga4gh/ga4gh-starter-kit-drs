@@ -1,7 +1,6 @@
 package org.ga4gh.drs.configuration;
 
 import java.util.List;
-
 import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
 import org.ga4gh.drs.utils.datasource.S3DataSource;
 

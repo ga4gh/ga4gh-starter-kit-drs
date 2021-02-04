@@ -1,13 +1,13 @@
 package org.ga4gh.drs.utils.datasource;
 
-import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
-import org.springframework.beans.factory.annotation.Autowired;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class LocalFileDataSource implements DataSource<FileDrsObjectLoader> {
-
-    @Autowired
-    DrsObjectLoaderFactory drsObjectLoaderFactory;
 
     private String idPrefix;
     private String rootDir;
