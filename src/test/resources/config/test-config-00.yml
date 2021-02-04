@@ -10,12 +10,12 @@ drsConfig:
       artifact: test
   dataSourceRegistry:
     local:
-      - id_prefix: TestDataPhenopackets
-        root_dir: ./src/test/resources/data/phenopackets
-      - id_prefix: TestDataHtsjdkSamtools
-        root_dir: ./src/test/resources/data/htsjdk
+      - idPrefix: TestDataPhenopackets
+        rootDir: ./src/test/resources/data/phenopackets
+      - idPrefix: TestDataHtsjdkSamtools
+        rootDir: ./src/test/resources/data/htsjdk
     s3:
-      - id_prefix: S3DemoData
-        root_dir: /
+      - idPrefix: S3DemoData
+        rootDir: /
         region: us-east-2
         bucket: ga4gh-demo-data

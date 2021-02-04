@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.ga4gh.drs.utils.objectloader.S3DrsObjectLoader;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class S3DataSource implements DataSource<S3DrsObjectLoader> {
 
     private String idPrefix;
