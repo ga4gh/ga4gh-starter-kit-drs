@@ -14,6 +14,7 @@ import org.ga4gh.drs.model.ServiceInfo;
 import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.DeepObjectMerger;
 import org.ga4gh.drs.utils.cache.AccessCache;
+import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
@@ -86,7 +87,8 @@ public class AppConfig implements WebMvcConfigurer {
         serviceInfo.getType().setVersion(ServiceInfoDefaults.SERVICE_TYPE_VERSION);
 
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
-        dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
+        dataSourceRegistry.setLocal(DataSourceDefaults.LOCAL);
+        dataSourceRegistry.setS3(DataSourceDefaults.S3);
         return drsConfigContainer;
     }
 
@@ -152,6 +154,16 @@ public class AppConfig implements WebMvcConfigurer {
     @RequestScope
     public FileStreamRequestHandler fileStreamRequestHandler() {
         return new FileStreamRequestHandler();
+    }
+
+    /* ******************************
+     * DATA SOURCE BEANS
+     * ****************************** */
+
+    @Bean
+    @Scope(value = AppConfigConstants.PROTOTYPE)
+    public LocalFileDataSource localFileDataSource() {
+        return new LocalFileDataSource();
     }
 
     /* ******************************
