@@ -1,7 +1,6 @@
 package org.ga4gh.drs.utils.cache;
 
 import org.ga4gh.drs.model.AccessType;
-import org.ga4gh.drs.model.AccessURL;
 
 public class AccessCacheItem {
 
@@ -13,18 +12,6 @@ public class AccessCacheItem {
 
     public AccessCacheItem() {
 
-    }
-
-    public AccessURL generateAccessURL() {
-
-        switch(getAccessType()) {
-            case FILE:
-                return null;
-            case HTTPS:
-                return null;
-            default:
-                return null;
-        }
     }
 
     public void setObjectId(String objectId) {

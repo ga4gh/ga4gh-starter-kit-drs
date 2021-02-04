@@ -31,7 +31,7 @@ public class Objects {
     }
 
     @GetMapping(path = "/{object_id:.+}/access/{access_id:.+}")
-    public AccessURL getAccessMethodById(
+    public AccessURL getAccessURLById(
         @PathVariable(name = "object_id") String objectId,
         @PathVariable(name = "access_id") String accessId
     ) {

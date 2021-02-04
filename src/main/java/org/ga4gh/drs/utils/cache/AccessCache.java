@@ -20,7 +20,8 @@ public class AccessCache {
                     public AccessCacheItem load(String key) {
                         return new AccessCacheItem();
                     }
-            });
+                }
+            );
     }
 
     public void put(String key, AccessCacheItem value) {

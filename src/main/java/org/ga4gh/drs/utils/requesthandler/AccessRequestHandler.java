@@ -58,7 +58,7 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
 
     private AccessURL generateAccessURLForFile(String objectId, String accessId) throws URISyntaxException {
         String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
-        String path = "/stream/" + objectId + "/" + accessId;
+        String path = "/stream/" + getObjectId() + "/" + getAccessId();
         return new AccessURL(new URI("http://" + hostname + path));
     }
 
