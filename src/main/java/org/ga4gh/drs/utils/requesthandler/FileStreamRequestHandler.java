@@ -21,7 +21,7 @@ public class FileStreamRequestHandler implements RequestHandler<Void> {
     private HttpServletResponse response;
 
     public Void handleRequest() {
-        AccessCacheItem cacheItem = accessCache.get(getObjectId() + ":" + getAccessId());
+        AccessCacheItem cacheItem = accessCache.get(getObjectId(), getAccessId());
         if (cacheItem == null) {
             throw new ResourceNotFoundException("invalid access_id/object_id");
         }

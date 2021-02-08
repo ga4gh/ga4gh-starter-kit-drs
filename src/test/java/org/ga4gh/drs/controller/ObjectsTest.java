@@ -24,8 +24,6 @@ import org.testng.annotations.Test;
 import org.testng.ITestContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.security.MessageDigest;
-
 @SpringBootTest
 @ContextConfiguration(classes={App.class, AppConfig.class, Objects.class})
 @WebAppConfiguration

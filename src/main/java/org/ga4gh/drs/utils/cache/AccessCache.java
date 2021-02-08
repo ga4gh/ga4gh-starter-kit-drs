@@ -24,11 +24,15 @@ public class AccessCache {
             );
     }
 
-    public void put(String key, AccessCacheItem value) {
-        cache.put(key, value);
+    public void put(String objectId, String accessId, AccessCacheItem value) {
+        cache.put(getCompositeKey(objectId, accessId), value);
     }
 
-    public AccessCacheItem get(String key) {
-        return cache.getIfPresent(key);
+    public AccessCacheItem get(String objectId, String accessId) {
+        return cache.getIfPresent(getCompositeKey(objectId, accessId));
+    }
+
+    private String getCompositeKey(String objectId, String accessId) {
+        return objectId + ":" + accessId;
     }
 }

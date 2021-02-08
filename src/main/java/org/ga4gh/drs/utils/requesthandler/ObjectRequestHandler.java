@@ -45,7 +45,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
                     accessMethod.getType(),
                     drsObject.getMimeType()
                 );
-                accessCache.put(drsObject.getId() + ":" + accessMethod.getAccessId(), item);
+                accessCache.put(drsObject.getId(), accessMethod.getAccessId(), item);
             }
         }
         

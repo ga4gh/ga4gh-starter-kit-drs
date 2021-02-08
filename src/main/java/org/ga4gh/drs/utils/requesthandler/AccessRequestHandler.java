@@ -28,7 +28,7 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
     }
 
     public AccessURL handleRequest() {
-        AccessCacheItem cacheItem = accessCache.get(objectId + ":" + accessId);
+        AccessCacheItem cacheItem = accessCache.get(objectId, accessId);
         if (cacheItem == null) {
             throw new ResourceNotFoundException("invalid access_id/object_id");
         }
@@ -38,7 +38,7 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
         try {
             switch (cacheItem.getAccessType()) {
                 case FILE:
-                    accessURL = generateAccessURLForFile(cacheItem.getObjectId(), cacheItem.getAccessId());
+                    accessURL = generateAccessURLForFile();
                     break;
                 case HTTPS:
                     accessURL = null;
@@ -56,7 +56,7 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
         return accessURL;
     }
 
-    private AccessURL generateAccessURLForFile(String objectId, String accessId) throws URISyntaxException {
+    private AccessURL generateAccessURLForFile() throws URISyntaxException {
         String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
         String path = "/stream/" + getObjectId() + "/" + getAccessId();
         return new AccessURL(new URI("http://" + hostname + path));
