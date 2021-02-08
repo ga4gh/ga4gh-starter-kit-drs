@@ -162,7 +162,7 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
 
     @Test(dataProvider = "existsCases")
     public void testExists(String objectId, String objectPath, boolean expExists) {
-        boolean exists = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).exists();
+        boolean exists = factory.createFileDrsObjectLoader(objectId, objectPath).exists();
         Assert.assertEquals(exists, expExists);
     }
 
