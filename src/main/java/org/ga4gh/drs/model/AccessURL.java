@@ -3,30 +3,30 @@ package org.ga4gh.drs.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.lang.NonNull;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AccessURL {
     @NonNull
-    private URL url;
+    private URI url;
 
     private Map<String, String> headers;
 
-    public AccessURL(URL url) {
+    public AccessURL(URI url) {
         this.url = url;
     }
 
-    public AccessURL(URL url, Map<String, String> headers) {
+    public AccessURL(URI url, Map<String, String> headers) {
         this.url = url;
         this.headers = headers;
     }
 
-    public URL getUrl() {
+    public URI getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(URI url) {
         this.url = url;
     }
 
