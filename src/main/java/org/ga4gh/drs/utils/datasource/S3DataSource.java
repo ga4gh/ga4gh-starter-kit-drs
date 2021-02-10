@@ -1,8 +1,5 @@
 package org.ga4gh.drs.utils.datasource;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.ga4gh.drs.utils.objectloader.S3DrsObjectLoader;
 
 public class S3DataSource implements DataSource<S3DrsObjectLoader> {

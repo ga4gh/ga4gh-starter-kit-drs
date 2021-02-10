@@ -9,12 +9,12 @@ public class DataSourceDefaults {
 
     public static final List<LocalFileDataSource> LOCAL = Arrays.asList(
         new LocalFileDataSource() {{
-            setIdPrefix("TestDataHtsjdkSamtools");
-            setRootDir("./src/test/resources/data/htsjdk/samtools");
+            setIdPrefix("TestDataHtsjdkSamtools.");
+            setRootDir("./src/test/resources/data/htsjdk/samtools/");
         }},
         new LocalFileDataSource() {{
-            setIdPrefix("TestDataPhenopackets");
-            setRootDir("./src/test/resources/data/phenopackets");
+            setIdPrefix("TestDataPhenopackets.");
+            setRootDir("./src/test/resources/data/phenopackets/");
         }}
     );
 

@@ -1,8 +1,5 @@
 package org.ga4gh.drs.utils.datasource;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
 
 public class LocalFileDataSource implements DataSource<FileDrsObjectLoader> {
@@ -12,6 +9,11 @@ public class LocalFileDataSource implements DataSource<FileDrsObjectLoader> {
 
     public LocalFileDataSource() {
 
+    }
+
+    public LocalFileDataSource(String idPrefix, String rootDir) {
+        this.idPrefix = idPrefix;
+        this.rootDir = rootDir;
     }
 
     @Override
