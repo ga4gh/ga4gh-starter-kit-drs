@@ -1,17 +1,15 @@
 package org.ga4gh.drs.utils;
 
 import org.ga4gh.drs.AppConfigConstants;
-import org.ga4gh.drs.configuration.DataSource;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
-import org.ga4gh.drs.model.AccessType;
-import org.ga4gh.drs.utils.objectloader.AbstractDrsObjectLoader;
+import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
+import org.ga4gh.drs.utils.datasource.S3DataSource;
+import org.ga4gh.drs.utils.objectloader.DrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DataSourceLookup {
 
@@ -22,63 +20,33 @@ public class DataSourceLookup {
     @Autowired
     DrsObjectLoaderFactory drsObjectLoaderFactory;
 
-    List<DataSource> dataSources;
+    List<LocalFileDataSource> localDataSources;
+    List<S3DataSource> s3DataSources;
 
-    private static final Pattern pathTemplateSlotPattern = Pattern.compile("\\{[a-zA-Z][a-zA-Z0-9]*}");
     public DataSourceLookup() {
 
     }
 
     @PostConstruct
     private void postConstruct() {
-        dataSources = drsConfigContainer.getDrsConfig().getDataSourceRegistry().getDataSources();
+        localDataSources = drsConfigContainer.getDrsConfig().getDataSourceRegistry().getLocal();
+        s3DataSources = drsConfigContainer.getDrsConfig().getDataSourceRegistry().getS3();
     }
 
-    public AbstractDrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
-        DataSource source = findDataSourceMatch(objectId);
-
-        if (source == null) {
-            return null;
-        }
-
-        String objectPath = renderObjectPath(source, objectId);
-        return newDrsObjectLoader(source, objectId, objectPath);
-    }
-
-    private DataSource findDataSourceMatch(String objectId) {
-        for (DataSource source : dataSources) {
-            if (source.getDrsIdPattern().matcher(objectId).find()) {
-                return source;
+    public DrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
+        
+        for (LocalFileDataSource localDataSource : localDataSources) {
+            if (localDataSource.objectIdMatches(objectId)) {
+                return drsObjectLoaderFactory.createFileDrsObjectLoader(localDataSource, objectId);
             }
         }
+
+        for (S3DataSource s3DataSource : s3DataSources) {
+            if (s3DataSource.objectIdMatches(objectId)) {
+                return drsObjectLoaderFactory.createS3DrsObjectLoader(s3DataSource, objectId);
+            }
+        }
+
         return null;
-    }
-
-    @SuppressWarnings("unused")
-    private String renderObjectPath(DataSource source, String objectId) {
-        Pattern drsIdPattern = source.getDrsIdPattern();
-
-        Matcher drsIdPatternMatcher = drsIdPattern.matcher(objectId);
-
-        // Find cannot fail because the provided source was selected as its pattern matched
-        drsIdPatternMatcher.find();
-
-        String objectPath = source.getObjectPathTemplate();
-
-        // render the object path, ie. by substituting capture group names with specified values
-        Matcher replacementMatcher = pathTemplateSlotPattern.matcher(objectPath);
-        return replacementMatcher.replaceAll(result -> {
-            // Get name of group with surrounding {}
-            String matched = result.group();
-            // Trim {}
-            String subseq = matched.substring(1, matched.length() - 1);
-            return drsIdPatternMatcher.group(subseq);
-        });
-    }
-
-    private AbstractDrsObjectLoader newDrsObjectLoader(DataSource source, String objectId, String objectPath) {
-        AccessType accessType = source.getProtocol();
-        AbstractDrsObjectLoader drsObjectLoader = drsObjectLoaderFactory.createDrsObjectLoader(accessType, objectId, objectPath);
-        return drsObjectLoader;
     }
 }

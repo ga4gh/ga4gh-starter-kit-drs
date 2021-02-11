@@ -43,31 +43,31 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
     public Object[][] getObjectByIdCases() {
         return new Object[][] {
             {
-                "test.invalidId",
+                "TestDataPhenopackets.invalidId",
                 false,
                 status().isNotFound(),
                 null
             },
             {
-                "test.phenopackets.Zapata.4",
+                "TestDataPhenopackets.Zapata-Patient4.json",
                 false,
                 status().isNotFound(),
                 null
             },
             {
-                "test.phenopackets.Zapata.1",
+                "TestDataPhenopackets.Zapata-Patient1.json",
                 true,
                 status().isOk(),
                 "00.json"
             },
             {
-                "test.phenopackets.Chebly.1",
+                "TestDataPhenopackets.Chebly-Patient1.json",
                 true,
                 status().isOk(),
                 "01.json"
             },
             {
-                "test.phenopackets.Vajro.3",
+                "TestDataPhenopackets.Vajro-Patient3.json",
                 true,
                 status().isOk(),
                 "02.json"
@@ -79,22 +79,22 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
     public Object[][] getAccessURLByIdCases() {
         return new Object[][] {
             {
-                "test.phenopackets.Zapata.4",
+                "TestDataPhenopackets.Zapata-Patient4.json",
                 false,
                 status().isNotFound()
             },
             {
-                "test.phenopackets.Zapata.1",
+                "TestDataPhenopackets.Zapata-Patient1.json",
                 true,
                 status().isOk()
             },
             {
-                "test.phenopackets.Chebly.1",
+                "TestDataPhenopackets.Chebly-Patient1.json",
                 true,
                 status().isOk()
             },
             {
-                "test.phenopackets.Vajro.3",
+                "TestDataPhenopackets.Vajro-Patient3.json",
                 true,
                 status().isOk()
             }
@@ -105,25 +105,25 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
     public Object[][] streamFileCases() {
         return new Object[][] {
             {
-                "test.phenopackets.Zapata.4",
+                "TestDataPhenopackets.Zapata-Patient4.json",
                 false,
                 status().isNotFound(),
                 null
             },
             {
-                "test.phenopackets.Zapata.1",
+                "TestDataPhenopackets.Zapata-Patient1.json",
                 true,
                 status().isOk(),
                 "67e8dabdcc47969974bfb48855cea9ff"
             },
             {
-                "test.phenopackets.Chebly.1",
+                "TestDataPhenopackets.Chebly-Patient1.json",
                 true,
                 status().isOk(),
                 "b0e87051955eab5cecd75a9cdf73c618"
             },
             {
-                "test.phenopackets.Vajro.3",
+                "TestDataPhenopackets.Vajro-Patient3.json",
                 true,
                 status().isOk(),
                 "545ac7eb31f493097a929f4f62a146b9"
