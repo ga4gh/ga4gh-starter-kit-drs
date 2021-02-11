@@ -30,7 +30,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
             throw new ResourceNotFoundException("Could not locate data source associated with requested object_id");
         }
         if (!drsObjectLoader.exists()) {
-            throw new ResourceNotFoundException("No object found for the provided id");
+            throw new ResourceNotFoundException("No object found for the provided id: " + getObjectId());
         }
         DrsObject drsObject = drsObjectLoader.generateDrsObject();
 

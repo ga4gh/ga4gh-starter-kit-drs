@@ -28,7 +28,7 @@ public class S3DrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
 
     private static final String REGION = "us-east-1";
     private static final String BUCKET = "czbiohub-tabula-muris";
-    private static final String PREFIX = "TestTabulaMuris.";
+    private static final String PREFIX = "TestTabulaMurisFacs.";
     private static final String ROOT_DIR = "facs_bam_files/";
 
     private static final S3DataSource TABULA_MURIS_FACS_SOURCE =

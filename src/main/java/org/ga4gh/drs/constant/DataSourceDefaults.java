@@ -21,13 +21,13 @@ public class DataSourceDefaults {
     public static final List<S3DataSource> S3 = Arrays.asList(
         new S3DataSource() {{
             setIdPrefix("S3DemoData.");
-            setRootDir("/");
+            setRootDir("");
             setRegion("us-east-2");
             setBucket("ga4gh-demo-data");
         }},
         new S3DataSource() {{
-            setIdPrefix("TabulaMuris.");
-            setRootDir("/");
+            setIdPrefix("TestTabulaMurisFacs.");
+            setRootDir("facs_bam_files/");
             setRegion("us-east-1");
             setBucket("czbiohub-tabula-muris");
         }}
