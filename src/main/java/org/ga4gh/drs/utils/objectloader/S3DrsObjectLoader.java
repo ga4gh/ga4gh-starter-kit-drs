@@ -1,23 +1,11 @@
 package org.ga4gh.drs.utils.objectloader;
 
-<<<<<<< HEAD
-import java.time.LocalDateTime;
-import java.util.List;
-
-=======
->>>>>>> Add S3DrsObjectLoader and tests
 import org.ga4gh.drs.model.AccessMethod;
 import org.ga4gh.drs.model.AccessType;
+import org.ga4gh.drs.model.AccessURL;
 import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
-<<<<<<< HEAD
-
-public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
-
-    public S3DrsObjectLoader(String objectId, String objectPath) {
-        super(objectId, objectPath);
-=======
 import org.ga4gh.drs.utils.S3ClientRegionBasedProvider;
 import org.springframework.util.DigestUtils;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -43,43 +31,37 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
 
-    private S3Client client;
-
     private String bucket;
     private String key;
+    private String region;
+
+    private S3Client client;
 
     private Supplier<HeadObjectResponse> headObjectResponse;
 
     // Store nested objects only if this object is a bundle to avoid repeat requests
     private Supplier<List<S3Object>> objects;
 
-    public S3DrsObjectLoader(String objectId, String objectPath) {
-        super(objectId, objectPath);
-        URI uri = URI.create(objectPath);
-        bucket = uri.getHost();
-        // Strip leading /
-        key = uri.getPath().replaceAll("^/+$", "");
+    public S3DrsObjectLoader(String objectId, String region, String bucket, String key) {
+        super(objectId, "s3://" + bucket + "/" + key);
+        this.bucket = bucket;
+        this.key = key;
+        this.region = region;
         // Get client based on region
-        client = S3ClientRegionBasedProvider.getClient(bucket);
+        this.client = S3ClientRegionBasedProvider.getClient(region);
 
         headObjectResponse = this::getHeadObjectResponse;
         objects = this::getObjects;
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public boolean exists() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return false;
-=======
         // Check if bucket exists
         try {
             HeadBucketRequest request = HeadBucketRequest.builder()
@@ -109,15 +91,10 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         } catch (S3Exception e) {
             return false;
         }
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public boolean isBundle() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return false;
-=======
         return key.endsWith("/");
     }
 
@@ -137,41 +114,25 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
             ),
             false
         ).collect(Collectors.toList());
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public List<AccessMethod> generateAccessMethods() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return null;
-=======
-        // TODO currently access ID has no meaning within the app, should be
-        // used to populate a lookup cache
-        String accessID = UUID.randomUUID().toString();
-        AccessMethod accessMethod = new AccessMethod(accessID, AccessType.HTTPS);
+        AccessURL accessURL = new AccessURL(URI.create(
+            String.format("https://s3.%s.amazonaws.com/%s/%s", region, bucket, key)));
+        AccessMethod accessMethod = new AccessMethod(accessURL, AccessType.HTTPS, region);
         return Collections.singletonList(accessMethod);
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public List<ContentsObject> generateContents() {
-<<<<<<< HEAD
-        // TODO fill out stub method
-        return null;
-=======
         return objects.get().stream()
             .map(object -> new ContentsObject(object.key()))
             .collect(Collectors.toList());
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public DrsObject generateCustomDrsObjectProperties() {
-<<<<<<< HEAD
-        // TODO fill out stub method
-        return null;
-=======
         DrsObject drsObject = new DrsObject();
         drsObject.setVersion(headObjectResponse.get().versionId());
         return drsObject;
@@ -188,15 +149,10 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         } catch (IOException | S3Exception e) {
             throw new RuntimeException();
         }
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public List<Checksum> imputeChecksums() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return null;
-=======
         try {
             String digest;
             if (isBundle()) {
@@ -212,29 +168,19 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         } catch (RuntimeException e) {
             return Collections.emptyList();
         }
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public long imputeSize() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return 0;
-=======
         if (isBundle()) {
             return objects.get().stream().mapToLong(S3Object::size).sum();
         } else {
             return headObjectResponse.get().contentLength();
         }
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public String imputeName() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return null;
-=======
         if (isBundle()) {
             // Strip trailing / from folders and replace internal / with _
             // to make name conform with schema on best effort basis
@@ -248,31 +194,17 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
                 ? key
                 : key.substring(lastSlash + 1);
         }
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public String imputeMimeType() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return null;
-=======
         return isBundle()
             ? null
             : headObjectResponse.get().contentType();
->>>>>>> Add S3DrsObjectLoader and tests
     }
 
     @Override
     public LocalDateTime imputeCreatedTime() {
-<<<<<<< HEAD
-        // TODO implement stub method
-        return null;
-    }
-
-    public AccessType getAccessType() {
-        return AccessType.S3;
-=======
         /*
         S3 does not support the concept of updating objects, only replacing them
         with new objects, so created time is indistinguishable from updated time
@@ -289,6 +221,11 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
             lastModified = headObjectResponse.get().lastModified();
         }
         return LocalDateTime.ofInstant(lastModified, ZoneId.of("UTC"));
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return AccessType.S3;
     }
 
     /**
@@ -342,6 +279,5 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         public S3Object next() {
             return inner.next();
         }
->>>>>>> Add S3DrsObjectLoader and tests
     }
 }

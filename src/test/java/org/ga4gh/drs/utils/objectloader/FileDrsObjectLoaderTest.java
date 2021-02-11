@@ -1,13 +1,5 @@
 package org.ga4gh.drs.utils.objectloader;
 
-<<<<<<< HEAD
-=======
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
->>>>>>> Add S3DrsObjectLoader and tests
 import org.ga4gh.drs.App;
 import org.ga4gh.drs.AppConfig;
 import org.ga4gh.drs.model.AccessMethod;
@@ -244,13 +236,8 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(dataProvider = "imputeSizeCases")
-<<<<<<< HEAD
     public void testImputeSize(String objectId, int expSize) {
         long size = factory.createFileDrsObjectLoader(PHENOPACKETS_SOURCE, objectId).imputeSize();
-=======
-    public void testImputeSize(String objectId, String objectPath, long expSize) {
-        long size = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).imputeSize();
->>>>>>> Add S3DrsObjectLoader and tests
         Assert.assertEquals(size, expSize);
     }
 
@@ -281,13 +268,8 @@ public class FileDrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(dataProvider = "generateDrsObjectCases")
-<<<<<<< HEAD
     public void testGenerateDrsObject(String objectId, String expId, URI expSelfURI, int expSize, String expName, String expMimeType) {
         DrsObject drsObject = factory.createFileDrsObjectLoader(PHENOPACKETS_SOURCE, objectId).generateDrsObject();
-=======
-    public void testGenerateDrsObject(String objectId, String objectPath, String expId, URI expSelfURI, long expSize, String expName, String expMimeType) {
-        DrsObject drsObject = factory.createDrsObjectLoader(AccessType.FILE, objectId, objectPath).generateDrsObject();
->>>>>>> Add S3DrsObjectLoader and tests
         Assert.assertEquals(drsObject.getId(), expId);
         Assert.assertEquals(drsObject.getSelfURI(), expSelfURI);
         Assert.assertEquals(drsObject.getSize(), expSize);

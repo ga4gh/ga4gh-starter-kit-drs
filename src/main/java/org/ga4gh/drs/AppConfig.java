@@ -93,7 +93,6 @@ public class AppConfig implements WebMvcConfigurer {
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
         dataSourceRegistry.setLocal(DataSourceDefaults.LOCAL);
         dataSourceRegistry.setS3(DataSourceDefaults.S3);
-        dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
 
         S3 s3 = drsConfigContainer.getDrsConfig().getS3();
         s3.setRegion(S3Defaults.S3_REGION);
@@ -196,12 +195,8 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     @Scope(value = AppConfigConstants.PROTOTYPE)
-    public S3DrsObjectLoader S3DrsObjectLoader(String objectId, String objectPath) {
-        try {
-            return new S3DrsObjectLoader(objectId, objectPath);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+    public S3DrsObjectLoader S3DrsObjectLoader(String objectId, String region, String bucket, String key) {
+        return new S3DrsObjectLoader(objectId, region, bucket, key);
     }
 
     /* ******************************

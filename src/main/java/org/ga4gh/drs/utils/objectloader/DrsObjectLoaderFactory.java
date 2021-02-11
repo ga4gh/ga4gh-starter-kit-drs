@@ -18,8 +18,12 @@ public class DrsObjectLoaderFactory implements ApplicationContextAware {
     }
 
     public S3DrsObjectLoader createS3DrsObjectLoader(S3DataSource dataSource, String objectId) {
-        // TODO populate stub method
-        return null;
+        return context.getBean(S3DrsObjectLoader.class,
+            objectId, // ID
+            dataSource.getRegion(),
+            dataSource.getBucket(),
+            dataSource.renderObjectKey(objectId)
+        );
     }
 
     public void setApplicationContext(ApplicationContext context) {
