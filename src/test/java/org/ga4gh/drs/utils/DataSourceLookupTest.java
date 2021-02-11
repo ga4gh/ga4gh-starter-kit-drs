@@ -29,31 +29,31 @@ public class DataSourceLookupTest extends AbstractTestNGSpringContextTests {
                 null
             },
             {
-                "test.htsjdk.samtools.compressed.bam",
+                "TestDataHtsjdkSamtools.compressed.bam",
                 true,
                 "FileDrsObjectLoader",
                 "./src/test/resources/data/htsjdk/samtools/compressed.bam"
             },
             {
-                "test.htsjdk.samtools.BAMFileIndexTest.index_test.bam",
+                "TestDataHtsjdkSamtools.BAMFileIndexTest-index_test.bam",
                 true,
                 "FileDrsObjectLoader",
                 "./src/test/resources/data/htsjdk/samtools/BAMFileIndexTest/index_test.bam"
             },
             {
-                "test.phenopackets.Volpi.2",
+                "TestDataPhenopackets.Volpi-Patient2.json",
                 true,
                 "FileDrsObjectLoader",
-                "./src/test/resources/data/phenopackets/Volpi/Volpi-Patient-2.json"
+                "./src/test/resources/data/phenopackets/Volpi/Patient2.json"
             },
             {
-                "test.phenopackets.Tamhankar.1",
+                "TestDataPhenopackets.Tamhankar-Patient1.json",
                 true,
                 "FileDrsObjectLoader",
-                "./src/test/resources/data/phenopackets/Tamhankar/Tamhankar-Patient-1.json"
+                "./src/test/resources/data/phenopackets/Tamhankar/Patient1.json"
             },
             {
-                "test.phenopackets.Zapata",
+                "TestDataPhenopackets.Zapata",
                 true,
                 "FileDrsObjectLoader",
                 "./src/test/resources/data/phenopackets/Zapata"

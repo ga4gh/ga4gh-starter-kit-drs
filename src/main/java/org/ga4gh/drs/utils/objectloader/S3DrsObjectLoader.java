@@ -1,6 +1,5 @@
 package org.ga4gh.drs.utils.objectloader;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,73 +9,73 @@ import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
 
-public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
+public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
 
-    public HttpsDrsObjectLoader(String objectId, String objectPath) {
+    public S3DrsObjectLoader(String objectId, String objectPath) {
         super(objectId, objectPath);
     }
 
+    @Override
     public boolean exists() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return false;
     }
 
+    @Override
     public boolean isBundle() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return false;
     }
 
+    @Override
     public List<AccessMethod> generateAccessMethods() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return null;
     }
 
+    @Override
     public List<ContentsObject> generateContents() {
         // TODO fill out stub method
         return null;
     }
 
-    public String generateId() {
-        // TODO fill out stub method
-        return null;
-    }
-
-    public URI generateSelfURI() {
-        // TODO fill out stub method
-        return null;
-    }
-
+    @Override
     public DrsObject generateCustomDrsObjectProperties() {
         // TODO fill out stub method
         return null;
     }
 
+    @Override
     public List<Checksum> imputeChecksums() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return null;
     }
 
+    @Override
     public long imputeSize() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return 0;
     }
 
+    @Override
     public String imputeName() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return null;
     }
 
+    @Override
     public String imputeMimeType() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return null;
     }
 
+    @Override
     public LocalDateTime imputeCreatedTime() {
-        // TODO fill out stub method
+        // TODO implement stub method
         return null;
     }
 
     public AccessType getAccessType() {
-        return AccessType.HTTPS;
+        return AccessType.S3;
     }
 }

@@ -2,6 +2,11 @@ package org.ga4gh.drs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
@@ -12,27 +17,27 @@ import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
 import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.DeepObjectMerger;
+import org.ga4gh.drs.utils.cache.AccessCache;
+import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
+import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
+import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
-import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 
 
 @Configuration
@@ -82,7 +87,8 @@ public class AppConfig implements WebMvcConfigurer {
         serviceInfo.getType().setVersion(ServiceInfoDefaults.SERVICE_TYPE_VERSION);
 
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
-        dataSourceRegistry.setDataSources(DataSourceDefaults.REGISTRY);
+        dataSourceRegistry.setLocal(DataSourceDefaults.LOCAL);
+        dataSourceRegistry.setS3(DataSourceDefaults.S3);
         return drsConfigContainer;
     }
 
@@ -138,6 +144,28 @@ public class AppConfig implements WebMvcConfigurer {
         return new ObjectRequestHandler();
     }
 
+    @Bean
+    @RequestScope
+    public AccessRequestHandler accessRequestHandler() {
+        return new AccessRequestHandler();
+    }
+
+    @Bean
+    @RequestScope
+    public FileStreamRequestHandler fileStreamRequestHandler() {
+        return new FileStreamRequestHandler();
+    }
+
+    /* ******************************
+     * DATA SOURCE BEANS
+     * ****************************** */
+
+    @Bean
+    @Scope(value = AppConfigConstants.PROTOTYPE)
+    public LocalFileDataSource localFileDataSource() {
+        return new LocalFileDataSource();
+    }
+
     /* ******************************
      * DRS OBJECT LOADER BEANS
      * ****************************** */
@@ -166,5 +194,10 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public DrsObjectLoaderFactory drsObjectLoaderFactory() {
         return new DrsObjectLoaderFactory();
+    }
+
+    @Bean
+    public AccessCache accessCache() {
+        return new AccessCache();
     }
 }

@@ -1,7 +1,7 @@
 package org.ga4gh.drs.utils.objectloader;
 
-import org.ga4gh.drs.exception.ResourceNotFoundException;
-import org.ga4gh.drs.model.AccessType;
+import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
+import org.ga4gh.drs.utils.datasource.S3DataSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -13,16 +13,13 @@ public class DrsObjectLoaderFactory implements ApplicationContextAware {
 
     }
 
-    public AbstractDrsObjectLoader createDrsObjectLoader(AccessType accessType, String objectId, String objectPath) {
-        if (accessType == null) return null;
-        switch (accessType) {
-            case FILE:
-                return context.getBean(FileDrsObjectLoader.class, objectId, objectPath);
-            case HTTPS:
-                return context.getBean(HttpsDrsObjectLoader.class, objectId, objectPath);
-            default:
-                throw new ResourceNotFoundException();
-        }
+    public FileDrsObjectLoader createFileDrsObjectLoader(LocalFileDataSource dataSource, String objectId) {
+        return context.getBean(FileDrsObjectLoader.class, objectId, dataSource.renderObjectPath(objectId));
+    }
+
+    public S3DrsObjectLoader createS3DrsObjectLoader(S3DataSource dataSource, String objectId) {
+        // TODO populate stub method
+        return null;
     }
 
     public void setApplicationContext(ApplicationContext context) {
