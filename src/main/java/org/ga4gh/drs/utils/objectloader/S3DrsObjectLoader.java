@@ -6,7 +6,6 @@ import org.ga4gh.drs.model.AccessURL;
 import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
-import org.ga4gh.drs.utils.S3ClientRegionBasedProvider;
 import org.springframework.util.DigestUtils;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -40,7 +39,6 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
     private String bucket;
     private String key;
     private String region;
-
     private S3Client client;
 
     private Supplier<HeadObjectResponse> headObjectResponse;
@@ -48,13 +46,13 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
     // Store nested objects only if this object is a bundle to avoid repeat requests
     private Supplier<List<S3Object>> objects;
 
-    public S3DrsObjectLoader(String objectId, String region, String bucket, String key) {
+    public S3DrsObjectLoader(String objectId, String region, String bucket, String key, S3Client client) {
         super(objectId, "s3://" + bucket + "/" + key);
         this.bucket = bucket;
         this.key = key;
         this.region = region;
         // Get client based on region
-        this.client = S3ClientRegionBasedProvider.getClient(region);
+        this.client = client;
 
         headObjectResponse = this::getHeadObjectResponse;
         objects = this::getObjects;

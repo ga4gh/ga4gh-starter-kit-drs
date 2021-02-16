@@ -8,6 +8,7 @@ public class S3DataSource implements DataSource<S3DrsObjectLoader> {
     private String region;
     private String bucket;
     private String rootDir;
+    private String profile;
 
     public S3DataSource() {
 
@@ -60,5 +61,13 @@ public class S3DataSource implements DataSource<S3DrsObjectLoader> {
 
     public String getRootDir() {
         return rootDir;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }

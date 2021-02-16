@@ -38,6 +38,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -195,8 +196,8 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     @Scope(value = AppConfigConstants.PROTOTYPE)
-    public S3DrsObjectLoader S3DrsObjectLoader(String objectId, String region, String bucket, String key) {
-        return new S3DrsObjectLoader(objectId, region, bucket, key);
+    public S3DrsObjectLoader S3DrsObjectLoader(String objectId, String region, String bucket, String key, S3Client client) {
+        return new S3DrsObjectLoader(objectId, region, bucket, key, client);
     }
 
     /* ******************************
