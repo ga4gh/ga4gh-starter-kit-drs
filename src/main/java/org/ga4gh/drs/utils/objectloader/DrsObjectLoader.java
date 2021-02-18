@@ -11,20 +11,21 @@ import org.ga4gh.drs.model.ContentsObject;
 
 public interface DrsObjectLoader {
 
-    public boolean exists();
-    public boolean isBundle();
-    public DrsObject generateDrsObject();
-    public List<AccessMethod> generateAccessMethods();
-    public List<ContentsObject> generateContents();
-    public String generateId();
-    public URI generateSelfURI();
-    public DrsObject generateCustomDrsObjectProperties();
-    public List<Checksum> imputeChecksums();
-    public long imputeSize();
-    public String imputeName();
-    public String imputeMimeType();
-    public LocalDateTime imputeCreatedTime();
-    public void setObjectPath(String objectPath);
-    public String getObjectPath();
-    public AccessType getAccessType();
+    boolean exists();
+    boolean isBundle();
+    void setExpand(boolean expand);
+    DrsObject generateDrsObject();
+    List<AccessMethod> generateAccessMethods();
+    List<ContentsObject> generateContents();
+    String generateId();
+    URI generateSelfURI();
+    DrsObject generateCustomDrsObjectProperties();
+    List<Checksum> imputeChecksums();
+    long imputeSize();
+    String imputeName();
+    String imputeMimeType();
+    LocalDateTime imputeCreatedTime();
+    void setObjectPath(String objectPath);
+    String getObjectPath();
+    AccessType getAccessType();
 }

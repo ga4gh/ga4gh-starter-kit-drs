@@ -9,6 +9,7 @@ import org.ga4gh.drs.model.DrsObject;
 import org.springframework.util.DigestUtils;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CommonPrefix;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
@@ -41,21 +42,16 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
     private String region;
     private S3Client client;
 
-    private Supplier<HeadObjectResponse> headObjectResponse;
+    private HeadObjectResponse headObjectResponse;
 
-    // Store nested objects only if this object is a bundle to avoid repeat requests
-    private Supplier<List<S3Object>> objects;
+    private List<S3DrsObjectLoader> contents;
 
     public S3DrsObjectLoader(String objectId, String region, String bucket, String key, S3Client client) {
         super(objectId, "s3://" + bucket + "/" + key);
         this.bucket = bucket;
         this.key = key;
         this.region = region;
-        // Get client based on region
         this.client = client;
-
-        headObjectResponse = this::getHeadObjectResponse;
-        objects = this::getObjects;
     }
 
     @Override
@@ -82,7 +78,7 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
                 // A directory exists if there are any keys with it as a prefix
                 return !response.contents().isEmpty();
             } else {
-                headObjectResponse.get();
+                if (headObjectResponse == null) headObjectResponse = getHeadObjectResponse();
                 // A file exists if the head-object request returns successfully
                 return true;
             }
@@ -104,7 +100,7 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         return client.headObject(request);
     }
 
-    private List<S3Object> getObjects() {
+    private List<S3DrsObjectLoader> getContents() {
         return StreamSupport.stream(
             Spliterators.spliteratorUnknownSize(
                 new S3ContentsLazyIterator(key),
@@ -124,15 +120,20 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
 
     @Override
     public List<ContentsObject> generateContents() {
-        return objects.get().stream()
-            .map(object -> new ContentsObject(object.key()))
+        if (contents == null) contents = getContents();
+        if (getExpand()) {
+            contents.forEach(c -> c.setExpand(true));
+        }
+        return contents.stream()
+            .map(S3DrsObjectLoader::toContents)
             .collect(Collectors.toList());
     }
 
     @Override
     public DrsObject generateCustomDrsObjectProperties() {
         DrsObject drsObject = new DrsObject();
-        drsObject.setVersion(headObjectResponse.get().versionId());
+        if (headObjectResponse == null) headObjectResponse = getHeadObjectResponse();
+        drsObject.setVersion(headObjectResponse.versionId());
         return drsObject;
     }
 
@@ -154,8 +155,9 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         try {
             String digest;
             if (isBundle()) {
-                String concatenatedChecksums = objects.get().stream()
-                    .map(o -> md5FromKey(o.key()))
+                if (contents == null) contents = getContents();
+                String concatenatedChecksums = contents.stream()
+                    .map(o -> md5FromKey(o.key))
                     .sorted()
                     .collect(Collectors.joining());
                 digest = DigestUtils.md5DigestAsHex(concatenatedChecksums.getBytes(StandardCharsets.US_ASCII));
@@ -171,9 +173,11 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
     @Override
     public long imputeSize() {
         if (isBundle()) {
-            return objects.get().stream().mapToLong(S3Object::size).sum();
+            if (contents == null) contents = getContents();
+            return contents.stream().mapToLong(S3DrsObjectLoader::imputeSize).sum();
         } else {
-            return headObjectResponse.get().contentLength();
+            if (headObjectResponse == null) headObjectResponse = getHeadObjectResponse();
+            return headObjectResponse.contentLength();
         }
     }
 
@@ -196,9 +200,12 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
 
     @Override
     public String imputeMimeType() {
-        return isBundle()
-            ? null
-            : headObjectResponse.get().contentType();
+        if (isBundle()) {
+            return null;
+        } else {
+            if (headObjectResponse == null) headObjectResponse = getHeadObjectResponse();
+            return headObjectResponse.contentType();
+        }
     }
 
     @Override
@@ -207,18 +214,31 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         S3 does not support the concept of updating objects, only replacing them
         with new objects, so created time is indistinguishable from updated time
          */
-        Instant lastModified;
         if (isBundle()) {
             // Directories are not real files in S3 so they don't have an associated creation date
             // Use the age of the oldest file inside or else Unix epoch
-            lastModified = objects.get().stream()
-                .map(S3Object::lastModified)
-                .min(Instant::compareTo)
-                .orElse(Instant.EPOCH);
+            if (contents == null) contents = getContents();
+            return contents.stream()
+                .map(S3DrsObjectLoader::imputeCreatedTime)
+                .min(LocalDateTime::compareTo)
+                .orElse(LocalDateTime.ofInstant(Instant.EPOCH, ZoneId.of("UTC")));
         } else {
-            lastModified = headObjectResponse.get().lastModified();
+            if (headObjectResponse == null) headObjectResponse = getHeadObjectResponse();
+            Instant lastModified = headObjectResponse.lastModified();
+            return LocalDateTime.ofInstant(lastModified, ZoneId.of("UTC"));
         }
-        return LocalDateTime.ofInstant(lastModified, ZoneId.of("UTC"));
+    }
+
+    private ContentsObject toContents() {
+        ContentsObject object = new ContentsObject(imputeName());
+        // Recurse only if in a bundle and nested ContentsObjects were requested to be expanded
+        System.err.format("Key: %s, expand: %b, bundle: %b\n", key, getExpand(), isBundle());
+        if (getExpand() && isBundle()) {
+            object.setContents(generateContents());
+        }
+        object.setId(getObjectId());
+//        object.setDrsUri(Collections.singletonList(generateSelfURI()));
+        return object;
     }
 
     @Override
@@ -230,11 +250,12 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
      * Iterate over the S3Objects inside a bundle using continuation tokens
      * if output is truncated
      */
-    private class S3ContentsLazyIterator implements Iterator<S3Object> {
+    private class S3ContentsLazyIterator implements Iterator<S3DrsObjectLoader> {
 
         private String key;
         private boolean truncated;
-        private Iterator<S3Object> inner;
+        private Iterator<CommonPrefix> directories;
+        private Iterator<S3Object> files;
 
         public S3ContentsLazyIterator(String key) {
             this.key = key;
@@ -243,19 +264,21 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         @Override
         public boolean hasNext() {
             // First iteration
-            if (inner == null) {
+            if (files == null) {
                 ListObjectsV2Request request = ListObjectsV2Request.builder()
                     .bucket(bucket)
                     .prefix(this.key)
+                    .delimiter("/")
                     .build();
 
                 ListObjectsV2Response response = client.listObjectsV2(request);
-                inner = response.contents().iterator();
+                directories = response.commonPrefixes().iterator();
+                files = response.contents().iterator();
                 truncated = response.isTruncated();
                 if (truncated) this.key = response.continuationToken();
             }
 
-            if (inner.hasNext()) {
+            if (files.hasNext() || directories.hasNext()) {
                 return true;
             } else if (truncated) {
                 ListObjectsV2Request request = ListObjectsV2Request.builder()
@@ -264,7 +287,7 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
                     .build();
 
                 ListObjectsV2Response response = client.listObjectsV2(request);
-                inner = response.contents().iterator();
+                files = response.contents().iterator();
                 truncated = response.isTruncated();
                 if (truncated) this.key = response.continuationToken();
                 return true;
@@ -274,8 +297,14 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
         }
 
         @Override
-        public S3Object next() {
-            return inner.next();
+        public S3DrsObjectLoader next() {
+            String key = directories.hasNext()
+                ? directories.next().prefix()
+                : files.next().key();
+            return new S3DrsObjectLoader(
+                // Strip our key from the beginning of the child's, then add on our ID to reflect path
+                getObjectId() + key.replaceFirst(S3DrsObjectLoader.this.key, ""),
+                region, bucket, key, client);
         }
     }
 }

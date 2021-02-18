@@ -13,6 +13,8 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
 
     private String objectId;
     private String objectPath;
+    // Whether to recursively expand nested ContentsObject
+    private boolean expand;
     private DrsConfigContainer drsConfigContainer;
 
     public AbstractDrsObjectLoader(String objectId, String objectPath) {
@@ -25,7 +27,10 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
     }
 
     public URI generateSelfURI() {
-        String hostname = getDrsConfigContainer().getDrsConfig().getServerProps().getHostname();
+        String hostname = getDrsConfigContainer()
+            .getDrsConfig()
+            .getServerProps()
+            .getHostname();
         return URI.create("drs://" + hostname + "/" + getObjectId());
     }
 
@@ -95,5 +100,14 @@ public abstract class AbstractDrsObjectLoader implements DrsObjectLoader {
 
     public final DrsConfigContainer getDrsConfigContainer() {
         return drsConfigContainer;
+    }
+
+    @Override
+    public void setExpand(boolean expand) {
+        this.expand = expand;
+    }
+
+    public boolean getExpand() {
+        return expand;
     }
 }

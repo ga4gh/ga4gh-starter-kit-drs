@@ -2,7 +2,13 @@ git:
   depth: false
 language: java
 jdk: oraclejdk11
+
+before_install:
+  - scripts/install-aws-cli.sh
+  - scripts/configure-test-aws-profile.sh
+
 script: "./gradlew test"
+
 after_success:
-    - "./gradlew jacocoTestReport"
-    - bash <(curl -s https://codecov.io/bash)
+  - "./gradlew jacocoTestReport"
+  - bash <(curl -s https://codecov.io/bash)

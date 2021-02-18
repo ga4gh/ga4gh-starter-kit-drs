@@ -21,6 +21,14 @@ public class S3DataSource implements DataSource<S3DrsObjectLoader> {
         this.rootDir = rootDir;
     }
 
+    public S3DataSource(String idPrefix, String region, String bucket, String rootDir, String profile) {
+        this.idPrefix = idPrefix;
+        this.region = region;
+        this.bucket = bucket;
+        this.rootDir = rootDir;
+        this.profile = profile;
+    }
+
     public String renderObjectKey(String objectId) {
         String postPrefix = objectId.replaceFirst(getIdPrefix(), "");
         return getRootDir() + postPrefix;
