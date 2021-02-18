@@ -5,7 +5,7 @@ jdk: oraclejdk11
 
 before_install:
   - scripts/install-aws-cli.sh
-  - scripts/configure-test-aws-profile.sh
+  - scripts/configure-aws-profile.sh
 
 script: "./gradlew test"
 
