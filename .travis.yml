@@ -4,8 +4,12 @@ language: java
 jdk: oraclejdk11
 
 before_install:
-  - scripts/install-aws-cli.sh
-  - scripts/configure-aws-profile.sh
+# Only install and configure AWS profiles for builds not triggered by PRS
+# as those builds will not have access to the necessary credentials
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      scripts/install-aws-cli.sh;
+      scripts/configure-aws-profile.sh;
+    fi'
 
 script:
     - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then ./gradlew prTest; fi'
