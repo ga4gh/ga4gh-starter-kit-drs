@@ -43,6 +43,7 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
 
     private HeadObjectResponse headObjectResponse;
 
+    // Nested contents
     private List<S3DrsObjectLoader> contents;
 
     public S3DrsObjectLoader(String objectId, String region, String bucket, String key, S3Client client) {
@@ -240,8 +241,15 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     /**
-     * Iterate over the S3Objects inside a bundle using continuation tokens
-     * if output is truncated
+     * Iterator over the nested contents of an S3 bundle.
+     *
+     * This iterator performs the necessary S3 API calls and converts the
+     * returned S3Object objects into S3DrsObjectLoader objects from which
+     * necessary metadata or the ContentsObject for nested bundles can be extracted
+     *
+     * This iterator also converts S3's flat bucket structure to a file/directory
+     * structure, with objects corresponding to directories/bundles returned before
+     * files
      */
     private class S3ContentsLazyIterator implements Iterator<S3DrsObjectLoader> {
 
@@ -268,7 +276,7 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
                 directories = response.commonPrefixes().iterator();
                 files = response.contents().iterator();
                 truncated = response.isTruncated();
-                if (truncated) this.key = response.continuationToken();
+                if (truncated) this.key = response.nextContinuationToken();
             }
 
             if (files.hasNext() || directories.hasNext()) {
@@ -281,8 +289,9 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
 
                 ListObjectsV2Response response = client.listObjectsV2(request);
                 files = response.contents().iterator();
+                directories = response.commonPrefixes().iterator();
                 truncated = response.isTruncated();
-                if (truncated) this.key = response.continuationToken();
+                if (truncated) this.key = response.nextContinuationToken();
                 return true;
             } else {
                 return false;

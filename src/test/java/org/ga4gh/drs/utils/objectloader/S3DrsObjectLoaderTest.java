@@ -16,7 +16,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 @Test(groups = {"secure"})
@@ -223,5 +222,19 @@ public class S3DrsObjectLoaderTest extends AbstractTestNGSpringContextTests {
         S3DrsObjectLoader loader = factory.createS3DrsObjectLoader(GA4GH_SERVICE_SOURCE, "");
         loader.setExpand(true);
         List<ContentsObject> contents = loader.generateContents();
+        // All the top level contents objects should be bundles with more contents
+        Assert.assertTrue(contents.stream().noneMatch(c -> c.getContents().isEmpty()));
+
+        // The further nested contents should all be files and not bundles
+        Assert.assertTrue(contents.stream().flatMap(c -> c.getContents().stream()).allMatch(c -> c.getContents() == null));
+    }
+
+    @Test
+    public void testGenerateContentsNoExpand() {
+        S3DrsObjectLoader loader = factory.createS3DrsObjectLoader(GA4GH_SERVICE_SOURCE, "");
+        loader.setExpand(false);
+        List<ContentsObject> contents = loader.generateContents();
+        // All the top level contents objects should not have further contents because expand has been set to false
+        Assert.assertTrue(contents.stream().allMatch(c -> c.getContents() == null));
     }
 }

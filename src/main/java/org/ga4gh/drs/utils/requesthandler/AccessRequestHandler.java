@@ -33,7 +33,7 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
             throw new ResourceNotFoundException("invalid access_id/object_id");
         }
 
-        AccessURL accessURL = null;
+        AccessURL accessURL;
 
         try {
             switch (cacheItem.getAccessType()) {
