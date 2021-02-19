@@ -68,6 +68,17 @@ test {
     useTestNG()
 }
 
+task prTest(type: Test) {
+    testLogging {
+        showStandardStreams = false // make true for log output to console
+    }
+
+    // Use TestNG for unit tests
+    useTestNG() {
+        excludeGroups 'secure'
+    }
+}
+
 jacoco {
     toolVersion = '0.8.5'
     reportsDir = file("$buildDir/reports/jacoco")

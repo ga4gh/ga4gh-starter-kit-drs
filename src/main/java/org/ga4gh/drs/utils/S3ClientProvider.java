@@ -9,7 +9,11 @@ import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
-public class S3ClientRegionBasedProvider {
+/**
+ * Utility class to create and cache expensive S3Clients configured according to
+ *
+ */
+public class S3ClientProvider {
 
     private static Map<S3DataSource, S3Client> clients = new HashMap<>();
 

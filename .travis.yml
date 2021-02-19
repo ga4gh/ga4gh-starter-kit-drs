@@ -7,7 +7,9 @@ before_install:
   - scripts/install-aws-cli.sh
   - scripts/configure-aws-profile.sh
 
-script: "./gradlew test"
+script:
+    - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then ./gradlew prTest; fi'
+    - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./gradlew test; fi'
 
 after_success:
   - "./gradlew jacocoTestReport"

@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -187,14 +186,10 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
             // Strip trailing / from folders and replace internal / with _
             // to make name conform with schema on best effort basis
             return key
-                .substring(0, key.length() - 1)
+                .replaceAll("/$", "")
                 .replace("/", "_");
         } else {
-            // Only take last component of key if object is inside a directory
-            int lastSlash = key.lastIndexOf("/");
-            return lastSlash == -1
-                ? key
-                : key.substring(lastSlash + 1);
+            return key.replace('/', '_');
         }
     }
 
@@ -232,12 +227,10 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
     private ContentsObject toContents() {
         ContentsObject object = new ContentsObject(imputeName());
         // Recurse only if in a bundle and nested ContentsObjects were requested to be expanded
-        System.err.format("Key: %s, expand: %b, bundle: %b\n", key, getExpand(), isBundle());
         if (getExpand() && isBundle()) {
             object.setContents(generateContents());
         }
         object.setId(getObjectId());
-//        object.setDrsUri(Collections.singletonList(generateSelfURI()));
         return object;
     }
 
