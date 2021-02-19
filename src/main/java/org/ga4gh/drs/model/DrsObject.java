@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.lang.NonNull;
+
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,7 +56,7 @@ public class DrsObject {
     private String version;
 
     public DrsObject() {
-        
+
     }
 
     public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, long size) {

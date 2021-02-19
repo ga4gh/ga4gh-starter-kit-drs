@@ -15,7 +15,12 @@ drsConfig:
       - idPrefix: TestDataHtsjdkSamtools.
         rootDir: ./src/test/resources/data/htsjdk
     s3:
-      - idPrefix: S3DemoData
-        rootDir: /
+      - idPrefix: S3DemoData.
+        rootDir: drs/phenopackets/
         region: us-east-2
         bucket: ga4gh-demo-data
+        profile: ga4gh-serviceaccount-basic
+      - idPrefix: TabulaMurisFacs.
+        rootDir: facs_bam_files/
+        region: us-east-1
+        bucket: czbiohub-tabula-muris

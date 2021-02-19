@@ -1,5 +1,6 @@
 package org.ga4gh.drs.utils.objectloader;
 
+import org.ga4gh.drs.utils.S3ClientProvider;
 import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
 import org.ga4gh.drs.utils.datasource.S3DataSource;
 import org.springframework.context.ApplicationContext;
@@ -18,8 +19,13 @@ public class DrsObjectLoaderFactory implements ApplicationContextAware {
     }
 
     public S3DrsObjectLoader createS3DrsObjectLoader(S3DataSource dataSource, String objectId) {
-        // TODO populate stub method
-        return null;
+        return context.getBean(S3DrsObjectLoader.class,
+            objectId,
+            dataSource.getRegion(),
+            dataSource.getBucket(),
+            dataSource.renderObjectKey(objectId),
+            S3ClientProvider.getClient(dataSource)
+        );
     }
 
     public void setApplicationContext(ApplicationContext context) {

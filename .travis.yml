@@ -2,7 +2,19 @@ git:
   depth: false
 language: java
 jdk: oraclejdk11
-script: "./gradlew test"
+
+before_install:
+# Only install and configure AWS profiles for builds not triggered by PRS
+# as those builds will not have access to the necessary credentials
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      scripts/install-aws-cli.sh;
+      scripts/configure-aws-profile.sh;
+    fi'
+
+script:
+    - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then ./gradlew prTest; fi'
+    - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./gradlew test; fi'
+
 after_success:
-    - "./gradlew jacocoTestReport"
-    - bash <(curl -s https://codecov.io/bash)
+  - "./gradlew jacocoTestReport"
+  - bash <(curl -s https://codecov.io/bash)

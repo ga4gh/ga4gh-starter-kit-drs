@@ -8,6 +8,32 @@ public class S3DataSource implements DataSource<S3DrsObjectLoader> {
     private String region;
     private String bucket;
     private String rootDir;
+    private String profile;
+
+    public S3DataSource() {
+
+    }
+
+    public S3DataSource(String idPrefix, String region, String bucket, String rootDir) {
+        this.idPrefix = idPrefix;
+        this.region = region;
+        this.bucket = bucket;
+        this.rootDir = rootDir;
+    }
+
+    public S3DataSource(String idPrefix, String region, String bucket, String rootDir, String profile) {
+        this.idPrefix = idPrefix;
+        this.region = region;
+        this.bucket = bucket;
+        this.rootDir = rootDir;
+        this.profile = profile;
+    }
+
+    public String renderObjectKey(String objectId) {
+        String postPrefix = objectId.replaceFirst(getIdPrefix(), "");
+        return getRootDir() + postPrefix;
+    }
+
 
     public void setIdPrefix(String idPrefix) {
         this.idPrefix = idPrefix;
@@ -43,5 +69,13 @@ public class S3DataSource implements DataSource<S3DrsObjectLoader> {
 
     public String getRootDir() {
         return rootDir;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }

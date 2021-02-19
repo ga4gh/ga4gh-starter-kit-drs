@@ -25,11 +25,16 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.1-jre'
+
+    implementation platform('software.amazon.awssdk:bom:2.15.0')
+    implementation 'software.amazon.awssdk:aws-core'
+    implementation 'software.amazon.awssdk:s3:2.10.1'
 
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation 'org.testng:testng:7.0.0'
@@ -61,6 +66,17 @@ test {
     }
     // Use TestNG for unit tests
     useTestNG()
+}
+
+task prTest(type: Test) {
+    testLogging {
+        showStandardStreams = false // make true for log output to console
+    }
+
+    // Use TestNG for unit tests
+    useTestNG() {
+        excludeGroups 'secure'
+    }
 }
 
 jacoco {

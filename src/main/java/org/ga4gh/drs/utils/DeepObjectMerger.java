@@ -2,7 +2,12 @@ package org.ga4gh.drs.utils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 public class DeepObjectMerger {
 

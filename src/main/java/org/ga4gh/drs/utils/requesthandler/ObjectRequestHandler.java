@@ -20,8 +20,10 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     private String objectId;
 
+    private boolean expand;
+
     public ObjectRequestHandler() {
-        
+
     }
 
     public DrsObject handleRequest() {
@@ -30,8 +32,9 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
             throw new ResourceNotFoundException("Could not locate data source associated with requested object_id");
         }
         if (!drsObjectLoader.exists()) {
-            throw new ResourceNotFoundException("No object found for the provided id");
+            throw new ResourceNotFoundException("No object found for the provided id: " + getObjectId());
         }
+        drsObjectLoader.setExpand(expand);
         DrsObject drsObject = drsObjectLoader.generateDrsObject();
 
         // register an access id in the cache for each returned AccessMethod with
@@ -48,7 +51,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
                 accessCache.put(drsObject.getId(), accessMethod.getAccessId(), item);
             }
         }
-        
+
         return drsObject;
     }
 
@@ -68,5 +71,13 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     public String getObjectId() {
         return objectId;
+    }
+
+    public boolean getExpand() {
+        return expand;
+    }
+
+    public void setExpand(boolean expand) {
+        this.expand = expand;
     }
 }

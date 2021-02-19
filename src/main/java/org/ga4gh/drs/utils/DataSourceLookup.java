@@ -8,6 +8,7 @@ import org.ga4gh.drs.utils.objectloader.DrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 import javax.annotation.PostConstruct;
 import java.util.List;
 
@@ -34,7 +35,6 @@ public class DataSourceLookup {
     }
 
     public DrsObjectLoader getDrsObjectLoaderFromId(String objectId) {
-        
         for (LocalFileDataSource localDataSource : localDataSources) {
             if (localDataSource.objectIdMatches(objectId)) {
                 return drsObjectLoaderFactory.createFileDrsObjectLoader(localDataSource, objectId);
@@ -46,7 +46,6 @@ public class DataSourceLookup {
                 return drsObjectLoaderFactory.createS3DrsObjectLoader(s3DataSource, objectId);
             }
         }
-
         return null;
     }
 }

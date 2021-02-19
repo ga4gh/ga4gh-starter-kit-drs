@@ -10,8 +10,10 @@ import org.apache.commons.cli.ParseException;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.configuration.S3;
 import org.ga4gh.drs.configuration.ServerProps;
 import org.ga4gh.drs.constant.DataSourceDefaults;
+import org.ga4gh.drs.constant.S3Defaults;
 import org.ga4gh.drs.constant.ServerPropsDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
@@ -22,6 +24,7 @@ import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
+import org.ga4gh.drs.utils.objectloader.S3DrsObjectLoader;
 import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
@@ -34,6 +37,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -89,6 +94,9 @@ public class AppConfig implements WebMvcConfigurer {
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
         dataSourceRegistry.setLocal(DataSourceDefaults.LOCAL);
         dataSourceRegistry.setS3(DataSourceDefaults.S3);
+
+        S3 s3 = drsConfigContainer.getDrsConfig().getS3();
+        s3.setRegion(S3Defaults.S3_REGION);
         return drsConfigContainer;
     }
 
@@ -179,7 +187,17 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Scope(value = AppConfigConstants.PROTOTYPE)
     public HttpsDrsObjectLoader HttpsDrsObjectLoader(String objectId, String objectPath) {
-        return new HttpsDrsObjectLoader(objectId, objectPath);
+        try {
+            return new HttpsDrsObjectLoader(objectId, objectPath);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    @Bean
+    @Scope(value = AppConfigConstants.PROTOTYPE)
+    public S3DrsObjectLoader S3DrsObjectLoader(String objectId, String region, String bucket, String key, S3Client client) {
+        return new S3DrsObjectLoader(objectId, region, bucket, key, client);
     }
 
     /* ******************************
@@ -199,5 +217,11 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public AccessCache accessCache() {
         return new AccessCache();
+    }
+
+    public Region defaultRegion(
+        @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+    ) {
+        return Region.of(drsConfigContainer.getDrsConfig().getS3().getRegion());
     }
 }
