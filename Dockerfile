@@ -23,8 +23,14 @@ FROM openjdk:11.0.10
 
 USER root
 
+ARG mode
+
 WORKDIR /usr/src/app
 COPY --from=builder /usr/local/bin/sqlite3 /usr/local/bin/sqlite3
 COPY build/drs-server.jar drs-server.jar
+COPY src/test/resources/ /usr/src/app/resources/
+COPY database/sqlite/create-schema.migrations.sql /usr/src/app/database/create-schema.migrations.sql
+COPY scripts /usr/src/app/scripts
 
-CMD ["java", "-jar", "drs-server.jar", "--mode", "development"]
+ENV mode=${mode}
+CMD ["scripts/run.sh"]

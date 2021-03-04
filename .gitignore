@@ -34,3 +34,9 @@ build
 .classpath
 .settings
 bin
+
+# Ignore SQL files 
+*.db
+
+# Ignore python virtual environment files
+venv/
