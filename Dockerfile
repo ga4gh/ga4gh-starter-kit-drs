@@ -27,10 +27,12 @@ ARG mode
 
 WORKDIR /usr/src/app
 COPY --from=builder /usr/local/bin/sqlite3 /usr/local/bin/sqlite3
-COPY build/drs-server.jar drs-server.jar
-COPY src/test/resources/ /usr/src/app/resources/
-COPY database/sqlite/create-schema.migrations.sql /usr/src/app/database/create-schema.migrations.sql
-COPY scripts /usr/src/app/scripts
+COPY --from=builder /usr/bin/make /usr/bin/make
+COPY Makefile Makefile
+COPY project.properties project.properties
+COPY drs-server.jar drs-server.jar
+COPY src/test/resources/ src/test/resources/
+COPY database/sqlite database/sqlite
 
 ENV mode=${mode}
-CMD ["scripts/run.sh"]
+CMD ["make", "run-development-docker"]

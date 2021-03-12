@@ -53,7 +53,7 @@ application {
 
 bootJar {
     mainClassName = 'org.ga4gh.drs.App'
-    destinationDirectory = file(project.buildDir)
+    destinationDirectory = file(project.rootDir)
 }
 
 test {
