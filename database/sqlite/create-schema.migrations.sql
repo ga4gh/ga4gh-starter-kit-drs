@@ -1,11 +1,11 @@
 CREATE TABLE drs_object (
     id TEXT PRIMARY KEY,
     description TEXT,
-    created_time DATETIME,
+    created_time TEXT,
     mime_type TEXT,
     name TEXT,
     size UNSIGNED BIG INT,
-    updated_time DATETIME,
+    updated_time TEXT,
     version TEXT
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE drs_object_access_method (
     FOREIGN KEY(drs_object_id) REFERENCES drs_object(id)
 );
 
-CREATE TABLE drs_object_aliases (
+CREATE TABLE drs_object_alias (
     drs_object_id TEXT,
     alias TEXT,
     PRIMARY KEY (drs_object_id, alias),

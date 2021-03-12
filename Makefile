@@ -23,7 +23,7 @@ clean-jar:
 clean-all: clean-sqlite clean-jar
 
 # create the sqlite database
-.PHONY: sqlite-db-create
+.PHONY: sqlite-db-build
 sqlite-db-build: clean-sqlite
 	@sqlite3 ${DEVDB} < database/sqlite/create-schema.migrations.sql
 
@@ -44,8 +44,7 @@ jar-run:
 
 # run application in development mode locally
 .PHONY: run-development-local
-run-development-local: clean-all sqlite-db-build sqlite-db-populate jar-build
-	# TODO add jar-run to list of commands
+run-development-local: clean-all sqlite-db-build sqlite-db-populate jar-build jar-run
 
 # run application in development mode (to be used inside docker container)
 .PHONY: run-development-docker

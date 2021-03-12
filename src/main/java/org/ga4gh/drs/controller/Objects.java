@@ -26,7 +26,6 @@ public class Objects {
         @PathVariable(name = "object_id") String id,
         @RequestParam(name = "expand", required = false) boolean expand
     ) {
-        System.err.println("Objects route ID: " + id + " expand: " + expand);
         objectRequestHandler.setObjectId(id);
         return objectRequestHandler.handleRequest();
     }

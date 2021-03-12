@@ -1,5 +1,9 @@
 package org.ga4gh.drs.utils.requesthandler;
 
+import java.net.URI;
+
+import org.ga4gh.drs.AppConfigConstants;
+import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.exception.ResourceNotFoundException;
 import org.ga4gh.drs.model.AccessMethod;
 import org.ga4gh.drs.model.AccessType;
@@ -7,16 +11,26 @@ import org.ga4gh.drs.model.DrsObject;
 import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.cache.AccessCacheItem;
+import org.ga4gh.drs.utils.hibernate.HibernateUtil;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoader;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     @Autowired
-    DataSourceLookup dataSourceLookup;
+    @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER)
+    DrsConfigContainer drsConfigContainer;
+
+    // @Autowired
+    // DataSourceLookup dataSourceLookup;
 
     @Autowired
     AccessCache accessCache;
+
+    @Autowired
+    HibernateUtil hibernateUtil;
 
     private String objectId;
 
@@ -25,6 +39,14 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     }
 
     public DrsObject handleRequest() {
+        DrsObject drsObject = (DrsObject) hibernateUtil.getSingleEntityObject(DrsObject.class, getObjectId());
+        if (drsObject == null) {
+            throw new ResourceNotFoundException("no DrsObject found by id: " + getObjectId());
+        }
+        drsObject.setSelfURI(prepareSelfURI(getObjectId()));
+        return drsObject;
+        
+        /*
         DrsObjectLoader drsObjectLoader = dataSourceLookup.getDrsObjectLoaderFromId(getObjectId());
         if (drsObjectLoader == null) {
             throw new ResourceNotFoundException("Could not locate data source associated with requested object_id");
@@ -50,6 +72,12 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         }
         
         return drsObject;
+        */
+    }
+
+    private URI prepareSelfURI(String id) {
+        String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
+        return URI.create("drs://" + hostname + "/" + id);
     }
 
     private AccessCacheItem generateAccessCacheItem(String objectId, String accessId, String objectPath, AccessType accessType, String mimeType) {

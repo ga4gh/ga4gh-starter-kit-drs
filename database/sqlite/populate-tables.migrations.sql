@@ -111,67 +111,87 @@ INSERT INTO drs_object (
 INSERT INTO drs_object (
     id,
     description,
+    created_time,
     mime_type,
     name,
     size,
+    updated_time,
     version
 ) VALUES
     (
         "697907bf-d5bd-433e-aac2-1747f1faf366",
         "Phenopackets, Zhang family, 2009, proband",
+        "2021-03-12 20:00:00.000",
         "application/json",
         "phenopackets.zhang.2009.proband",
         6471,
+        "2021-03-13 12:30:45.000",
         "1.0.0"
     ),
     (
         "3a45fab2-f350-445d-a137-4b1f946bf184",
         "Phenopackets, Zhang family, 2011, Patient 2",
+        "2021-03-12 20:00:00.000",
         "application/json",
         "phenopackets.zhang.2011.2",
         4001,
+        "2021-03-13 12:30:45.000",
         "1.0.0"
     ),
     (
         "ac53ca59-46f3-4f61-b1e7-bb75a49bfbfe",
         "Phenopackets, Zhang family, 2016, Patient 1",
+        "2021-03-12 20:00:00.000",
         "application/json",
         "phenopackets.zhang.2016.1",
         4709,
+        "2021-03-13 12:30:45.000",
         "1.0.0"
     ),
     (
         "1275f896-4c8f-47e1-99a1-873a6b2ef5fb",
         "Phenopackets, Zhang family, 2017, Patient 1",
+        "2021-03-12 20:00:00.000",
         "application/json",
         "phenopackets.zhang.2017.1",
         7555,
+        "2021-03-13 12:30:45.000",
         "1.0.0"
     ),
     (
         "8f40acc0-0c54-45c5-8c85-a6f5fb32a1a7",
         "Phenopackets, Zhang family, 2017, Patient 2",
+        "2021-03-12 20:00:00.000",
         "application/json",
         "phenopackets.zhang.2017.2",
         7114,
+        "2021-03-13 12:30:45.000",
         "1.0.0"
     ),
     (
         "41898242-62a9-4129-9a2c-5a4e8f5f0afb",
         "Phenopackets, Zhang family, 2017, Patient 3",
+        "2021-03-12 20:00:00.000",
         "application/json",
         "phenopackets.zhang.2017.3",
         6262,
+        "2021-03-13 12:30:45.000",
         "1.0.0"
     ),
     (
         "6b994f18-6189-4233-bb83-139686490d68",
         "Phenopackets, Zhang family, 2017, Patient 4",
+        "2021-03-12 20:00:00.000",
         "application/json",
         "phenopackets.zhang.2017.4",
         6289,
+        "2021-03-13 12:30:45.000",
         "1.0.0"
     );
+
+INSERT INTO drs_object_alias VALUES
+    ("6b994f18-6189-4233-bb83-139686490d68", "PMID:28851325-Zhang-2017-FOXG1-Patient_4"),
+    ("6b994f18-6189-4233-bb83-139686490d68", "Zhang-FOXG1-4");
 
 INSERT INTO drs_object_bundle VALUES
     ("b8cd0667-2c33-4c9f-967b-161b905932c9", "355a74bd-6571-4d4a-8602-a9989936717f"),

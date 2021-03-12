@@ -10,8 +10,10 @@ import org.apache.commons.cli.ParseException;
 import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.configuration.HibernateProps;
 import org.ga4gh.drs.configuration.ServerProps;
 import org.ga4gh.drs.constant.DataSourceDefaults;
+import org.ga4gh.drs.constant.HibernatePropsDefaults;
 import org.ga4gh.drs.constant.ServerPropsDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
@@ -19,12 +21,14 @@ import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.DeepObjectMerger;
 import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
+import org.ga4gh.drs.utils.hibernate.HibernateUtil;
 import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
 import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
 import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
 import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
+import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -32,12 +36,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -47,6 +54,11 @@ public class AppConfig implements WebMvcConfigurer {
     /* ******************************
      * CONFIG BEANS
      * ****************************** */
+
+    @Bean
+    public HibernateUtil getHibernateUtil() {
+        return new HibernateUtil();
+    }
 
     @Bean
     public Options getCommandLineOptions() {
@@ -89,6 +101,18 @@ public class AppConfig implements WebMvcConfigurer {
         DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
         dataSourceRegistry.setLocal(DataSourceDefaults.LOCAL);
         dataSourceRegistry.setS3(DataSourceDefaults.S3);
+
+        HibernateProps hibernateProps = drsConfigContainer.getDrsConfig().getHibernateProps();
+        hibernateProps.setDriverClassName(HibernatePropsDefaults.DRIVER_CLASS_NAME);
+        hibernateProps.setUrl(HibernatePropsDefaults.URL);
+        hibernateProps.setUsername(HibernatePropsDefaults.USERNAME);
+        hibernateProps.setPassword(HibernatePropsDefaults.PASSWORD);
+        hibernateProps.setPoolSize(HibernatePropsDefaults.POOL_SIZE);
+        hibernateProps.setDialect(HibernatePropsDefaults.DIALECT);
+        hibernateProps.setHbm2ddlAuto(HibernatePropsDefaults.HBM2DDL_AUTO);
+        hibernateProps.setShowSQL(HibernatePropsDefaults.SHOW_SQL);
+        hibernateProps.setCurrentSessionContextClass(HibernatePropsDefaults.CURRENT_SESSION_CONTEXT_CLASS);
+
         return drsConfigContainer;
     }
 

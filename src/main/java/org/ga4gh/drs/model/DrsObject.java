@@ -8,51 +8,87 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
+import org.hibernate.Hibernate;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name = "drs_object")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class DrsObject {
-    // Required
+public class DrsObject implements DrsEntity {
+    
+    /* COLUMN ATTRIBUTES LIFTED FROM DRS SPEC */
+
+    @Id
+    @Column(name = "id")
     @NonNull
     private String id;
 
-    @NonNull
-    private URI selfURI;
+    @Column(name = "description")
+    private String description;
 
-    @NonNull
-    private List<Checksum> checksums;
-
-    @NonNull
+    // @NonNull
+    @Column(name = "created_time")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createdTime;
 
+    @Column(name = "mime_type")
+    private String mimeType;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "size")
     private long size;
 
-    // Optional
-    private List<AccessMethod> accessMethods;
-
-    private List<String> aliases;
-
-    private List<ContentsObject> contents;
-
+    @Column(name = "updated_time")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updatedTime;
 
-    private String description;
-
-    private String mimeType;
-
-    private String name;
-
+    @Column(name = "version")
     private String version;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "drs_object_alias", joinColumns = @JoinColumn(name = "drs_object_id"))
+    @Column(name = "alias")
+    private List<String> aliases;
+
+    /* COLUMN ATTRIBUTES, CUSTOM */
+
+    /* Transient attributes */
+
+    @Transient
+    @NonNull
+    private URI selfURI;
+
+    @Transient
+    // @NonNull
+    private List<Checksum> checksums;
+
+    @Transient
+    private List<AccessMethod> accessMethods;
+
+    @Transient
+    private List<ContentsObject> contents;
 
     public DrsObject() {
         
@@ -64,6 +100,10 @@ public class DrsObject {
         this.setChecksums(checksums);
         this.setCreatedTime(createdTime);
         this.setSize(size);
+    }
+
+    public void lazyLoad() {
+        Hibernate.initialize(getAliases());
     }
 
     public String getId() {
