@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Error extends Exception {
+
+    public static final long serialVersionUID = 1L;
+
     private String msg;
 
     private int statusCode;

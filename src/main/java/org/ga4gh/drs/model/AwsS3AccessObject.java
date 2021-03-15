@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "aws_s3_access_object")
 public class AwsS3AccessObject implements Serializable {
 
+    public static final long serialVersionUID = 1L;
+
     @Id
     @ManyToOne(fetch = FetchType.EAGER,
                cascade = {CascadeType.PERSIST, CascadeType.MERGE,

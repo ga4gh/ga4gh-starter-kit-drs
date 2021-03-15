@@ -62,7 +62,7 @@ public class DrsObjectTest {
                 LocalDateTime.now(),
                 1024,
                 new ArrayList<AccessMethod>() {{
-                    add(new AccessMethod("id:00001", AccessType.FILE));
+                    add(new AccessMethod("id:00001", AccessType.file));
                 }},
                 new ArrayList<String>() {{
                     add("Patient 0 BAM");

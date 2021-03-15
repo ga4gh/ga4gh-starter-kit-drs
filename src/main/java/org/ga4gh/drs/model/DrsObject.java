@@ -13,7 +13,6 @@ import org.hibernate.Hibernate;
 import org.springframework.lang.NonNull;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
