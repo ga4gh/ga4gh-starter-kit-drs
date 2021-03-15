@@ -1,6 +1,7 @@
 package org.ga4gh.drs.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -12,6 +13,7 @@ import org.hibernate.Hibernate;
 import org.springframework.lang.NonNull;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -21,6 +23,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -55,7 +59,7 @@ public class DrsObject implements DrsEntity {
     private String name;
 
     @Column(name = "size")
-    private long size;
+    private Long size;
 
     @Column(name = "updated_time")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -77,6 +81,24 @@ public class DrsObject implements DrsEntity {
     private List<Checksum> checksums;
 
     /* COLUMN ATTRIBUTES, CUSTOM */
+
+    @ManyToMany
+    @JoinTable(
+        name = "drs_object_bundle",
+        joinColumns = {@JoinColumn(name = "parent_id")},
+        inverseJoinColumns = {@JoinColumn(name = "child_id")}
+    )
+    @JsonIgnore
+    private List<DrsObject> drsObjectChildren;
+
+    @ManyToMany
+    @JoinTable(
+        name = "drs_object_bundle",
+        joinColumns = {@JoinColumn(name = "child_id")},
+        inverseJoinColumns = {@JoinColumn(name = "parent_id")}
+    )
+    @JsonIgnore
+    private List<DrsObject> drsObjectParents;
 
     /* Transient attributes */
 
@@ -105,6 +127,15 @@ public class DrsObject implements DrsEntity {
     public void lazyLoad() {
         Hibernate.initialize(getAliases());
         Hibernate.initialize(getChecksums());
+        Hibernate.initialize(getDrsObjectChildren());
+    }
+
+    public void convertChildrenToContents() {
+        List<ContentsObject> contents = new ArrayList<>();
+
+        // TODO convert DrsObjects in bundleChildren to contentsObjects
+
+        setContents(contents);
     }
 
     public String getId() {
@@ -209,5 +240,21 @@ public class DrsObject implements DrsEntity {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public List<DrsObject> getDrsObjectChildren() {
+        return drsObjectChildren;
+    }
+
+    public void setDrsObjectChildren(List<DrsObject> drsObjectChildren) {
+        this.drsObjectChildren = drsObjectChildren;
+    }
+
+    public List<DrsObject> getDrsObjectParents() {
+        return drsObjectParents;
+    }
+
+    public void setDrsObjectParents(List<DrsObject> drsObjectParents) {
+        this.drsObjectParents = drsObjectParents;
     }
 }

@@ -1,5 +1,6 @@
 package org.ga4gh.drs.utils.hibernate;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -47,13 +48,14 @@ public class HibernateUtil {
         }
     }
 
-    public DrsEntity getSingleEntityObject(Class<? extends DrsEntity> entityClass, String id) throws HibernateException {
+    public DrsObject loadDrsObject(String id) throws HibernateException {
         Session session = newTransaction();
-        DrsEntity object = null;
+        DrsObject drsObject = null;
         try {
-            object = (DrsEntity) session.get(entityClass, id);
-            if (object != null) {
-                object.lazyLoad();
+            drsObject = session.get(DrsObject.class, id);
+            if (drsObject != null) {
+                drsObject.lazyLoad();
+                drsObject.setSize(recursiveDrsObjectChildLoad(drsObject));
             }
             endTransaction(session);
         } catch (PersistenceException e) {
@@ -63,16 +65,31 @@ public class HibernateUtil {
         } finally {
             endTransaction(session);
         }
-        return object;
+        return drsObject;
     }
 
-    private Session newTransaction() {
+    private Long recursiveDrsObjectChildLoad(DrsObject parentDrsObject) {
+        Long sizeSum = 0L;
+        List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
+
+        if (childrenDrsObjects.size() == 0) {
+            sizeSum = parentDrsObject.getSize();
+        } else {
+            for (int i = 0; i < childrenDrsObjects.size(); i ++) {
+                sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+            }
+        }
+        
+        return sizeSum;
+    }
+
+    public Session newTransaction() {
         Session session = getSessionFactory().getCurrentSession();
         session.beginTransaction();
         return session;
     }
 
-    private void endTransaction(Session session) {
+    public void endTransaction(Session session) {
         if (session.getTransaction().isActive()) {
             session.getTransaction().commit();
             session.close();

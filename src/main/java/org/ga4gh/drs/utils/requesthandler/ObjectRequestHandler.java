@@ -1,11 +1,15 @@
 package org.ga4gh.drs.utils.requesthandler;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.exception.ResourceNotFoundException;
 import org.ga4gh.drs.model.AccessMethod;
 import org.ga4gh.drs.model.AccessType;
+import org.ga4gh.drs.model.ContentsObject;
 import org.ga4gh.drs.model.DrsObject;
 import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.cache.AccessCacheItem;
@@ -35,11 +39,16 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     }
 
     public DrsObject handleRequest() {
-        DrsObject drsObject = (DrsObject) hibernateUtil.getSingleEntityObject(DrsObject.class, getObjectId());
+        // Get DrsObject from db
+        DrsObject drsObject = (DrsObject) hibernateUtil.loadDrsObject(getObjectId());
         if (drsObject == null) {
             throw new ResourceNotFoundException("no DrsObject found by id: " + getObjectId());
         }
+
+        // post query prep of response
         drsObject.setSelfURI(prepareSelfURI(getObjectId()));
+        drsObject.setContents(prepareContents(drsObject));
+
         return drsObject;
         
         /*
@@ -74,6 +83,31 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     private URI prepareSelfURI(String id) {
         String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
         return URI.create("drs://" + hostname + "/" + id);
+    }
+
+    private List<ContentsObject> prepareContents(DrsObject drsObject) {
+        List<ContentsObject> contents = new ArrayList<>();
+        for (int i = 0; i < drsObject.getDrsObjectChildren().size(); i++) {
+            contents.add(convertDrsObjectToContentsObject(drsObject.getDrsObjectChildren().get(i)));
+        }
+        return contents;
+    }
+
+    private ContentsObject convertDrsObjectToContentsObject(DrsObject drsObject) {
+        ContentsObject contentsObject = new ContentsObject();
+        contentsObject.setId(drsObject.getId());
+        contentsObject.setDrsUri(new ArrayList<URI>(){{
+            add(prepareSelfURI(drsObject.getId()));
+        }});
+        contentsObject.setName(drsObject.getName());
+
+        List<ContentsObject> childContents = new ArrayList<>();
+        for (int i = 0; i < drsObject.getDrsObjectChildren().size(); i++) {
+            childContents.add(convertDrsObjectToContentsObject(drsObject.getDrsObjectChildren().get(i)));
+        }
+        contentsObject.setContents(childContents);
+        
+        return contentsObject;
     }
 
     private AccessCacheItem generateAccessCacheItem(String objectId, String accessId, String objectPath, AccessType accessType, String mimeType) {

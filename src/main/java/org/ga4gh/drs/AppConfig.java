@@ -28,7 +28,6 @@ import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
 import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
-import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -36,16 +35,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import javax.sql.DataSource;
-
 
 @Configuration
 @ConfigurationProperties
