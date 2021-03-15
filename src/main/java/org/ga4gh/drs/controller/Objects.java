@@ -27,6 +27,7 @@ public class Objects {
         @RequestParam(name = "expand", required = false) boolean expand
     ) {
         objectRequestHandler.setObjectId(id);
+        objectRequestHandler.setExpand(expand);
         return objectRequestHandler.handleRequest();
     }
 

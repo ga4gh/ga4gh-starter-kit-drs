@@ -34,6 +34,8 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     private String objectId;
 
+    private boolean expand;
+
     public ObjectRequestHandler() {
         
     }
@@ -101,11 +103,13 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         }});
         contentsObject.setName(drsObject.getName());
 
-        List<ContentsObject> childContents = new ArrayList<>();
-        for (int i = 0; i < drsObject.getDrsObjectChildren().size(); i++) {
-            childContents.add(convertDrsObjectToContentsObject(drsObject.getDrsObjectChildren().get(i)));
+        if (getExpand()) {
+            List<ContentsObject> childContents = new ArrayList<>();
+            for (int i = 0; i < drsObject.getDrsObjectChildren().size(); i++) {
+                childContents.add(convertDrsObjectToContentsObject(drsObject.getDrsObjectChildren().get(i)));
+            }
+            contentsObject.setContents(childContents);
         }
-        contentsObject.setContents(childContents);
         
         return contentsObject;
     }
@@ -126,5 +130,13 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     public String getObjectId() {
         return objectId;
+    }
+
+    public void setExpand(boolean expand) {
+        this.expand = expand;
+    }
+
+    public boolean getExpand() {
+        return expand;
     }
 }
