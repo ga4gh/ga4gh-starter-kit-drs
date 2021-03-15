@@ -7,6 +7,7 @@ import javax.persistence.PersistenceException;
 
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.model.Checksum;
 import org.ga4gh.drs.model.DrsEntity;
 import org.ga4gh.drs.model.DrsObject;
 import org.hibernate.HibernateException;
@@ -36,6 +37,7 @@ public class HibernateUtil {
                 new Configuration()
                 .setProperties(drsConfigContainer.getDrsConfig().getHibernateProps().getAllProperties())
                 .addAnnotatedClass(DrsObject.class)
+                .addAnnotatedClass(Checksum.class)
                 .buildSessionFactory();
             setSessionFactory(sessionFactory);
             setConfigured(configured);

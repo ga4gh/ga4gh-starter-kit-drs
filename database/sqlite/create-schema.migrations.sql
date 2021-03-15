@@ -28,7 +28,7 @@ CREATE TABLE drs_object_alias (
 CREATE TABLE drs_object_checksum (
     drs_object_id TEXT,
     checksum TEXT,
-    type TEXT CHECK (type IN ('md5', 'etag', 'crc32c', 'trunc512', 'sha1', 'sha-256')),
+    type TEXT CHECK (type IN ('md5', 'etag', 'crc32c', 'trunc512', 'sha1', 'sha256')),
     PRIMARY KEY (drs_object_id, type),
     FOREIGN KEY(drs_object_id) REFERENCES drs_object(id)
 );

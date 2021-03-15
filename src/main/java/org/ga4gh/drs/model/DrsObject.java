@@ -8,14 +8,12 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-
 import org.hibernate.Hibernate;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -23,6 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -72,6 +71,11 @@ public class DrsObject implements DrsEntity {
     @Column(name = "alias")
     private List<String> aliases;
 
+    @OneToMany(mappedBy = "drsObject",
+               fetch = FetchType.LAZY,
+               cascade = CascadeType.ALL)
+    private List<Checksum> checksums;
+
     /* COLUMN ATTRIBUTES, CUSTOM */
 
     /* Transient attributes */
@@ -79,10 +83,6 @@ public class DrsObject implements DrsEntity {
     @Transient
     @NonNull
     private URI selfURI;
-
-    @Transient
-    // @NonNull
-    private List<Checksum> checksums;
 
     @Transient
     private List<AccessMethod> accessMethods;
@@ -104,6 +104,7 @@ public class DrsObject implements DrsEntity {
 
     public void lazyLoad() {
         Hibernate.initialize(getAliases());
+        Hibernate.initialize(getChecksums());
     }
 
     public String getId() {

@@ -1,19 +1,15 @@
 package org.ga4gh.drs.utils.requesthandler;
 
 import java.net.URI;
-
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.exception.ResourceNotFoundException;
 import org.ga4gh.drs.model.AccessMethod;
 import org.ga4gh.drs.model.AccessType;
 import org.ga4gh.drs.model.DrsObject;
-import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.cache.AccessCacheItem;
 import org.ga4gh.drs.utils.hibernate.HibernateUtil;
-import org.ga4gh.drs.utils.objectloader.DrsObjectLoader;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
