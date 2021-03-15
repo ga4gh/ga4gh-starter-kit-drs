@@ -9,13 +9,20 @@ CREATE TABLE drs_object (
     version TEXT
 );
 
-CREATE TABLE drs_object_access_method (
+CREATE TABLE file_access_object(
     drs_object_id TEXT,
-    access_id TEXT,
-    access_url TEXT,
+    path TEXT,
+    PRIMARY KEY (drs_object_id, path),
+    FOREIGN KEY (drs_object_id) REFERENCES drs_object(id)
+);
+
+CREATE TABLE aws_s3_access_object(
+    drs_object_id TEXT,
     region TEXT,
-    type TEXT CHECK (type IN ('s3', 'https', 'file')),
-    FOREIGN KEY(drs_object_id) REFERENCES drs_object(id)
+    bucket TEXT,
+    key TEXT,
+    PRIMARY KEY (drs_object_id, key),
+    FOREIGN KEY (drs_object_id) REFERENCES drs_object(id)
 );
 
 CREATE TABLE drs_object_alias (

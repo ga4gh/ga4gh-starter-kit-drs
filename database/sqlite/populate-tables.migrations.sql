@@ -198,6 +198,12 @@ INSERT INTO drs_object_checksum VALUES
     ("6b994f18-6189-4233-bb83-139686490d68", "e065fb118dee30730e641fb896c3f96474009f6f", "sha1"),
     ("6b994f18-6189-4233-bb83-139686490d68", "d6c7496a91de38e03e63940073ec6f7d2ccb41f6a28b8791178a6f16c05afb24", "sha256");
 
+INSERT INTO file_access_object VALUES
+    ("6b994f18-6189-4233-bb83-139686490d68", "./src/test/resources/data/phenopackets/Zhang-2017-FOXG1-Patient_4.json");
+
+INSERT INTO aws_s3_access_object VALUES
+    ("6b994f18-6189-4233-bb83-139686490d68", "us-east-2", "ga4gh-demo-data", "/phenopackets/Zhang-2017-FOXG1-Patient_4.json");
+
 INSERT INTO drs_object_bundle VALUES
     ("b8cd0667-2c33-4c9f-967b-161b905932c9", "355a74bd-6571-4d4a-8602-a9989936717f"),
     ("355a74bd-6571-4d4a-8602-a9989936717f", "697907bf-d5bd-433e-aac2-1747f1faf366"),

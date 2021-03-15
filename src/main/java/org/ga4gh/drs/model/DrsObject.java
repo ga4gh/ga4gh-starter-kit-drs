@@ -35,7 +35,11 @@ import javax.persistence.Transient;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class DrsObject implements DrsEntity {
     
-    /* COLUMN ATTRIBUTES LIFTED FROM DRS SPEC */
+    /*
+        Simple attributes lifted directly from the DRS spec: id, description,
+        createdTime, mimeType, name, size, updatedTime, version, aliases,
+        checksums
+    */
 
     @Id
     @Column(name = "id")
@@ -45,11 +49,11 @@ public class DrsObject implements DrsEntity {
     @Column(name = "description")
     private String description;
 
-    // @NonNull
     @Column(name = "created_time")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    // @NonNull
     private LocalDateTime createdTime;
 
     @Column(name = "mime_type")
@@ -80,7 +84,10 @@ public class DrsObject implements DrsEntity {
                cascade = CascadeType.ALL)
     private List<Checksum> checksums;
 
-    /* COLUMN ATTRIBUTES, CUSTOM */
+    /* 
+        Attributes capturing the parent-child relationship of DRS bundles to
+        nested/sub bundles, to single blob DRS Objects
+    */
 
     @ManyToMany
     @JoinTable(
@@ -100,7 +107,27 @@ public class DrsObject implements DrsEntity {
     @JsonIgnore
     private List<DrsObject> drsObjectParents;
 
-    /* Transient attributes */
+    /*
+        Attributes capturing multiple byte storage/access locations associated
+        with a single DRSObject
+    */
+
+    @OneToMany(mappedBy = "drsObject",
+               fetch = FetchType.LAZY,
+               cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<FileAccessObject> fileAccessObjects;
+
+    @OneToMany(mappedBy = "drsObject",
+               fetch = FetchType.LAZY,
+               cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<AwsS3AccessObject> awsS3AccessObjects;
+
+    /*
+        Transient attributes produced from transforming database records. They
+        are needed to conform to the DRS spec: selfURI, accessMethods, contents
+    */
 
     @Transient
     @NonNull
@@ -116,6 +143,8 @@ public class DrsObject implements DrsEntity {
         
     }
 
+    /* Constructors */
+
     public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, long size) {
         this.setId(id);
         this.setSelfURI(selfURI);
@@ -124,137 +153,151 @@ public class DrsObject implements DrsEntity {
         this.setSize(size);
     }
 
+    /* Custom API methods */
+
     public void lazyLoad() {
         Hibernate.initialize(getAliases());
         Hibernate.initialize(getChecksums());
         Hibernate.initialize(getDrsObjectChildren());
+        Hibernate.initialize(getFileAccessObjects());
+        Hibernate.initialize(getAwsS3AccessObjects());
     }
 
-    public void convertChildrenToContents() {
-        List<ContentsObject> contents = new ArrayList<>();
+    /* Setters and Getters */
 
-        // TODO convert DrsObjects in bundleChildren to contentsObjects
-
-        setContents(contents);
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public URI getSelfURI() {
-        return selfURI;
-    }
-
-    public void setSelfURI(URI selfURI) {
-        this.selfURI = selfURI;
-    }
-
-    public List<Checksum> getChecksums() {
-        return checksums;
-    }
-
-    public void setChecksums(List<Checksum> checksums) {
-        this.checksums = checksums;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public List<AccessMethod> getAccessMethods() {
-        return accessMethods;
-    }
-
-    public void setAccessMethods(List<AccessMethod> accessMethods) {
-        this.accessMethods = accessMethods;
-    }
-
-    public List<String> getAliases() {
-        return aliases;
-    }
-
-    public void setAliases(List<String> aliases) {
-        this.aliases = aliases;
-    }
-
-    public List<ContentsObject> getContents() {
-        return contents;
-    }
-
-    public void setContents(List<ContentsObject> contents) {
-        this.contents = contents;
-    }
-
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
     }
 
-    public String getMimeType() {
-        return mimeType;
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
     }
 
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
 
-    public String getName() {
-        return name;
+    public String getMimeType() {
+        return mimeType;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getVersion() {
-        return version;
+    public String getName() {
+        return name;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return updatedTime;
     }
 
     public void setVersion(String version) {
         this.version = version;
     }
 
-    public List<DrsObject> getDrsObjectChildren() {
-        return drsObjectChildren;
+    public String getVersion() {
+        return version;
+    }
+
+    public void setAliases(List<String> aliases) {
+        this.aliases = aliases;
+    }
+
+    public List<String> getAliases() {
+        return aliases;
+    }
+
+    public void setChecksums(List<Checksum> checksums) {
+        this.checksums = checksums;
+    }
+
+    public List<Checksum> getChecksums() {
+        return checksums;
     }
 
     public void setDrsObjectChildren(List<DrsObject> drsObjectChildren) {
         this.drsObjectChildren = drsObjectChildren;
     }
 
-    public List<DrsObject> getDrsObjectParents() {
-        return drsObjectParents;
+    public List<DrsObject> getDrsObjectChildren() {
+        return drsObjectChildren;
     }
 
     public void setDrsObjectParents(List<DrsObject> drsObjectParents) {
         this.drsObjectParents = drsObjectParents;
+    }
+
+    public List<DrsObject> getDrsObjectParents() {
+        return drsObjectParents;
+    }
+
+    public void setFileAccessObjects(List<FileAccessObject> fileAccessObjects) {
+        this.fileAccessObjects = fileAccessObjects;
+    }
+
+    public List<FileAccessObject> getFileAccessObjects() {
+        return fileAccessObjects;
+    }
+
+    public void setAwsS3AccessObjects(List<AwsS3AccessObject> awsS3AccessObjects) {
+        this.awsS3AccessObjects = awsS3AccessObjects;
+    }
+
+    public List<AwsS3AccessObject> getAwsS3AccessObjects() {
+        return awsS3AccessObjects;
+    }
+
+    public void setSelfURI(URI selfURI) {
+        this.selfURI = selfURI;
+    }
+
+    public URI getSelfURI() {
+        return selfURI;
+    }
+
+    public void setAccessMethods(List<AccessMethod> accessMethods) {
+        this.accessMethods = accessMethods;
+    }
+
+    public List<AccessMethod> getAccessMethods() {
+        return accessMethods;
+    }
+
+    public void setContents(List<ContentsObject> contents) {
+        this.contents = contents;
+    }
+
+    public List<ContentsObject> getContents() {
+        return contents;
     }
 }

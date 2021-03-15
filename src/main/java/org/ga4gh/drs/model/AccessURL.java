@@ -2,7 +2,6 @@ package org.ga4gh.drs.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.lang.NonNull;
-
 import java.net.URI;
 import java.util.Map;
 

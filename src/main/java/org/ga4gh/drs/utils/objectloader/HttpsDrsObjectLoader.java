@@ -77,6 +77,6 @@ public class HttpsDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public AccessType getAccessType() {
-        return AccessType.HTTPS;
+        return AccessType.https;
     }
 }

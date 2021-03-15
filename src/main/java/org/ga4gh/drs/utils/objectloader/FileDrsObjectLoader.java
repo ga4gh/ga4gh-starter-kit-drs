@@ -42,7 +42,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
 
     public List<AccessMethod> generateAccessMethods() {
         String accessID = UUID.randomUUID().toString();
-        AccessMethod accessMethod = new AccessMethod(accessID, AccessType.FILE);
+        AccessMethod accessMethod = new AccessMethod(accessID, AccessType.file);
         return Collections.singletonList(accessMethod);
     }
 
@@ -106,7 +106,7 @@ public class FileDrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public AccessType getAccessType() {
-        return AccessType.FILE;
+        return AccessType.file;
     }
 
     private File getFile() {

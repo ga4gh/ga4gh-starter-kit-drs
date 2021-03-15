@@ -1,16 +1,14 @@
 package org.ga4gh.drs.utils.hibernate;
 
 import java.util.List;
-import java.util.Properties;
-
 import javax.annotation.PostConstruct;
 import javax.persistence.PersistenceException;
-
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.model.AwsS3AccessObject;
 import org.ga4gh.drs.model.Checksum;
-import org.ga4gh.drs.model.DrsEntity;
 import org.ga4gh.drs.model.DrsObject;
+import org.ga4gh.drs.model.FileAccessObject;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,6 +37,8 @@ public class HibernateUtil {
                 .setProperties(drsConfigContainer.getDrsConfig().getHibernateProps().getAllProperties())
                 .addAnnotatedClass(DrsObject.class)
                 .addAnnotatedClass(Checksum.class)
+                .addAnnotatedClass(FileAccessObject.class)
+                .addAnnotatedClass(AwsS3AccessObject.class)
                 .buildSessionFactory();
             setSessionFactory(sessionFactory);
             setConfigured(configured);
@@ -79,7 +79,7 @@ public class HibernateUtil {
                 sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
             }
         }
-        
+
         return sizeSum;
     }
 

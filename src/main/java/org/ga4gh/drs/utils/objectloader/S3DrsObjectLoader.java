@@ -76,6 +76,6 @@ public class S3DrsObjectLoader extends AbstractDrsObjectLoader {
     }
 
     public AccessType getAccessType() {
-        return AccessType.S3;
+        return AccessType.s3;
     }
 }
