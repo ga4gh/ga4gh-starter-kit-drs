@@ -8,13 +8,6 @@ import org.hibernate.dialect.identity.IdentityColumnSupport;
 public class SQLiteDialect extends Dialect {
 
     public SQLiteDialect() {
-        /*
-        registerColumnType(Types.BIT, "integer");
-        registerColumnType(Types.TINYINT, "tinyint");
-        registerColumnType(Types.SMALLINT, "smallint");
-        registerColumnType(Types.INTEGER, "integer");
-        */
-
         registerColumnType(Types.BIT, "integer");
         registerColumnType(Types.TINYINT, "tinyint");
         registerColumnType(Types.SMALLINT, "smallint");

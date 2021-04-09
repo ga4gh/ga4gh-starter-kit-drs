@@ -13,6 +13,7 @@ public class HibernateProps {
     private String hbm2ddlAuto;
     private String showSQL;
     private String currentSessionContextClass;
+    private String dateClass;
 
     public HibernateProps() {
 
@@ -40,6 +41,11 @@ public class HibernateProps {
 
         props.setProperty("hibernate.show_sql", getShowSQL());
         props.setProperty("hibernate.current_session_context_class", getCurrentSessionContextClass());
+
+        if (!getDateClass().equals("")) {
+            props.setProperty("hibernate.connection.date_class", getDateClass());
+        }
+
         return props;
     }
 
@@ -113,5 +119,13 @@ public class HibernateProps {
 
     public String getCurrentSessionContextClass() {
         return currentSessionContextClass;
+    }
+
+    public void setDateClass(String dateClass) {
+        this.dateClass = dateClass;
+    }
+
+    public String getDateClass() {
+        return dateClass;
     }
 }

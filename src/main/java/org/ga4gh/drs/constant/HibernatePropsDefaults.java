@@ -11,4 +11,5 @@ public class HibernatePropsDefaults {
     public static final String HBM2DDL_AUTO = "";
     public static final String SHOW_SQL = "true";
     public static final String CURRENT_SESSION_CONTEXT_CLASS = "thread";
+    public static final String DATE_CLASS = "text";
 }

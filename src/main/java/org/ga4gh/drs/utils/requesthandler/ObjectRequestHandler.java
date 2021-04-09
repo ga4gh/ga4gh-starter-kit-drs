@@ -45,6 +45,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     /* Custom API methods */
 
     public DrsObject handleRequest() {
+
         // Get DrsObject from db
         DrsObject drsObject = (DrsObject) hibernateUtil.loadDrsObject(getObjectId());
         if (drsObject == null) {
@@ -55,7 +56,6 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         drsObject.setSelfURI(prepareSelfURI(getObjectId()));
         drsObject.setContents(prepareContents(drsObject));
         drsObject.setAccessMethods(prepareAccessMethods(drsObject));
-
         return drsObject;
     }
 

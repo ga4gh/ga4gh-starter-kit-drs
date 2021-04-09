@@ -43,7 +43,6 @@ public class HibernateUtil {
             setSessionFactory(sessionFactory);
             setConfigured(configured);
         } catch (Throwable ex) {
-            ex.printStackTrace();
             throw new ExceptionInInitializerError(ex);
         }
     }
@@ -57,7 +56,6 @@ public class HibernateUtil {
                 drsObject.lazyLoad();
                 drsObject.setSize(recursiveDrsObjectChildLoad(drsObject));
             }
-            endTransaction(session);
         } catch (PersistenceException e) {
             throw new HibernateException(e.getMessage());
         } catch (Exception e) {

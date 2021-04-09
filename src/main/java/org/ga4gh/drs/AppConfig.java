@@ -95,6 +95,7 @@ public class AppConfig implements WebMvcConfigurer {
         hibernateProps.setHbm2ddlAuto(HibernatePropsDefaults.HBM2DDL_AUTO);
         hibernateProps.setShowSQL(HibernatePropsDefaults.SHOW_SQL);
         hibernateProps.setCurrentSessionContextClass(HibernatePropsDefaults.CURRENT_SESSION_CONTEXT_CLASS);
+        hibernateProps.setDateClass(HibernatePropsDefaults.DATE_CLASS);
 
         return drsConfigContainer;
     }
