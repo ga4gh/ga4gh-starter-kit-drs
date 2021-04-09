@@ -12,6 +12,10 @@ public class AccessURL {
 
     private Map<String, String> headers;
 
+    public AccessURL() {
+        
+    }
+
     public AccessURL(URI url) {
         this.url = url;
     }
