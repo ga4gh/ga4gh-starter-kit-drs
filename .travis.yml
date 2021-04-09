@@ -1,7 +1,19 @@
+addons:
+  apt:
+    sources:
+      - travis-ci/sqlite3
+    packages:
+      -sqlite3
 git:
   depth: false
 language: java
 jdk: oraclejdk11
+before_script:
+  - sqlite3 -version
+  - make -version
+  - make clean-all
+  - make sqlite-db-build
+  - make sqlite-db-populate
 script: "./gradlew test"
 after_success:
     - "./gradlew jacocoTestReport"
