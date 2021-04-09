@@ -7,21 +7,17 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.ga4gh.drs.configuration.DataSourceRegistry;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
+import org.ga4gh.drs.configuration.HibernateProps;
 import org.ga4gh.drs.configuration.ServerProps;
-import org.ga4gh.drs.constant.DataSourceDefaults;
+import org.ga4gh.drs.constant.HibernatePropsDefaults;
 import org.ga4gh.drs.constant.ServerPropsDefaults;
 import org.ga4gh.drs.constant.ServiceInfoDefaults;
 import org.ga4gh.drs.model.ServiceInfo;
-import org.ga4gh.drs.utils.DataSourceLookup;
 import org.ga4gh.drs.utils.DeepObjectMerger;
 import org.ga4gh.drs.utils.cache.AccessCache;
-import org.ga4gh.drs.utils.datasource.LocalFileDataSource;
-import org.ga4gh.drs.utils.objectloader.DrsObjectLoaderFactory;
-import org.ga4gh.drs.utils.objectloader.FileDrsObjectLoader;
-import org.ga4gh.drs.utils.objectloader.HttpsDrsObjectLoader;
+import org.ga4gh.drs.utils.hibernate.HibernateUtil;
 import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
@@ -34,11 +30,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 
 @Configuration
 @ConfigurationProperties
@@ -47,6 +41,11 @@ public class AppConfig implements WebMvcConfigurer {
     /* ******************************
      * CONFIG BEANS
      * ****************************** */
+
+    @Bean
+    public HibernateUtil getHibernateUtil() {
+        return new HibernateUtil();
+    }
 
     @Bean
     public Options getCommandLineOptions() {
@@ -86,9 +85,18 @@ public class AppConfig implements WebMvcConfigurer {
         serviceInfo.getType().setGroup(ServiceInfoDefaults.SERVICE_TYPE_GROUP);
         serviceInfo.getType().setVersion(ServiceInfoDefaults.SERVICE_TYPE_VERSION);
 
-        DataSourceRegistry dataSourceRegistry = drsConfigContainer.getDrsConfig().getDataSourceRegistry();
-        dataSourceRegistry.setLocal(DataSourceDefaults.LOCAL);
-        dataSourceRegistry.setS3(DataSourceDefaults.S3);
+        HibernateProps hibernateProps = drsConfigContainer.getDrsConfig().getHibernateProps();
+        hibernateProps.setDriverClassName(HibernatePropsDefaults.DRIVER_CLASS_NAME);
+        hibernateProps.setUrl(HibernatePropsDefaults.URL);
+        hibernateProps.setUsername(HibernatePropsDefaults.USERNAME);
+        hibernateProps.setPassword(HibernatePropsDefaults.PASSWORD);
+        hibernateProps.setPoolSize(HibernatePropsDefaults.POOL_SIZE);
+        hibernateProps.setDialect(HibernatePropsDefaults.DIALECT);
+        hibernateProps.setHbm2ddlAuto(HibernatePropsDefaults.HBM2DDL_AUTO);
+        hibernateProps.setShowSQL(HibernatePropsDefaults.SHOW_SQL);
+        hibernateProps.setCurrentSessionContextClass(HibernatePropsDefaults.CURRENT_SESSION_CONTEXT_CLASS);
+        hibernateProps.setDateClass(HibernatePropsDefaults.DATE_CLASS);
+
         return drsConfigContainer;
     }
 
@@ -157,44 +165,8 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     /* ******************************
-     * DATA SOURCE BEANS
-     * ****************************** */
-
-    @Bean
-    @Scope(value = AppConfigConstants.PROTOTYPE)
-    public LocalFileDataSource localFileDataSource() {
-        return new LocalFileDataSource();
-    }
-
-    /* ******************************
-     * DRS OBJECT LOADER BEANS
-     * ****************************** */
-
-    @Bean
-    @Scope(value = AppConfigConstants.PROTOTYPE)
-    public FileDrsObjectLoader fileDrsObjectLoader(String objectId, String objectPath) {
-        return new FileDrsObjectLoader(objectId, objectPath);
-    }
-
-    @Bean
-    @Scope(value = AppConfigConstants.PROTOTYPE)
-    public HttpsDrsObjectLoader HttpsDrsObjectLoader(String objectId, String objectPath) {
-        return new HttpsDrsObjectLoader(objectId, objectPath);
-    }
-
-    /* ******************************
      * OTHER UTILS BEANS
      * ****************************** */
-
-    @Bean
-    public DataSourceLookup dataSourceLookup() {
-        return new DataSourceLookup();
-    }
-
-    @Bean
-    public DrsObjectLoaderFactory drsObjectLoaderFactory() {
-        return new DrsObjectLoaderFactory();
-    }
 
     @Bean
     public AccessCache accessCache() {

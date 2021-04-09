@@ -6,12 +6,12 @@ public class DrsConfig {
 
     private ServerProps serverProps;
     private ServiceInfo serviceInfo;
-    private DataSourceRegistry dataSourceRegistry;
+    private HibernateProps hibernateProps;
 
     public DrsConfig() {
         serverProps = new ServerProps();
         serviceInfo = new ServiceInfo();
-        dataSourceRegistry = new DataSourceRegistry();
+        hibernateProps = new HibernateProps();
     }
 
     public void setServerProps(ServerProps serverProps) {
@@ -30,11 +30,11 @@ public class DrsConfig {
         return serviceInfo;
     }
 
-    public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
-        this.dataSourceRegistry = dataSourceRegistry;
+    public void setHibernateProps(HibernateProps hibernateProps) {
+        this.hibernateProps = hibernateProps;
     }
 
-    public DataSourceRegistry getDataSourceRegistry() {
-        return dataSourceRegistry;
+    public HibernateProps getHibernateProps() {
+        return hibernateProps;
     }
 }

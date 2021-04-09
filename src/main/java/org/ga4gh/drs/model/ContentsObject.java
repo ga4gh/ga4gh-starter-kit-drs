@@ -22,6 +22,10 @@ public class ContentsObject {
 
     private String id;
 
+    public ContentsObject() {
+        
+    }
+
     public ContentsObject(String name) {
         this.name = name;
     }

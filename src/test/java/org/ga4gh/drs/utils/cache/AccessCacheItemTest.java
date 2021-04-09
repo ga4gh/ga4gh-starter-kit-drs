@@ -15,7 +15,7 @@ public class AccessCacheItemTest {
                 "00001",
                 "2bc20749-bdfc-489d-8234-9eaea158b918",
                 "./path/to/00001.bam",
-                AccessType.FILE,
+                AccessType.file,
                 "application/bam"
             }
         };

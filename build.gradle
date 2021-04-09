@@ -41,6 +41,19 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.12.1'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
+    compile 'org.hibernate:hibernate-core:5.4.11.Final'
+    compile 'org.springframework:spring-orm:5.1.6.RELEASE'
+    compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+
+    compile 'org.hibernate:hibernate-core:5.4.11.Final'
+    compile 'org.postgresql:postgresql:42.2.10'
+    compile 'javax.xml.bind:jaxb-api:2.2.8'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.10.2'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.10.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.10.2'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.4.4'
+    compile 'org.springdoc:springdoc-openapi-ui:1.2.33'
+    compile 'org.xerial:sqlite-jdbc:3.8.11.2'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile ("org.springframework.security:spring-security-test")
@@ -53,6 +66,7 @@ application {
 
 bootJar {
     mainClassName = 'org.ga4gh.drs.App'
+    destinationDirectory = file(project.rootDir)
 }
 
 test {

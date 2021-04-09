@@ -1,7 +1,6 @@
 package org.ga4gh.drs.utils.requesthandler;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
 import org.ga4gh.drs.exception.ResourceNotFoundException;
@@ -33,33 +32,14 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
             throw new ResourceNotFoundException("invalid access_id/object_id");
         }
 
-        AccessURL accessURL = null;
-
-        try {
-            switch (cacheItem.getAccessType()) {
-                case FILE:
-                    accessURL = generateAccessURLForFile();
-                    break;
-                case HTTPS:
-                    accessURL = null;
-                    break;
-                default:
-                    // TODO THROW ERROR
-                    accessURL = null;
-                    break;
-            }
-        } catch (URISyntaxException e) {
-            // TODO THROW REST CONTROLLER EXCEPTION
-            return null;
-        }
-        
+        AccessURL accessURL = generateAccessURLForFile();
         return accessURL;
     }
 
-    private AccessURL generateAccessURLForFile() throws URISyntaxException {
+    private AccessURL generateAccessURLForFile() {
         String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
         String path = "/stream/" + getObjectId() + "/" + getAccessId();
-        return new AccessURL(new URI("http://" + hostname + path));
+        return new AccessURL(URI.create("http://" + hostname + path));
     }
 
     public void setObjectId(String objectId) {

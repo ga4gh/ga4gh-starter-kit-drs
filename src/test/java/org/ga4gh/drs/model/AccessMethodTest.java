@@ -15,7 +15,7 @@ public class AccessMethodTest {
             {
                 "access_id:00001",
                 new AccessURL(URI.create("https://s3.somebucket.com/00001.bam")),
-                AccessType.HTTPS,
+                AccessType.https,
                 "us-east-2"
             }
         };
