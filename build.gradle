@@ -61,11 +61,11 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'org.ga4gh.drs.App'
+    mainClassName = 'org.ga4gh.starterkit.drs.App'
 }
 
 bootJar {
-    mainClassName = 'org.ga4gh.drs.App'
+    mainClassName = 'org.ga4gh.starterkit.drs.App'
     destinationDirectory = file(project.rootDir)
 }
 
