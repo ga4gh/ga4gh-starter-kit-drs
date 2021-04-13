@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.ga4gh.drs.exception.ResourceNotFoundException;
+import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.cache.AccessCacheItem;
 import org.springframework.beans.factory.annotation.Autowired;

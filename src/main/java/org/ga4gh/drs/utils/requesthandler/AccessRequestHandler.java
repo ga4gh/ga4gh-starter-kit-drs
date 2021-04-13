@@ -3,7 +3,7 @@ package org.ga4gh.drs.utils.requesthandler;
 import java.net.URI;
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
-import org.ga4gh.drs.exception.ResourceNotFoundException;
+import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.drs.model.AccessURL;
 import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.cache.AccessCacheItem;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class AccessRequestHandler implements RequestHandler<AccessURL> {
 
     @Autowired
-    @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER)
+    @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER)
     private DrsConfigContainer drsConfigContainer;
 
     @Autowired

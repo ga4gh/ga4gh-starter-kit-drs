@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import org.ga4gh.drs.AppConfigConstants;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
-import org.ga4gh.drs.exception.ResourceNotFoundException;
+import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.drs.model.AccessMethod;
 import org.ga4gh.drs.model.AccessType;
 import org.ga4gh.drs.model.AccessURL;
@@ -16,21 +16,21 @@ import org.ga4gh.drs.model.DrsObject;
 import org.ga4gh.drs.model.FileAccessObject;
 import org.ga4gh.drs.utils.cache.AccessCache;
 import org.ga4gh.drs.utils.cache.AccessCacheItem;
-import org.ga4gh.drs.utils.hibernate.HibernateUtil;
+import org.ga4gh.drs.utils.hibernate.DrsHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     @Autowired
-    @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER)
+    @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER)
     DrsConfigContainer drsConfigContainer;
 
     @Autowired
     AccessCache accessCache;
 
     @Autowired
-    HibernateUtil hibernateUtil;
+    DrsHibernateUtil hibernateUtil;
 
     private String objectId;
 

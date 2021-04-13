@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class ServiceInfo {
 
     @Autowired
-    @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER)
+    @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER)
     DrsConfigContainer drsConfigContainer;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<org.ga4gh.drs.model.ServiceInfo> getServiceInfo() {
+    public ResponseEntity<org.ga4gh.starterkit.common.model.ServiceInfo> getServiceInfo() {
         return new ResponseEntity<>(drsConfigContainer.getDrsConfig().getServiceInfo(), HttpStatus.OK);
     }
 }

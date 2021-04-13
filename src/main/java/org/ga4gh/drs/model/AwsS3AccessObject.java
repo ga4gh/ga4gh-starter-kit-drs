@@ -11,9 +11,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
+
 @Entity
 @Table(name = "aws_s3_access_object")
-public class AwsS3AccessObject implements Serializable {
+public class AwsS3AccessObject implements Serializable, HibernateEntity {
 
     public static final long serialVersionUID = 1L;
 
@@ -35,6 +37,10 @@ public class AwsS3AccessObject implements Serializable {
     /* Constructors */
 
     public AwsS3AccessObject() {
+
+    }
+
+    public void loadRelations() {
 
     }
 

@@ -9,11 +9,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "drs_object_checksum")
-public class Checksum implements Serializable {
+public class Checksum implements Serializable, HibernateEntity {
 
     public static final long serialVersionUID = 1L;
 
@@ -41,7 +43,7 @@ public class Checksum implements Serializable {
         this.type = type;
     }
 
-    public void lazyLoad() {
+    public void loadRelations() {
 
     }
 

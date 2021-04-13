@@ -2,7 +2,7 @@ ORG := $(shell cat project.properties | grep "docker.organization" | cut -f 2 -d
 REPO := $(shell cat project.properties | grep "docker.repo" | cut -f 2 -d '=')
 TAG := $(shell cat project.properties | grep "docker.version" | cut -f 2 -d '=')
 IMG := ${ORG}/${REPO}:${TAG}
-DEVDB := drsdev.db
+DEVDB := ga4gh-starter-kit.dev.db
 JAR := drs-server.jar
 
 Nothing:

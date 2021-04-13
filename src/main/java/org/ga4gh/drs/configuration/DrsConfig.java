@@ -1,6 +1,7 @@
 package org.ga4gh.drs.configuration;
 
-import org.ga4gh.drs.model.ServiceInfo;
+import org.ga4gh.starterkit.common.model.ServiceInfo;
+import org.ga4gh.starterkit.common.hibernate.HibernateProps;
 
 public class DrsConfig {
 

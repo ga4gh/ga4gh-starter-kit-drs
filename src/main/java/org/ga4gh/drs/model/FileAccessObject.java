@@ -12,9 +12,11 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
+
 @Entity
 @Table(name = "file_access_object")
-public class FileAccessObject implements Serializable {
+public class FileAccessObject implements Serializable, HibernateEntity {
 
     public static final long serialVersionUID = 1L;
 
@@ -34,6 +36,10 @@ public class FileAccessObject implements Serializable {
 
     public FileAccessObject() {
 
+    }
+
+    public void loadRelations() {
+        
     }
 
     /* Setters and Getters */

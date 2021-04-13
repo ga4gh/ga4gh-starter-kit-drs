@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
+import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.hibernate.Hibernate;
 import org.springframework.lang.NonNull;
 import java.net.URI;
@@ -32,7 +34,7 @@ import javax.persistence.Transient;
 @Table(name = "drs_object")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class DrsObject implements DrsEntity {
+public class DrsObject implements HibernateEntity {
     
     /*
         Simple attributes lifted directly from the DRS spec: id, description,
@@ -154,7 +156,7 @@ public class DrsObject implements DrsEntity {
 
     /* Custom API methods */
 
-    public void lazyLoad() {
+    public void loadRelations() {
         Hibernate.initialize(getAliases());
         Hibernate.initialize(getChecksums());
         Hibernate.initialize(getDrsObjectChildren());

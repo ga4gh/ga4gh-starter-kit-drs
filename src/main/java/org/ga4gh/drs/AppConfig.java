@@ -9,15 +9,17 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.ga4gh.drs.configuration.DrsConfig;
 import org.ga4gh.drs.configuration.DrsConfigContainer;
-import org.ga4gh.drs.configuration.HibernateProps;
 import org.ga4gh.drs.configuration.ServerProps;
-import org.ga4gh.drs.constant.HibernatePropsDefaults;
-import org.ga4gh.drs.constant.ServerPropsDefaults;
-import org.ga4gh.drs.constant.ServiceInfoDefaults;
-import org.ga4gh.drs.model.ServiceInfo;
-import org.ga4gh.drs.utils.DeepObjectMerger;
+import org.ga4gh.drs.constant.DrsServerPropsDefaults;
+import org.ga4gh.drs.constant.DrsServiceInfoDefaults;
+import org.ga4gh.drs.model.AwsS3AccessObject;
+import org.ga4gh.drs.model.Checksum;
+import org.ga4gh.drs.model.DrsObject;
+import org.ga4gh.drs.model.FileAccessObject;
+import org.ga4gh.starterkit.common.model.ServiceInfo;
+import org.ga4gh.starterkit.common.util.DeepObjectMerger;
 import org.ga4gh.drs.utils.cache.AccessCache;
-import org.ga4gh.drs.utils.hibernate.HibernateUtil;
+import org.ga4gh.drs.utils.hibernate.DrsHibernateUtil;
 import org.ga4gh.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.drs.utils.requesthandler.ObjectRequestHandler;
@@ -30,29 +32,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @ConfigurationProperties
 public class AppConfig implements WebMvcConfigurer {
 
     /* ******************************
-     * CONFIG BEANS
+     * DRS SERVER CONFIG BEANS
      * ****************************** */
-
-    @Bean
-    public HibernateUtil getHibernateUtil() {
-        return new HibernateUtil();
-    }
-
-    @Bean
-    public Options getCommandLineOptions() {
-        final Options options = new Options();
-        options.addOption("c", "config", true, "Path to YAML config file");
-        return options;
-    }
 
     @Bean
     @Scope(AppConfigConstants.PROTOTYPE)
@@ -67,41 +60,29 @@ public class AppConfig implements WebMvcConfigurer {
         @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
         ServerProps serverProps = drsConfigContainer.getDrsConfig().getServerProps();
-        serverProps.setHostname(ServerPropsDefaults.HOSTNAME);
+        serverProps.setHostname(DrsServerPropsDefaults.HOSTNAME);
 
         ServiceInfo serviceInfo = drsConfigContainer.getDrsConfig().getServiceInfo();
-        serviceInfo.setId(ServiceInfoDefaults.ID);
-        serviceInfo.setName(ServiceInfoDefaults.NAME);
-        serviceInfo.setDescription(ServiceInfoDefaults.DESCRIPTION);
-        serviceInfo.setContactUrl(ServiceInfoDefaults.CONTACT_URL);
-        serviceInfo.setDocumentationUrl(ServiceInfoDefaults.DOCUMENTATION_URL);
-        serviceInfo.setCreatedAt(ServiceInfoDefaults.CREATED_AT);
-        serviceInfo.setUpdatedAt(ServiceInfoDefaults.UPDATED_AT);
-        serviceInfo.setEnvironment(ServiceInfoDefaults.ENVIRONMENT);
-        serviceInfo.setVersion(ServiceInfoDefaults.VERSION);
-        serviceInfo.getOrganization().setName(ServiceInfoDefaults.ORGANIZATION_NAME);
-        serviceInfo.getOrganization().setUrl(ServiceInfoDefaults.ORGANIZATION_URL);
-        serviceInfo.getType().setArtifact(ServiceInfoDefaults.SERVICE_TYPE_ARTIFACT);
-        serviceInfo.getType().setGroup(ServiceInfoDefaults.SERVICE_TYPE_GROUP);
-        serviceInfo.getType().setVersion(ServiceInfoDefaults.SERVICE_TYPE_VERSION);
-
-        HibernateProps hibernateProps = drsConfigContainer.getDrsConfig().getHibernateProps();
-        hibernateProps.setDriverClassName(HibernatePropsDefaults.DRIVER_CLASS_NAME);
-        hibernateProps.setUrl(HibernatePropsDefaults.URL);
-        hibernateProps.setUsername(HibernatePropsDefaults.USERNAME);
-        hibernateProps.setPassword(HibernatePropsDefaults.PASSWORD);
-        hibernateProps.setPoolSize(HibernatePropsDefaults.POOL_SIZE);
-        hibernateProps.setDialect(HibernatePropsDefaults.DIALECT);
-        hibernateProps.setHbm2ddlAuto(HibernatePropsDefaults.HBM2DDL_AUTO);
-        hibernateProps.setShowSQL(HibernatePropsDefaults.SHOW_SQL);
-        hibernateProps.setCurrentSessionContextClass(HibernatePropsDefaults.CURRENT_SESSION_CONTEXT_CLASS);
-        hibernateProps.setDateClass(HibernatePropsDefaults.DATE_CLASS);
+        serviceInfo.setId(DrsServiceInfoDefaults.ID);
+        serviceInfo.setName(DrsServiceInfoDefaults.NAME);
+        serviceInfo.setDescription(DrsServiceInfoDefaults.DESCRIPTION);
+        serviceInfo.setContactUrl(DrsServiceInfoDefaults.CONTACT_URL);
+        serviceInfo.setDocumentationUrl(DrsServiceInfoDefaults.DOCUMENTATION_URL);
+        serviceInfo.setCreatedAt(DrsServiceInfoDefaults.CREATED_AT);
+        serviceInfo.setUpdatedAt(DrsServiceInfoDefaults.UPDATED_AT);
+        serviceInfo.setEnvironment(DrsServiceInfoDefaults.ENVIRONMENT);
+        serviceInfo.setVersion(DrsServiceInfoDefaults.VERSION);
+        serviceInfo.getOrganization().setName(DrsServiceInfoDefaults.ORGANIZATION_NAME);
+        serviceInfo.getOrganization().setUrl(DrsServiceInfoDefaults.ORGANIZATION_URL);
+        serviceInfo.getType().setArtifact(DrsServiceInfoDefaults.SERVICE_TYPE_ARTIFACT);
+        serviceInfo.getType().setGroup(DrsServiceInfoDefaults.SERVICE_TYPE_GROUP);
+        serviceInfo.getType().setVersion(DrsServiceInfoDefaults.SERVICE_TYPE_VERSION);
 
         return drsConfigContainer;
     }
 
     @Bean
-    @Qualifier(AppConfigConstants.RUNTIME_DRS_CONFIG_CONTAINER)
+    @Qualifier(AppConfigConstants.USER_DRS_CONFIG_CONTAINER)
     public DrsConfigContainer runtimeDrsConfigContainer(
         @Autowired ApplicationArguments args,
         @Autowired() Options options,
@@ -133,13 +114,44 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @Qualifier(AppConfigConstants.MERGED_DRS_CONFIG_CONTAINER)
+    @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER)
     public DrsConfigContainer mergedDrsConfigContainer(
         @Qualifier(AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER) DrsConfigContainer defaultContainer,
-        @Qualifier(AppConfigConstants.RUNTIME_DRS_CONFIG_CONTAINER) DrsConfigContainer runtimeContainer
+        @Qualifier(AppConfigConstants.USER_DRS_CONFIG_CONTAINER) DrsConfigContainer userContainer
     ) {
-        DeepObjectMerger.merge(runtimeContainer, defaultContainer);
+        DeepObjectMerger.merge(userContainer, defaultContainer);
         return defaultContainer;
+    }
+
+    /* ******************************
+     * HIBERNATE CONFIG BEANS
+     * ****************************** */
+
+    @Bean List<Class<? extends HibernateEntity>> getAnnotatedClasses() {
+        List<Class<? extends HibernateEntity>> annotatedClasses = new ArrayList<>();
+        annotatedClasses.add(DrsObject.class);
+        annotatedClasses.add(Checksum.class);
+        annotatedClasses.add(FileAccessObject.class);
+        annotatedClasses.add(AwsS3AccessObject.class);
+        return annotatedClasses;
+    }
+
+    @Bean
+    public DrsHibernateUtil getDrsHibernateUtil(
+        @Autowired List<Class<? extends HibernateEntity>> annotatedClasses,
+        @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+    ) {
+        DrsHibernateUtil hibernateUtil = new DrsHibernateUtil();
+        hibernateUtil.setAnnotatedClasses(annotatedClasses);
+        hibernateUtil.setHibernateProps(drsConfigContainer.getDrsConfig().getHibernateProps());
+        return hibernateUtil;
+    }
+
+    @Bean
+    public Options getCommandLineOptions() {
+        final Options options = new Options();
+        options.addOption("c", "config", true, "Path to YAML config file");
+        return options;
     }
 
     /* ******************************

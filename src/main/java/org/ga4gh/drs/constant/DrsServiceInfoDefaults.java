@@ -3,7 +3,7 @@ package org.ga4gh.drs.constant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ServiceInfoDefaults {
+public class DrsServiceInfoDefaults {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 

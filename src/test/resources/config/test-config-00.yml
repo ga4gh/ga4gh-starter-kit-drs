@@ -8,14 +8,5 @@ drsConfig:
     type:
       group: org.test
       artifact: test
-  dataSourceRegistry:
-    local:
-      - idPrefix: TestDataPhenopackets.
-        rootDir: ./src/test/resources/data/phenopackets
-      - idPrefix: TestDataHtsjdkSamtools.
-        rootDir: ./src/test/resources/data/htsjdk
-    s3:
-      - idPrefix: S3DemoData
-        rootDir: /
-        region: us-east-2
-        bucket: ga4gh-demo-data
+  hibernateProps:
+    showSQL: false
