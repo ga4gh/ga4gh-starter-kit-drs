@@ -1,9 +1,9 @@
-ORG := $(shell cat project.properties | grep "docker.organization" | cut -f 2 -d '=')
-REPO := $(shell cat project.properties | grep "docker.repo" | cut -f 2 -d '=')
-TAG := $(shell cat project.properties | grep "docker.version" | cut -f 2 -d '=')
+ORG := $(shell cat build.gradle | grep "^group" | cut -f 2 -d ' ' | sed "s/'//g")
+REPO := $(shell cat settings.gradle | grep "rootProject.name" | cut -f 3 -d ' ' | sed "s/'//g")
+TAG := $(shell cat build.gradle | grep "^version" | cut -f 2 -d ' ' | sed "s/'//g")
 IMG := ${ORG}/${REPO}:${TAG}
 DEVDB := ga4gh-starter-kit.dev.db
-JAR := drs-server.jar
+JAR := ga4gh-starter-kit-drs.jar
 
 Nothing:
 	@echo "No target provided. Stop"
@@ -28,9 +28,9 @@ sqlite-db-build: clean-sqlite
 	@sqlite3 ${DEVDB} < database/sqlite/create-schema.migrations.sql
 
 # populate the sqlite database with test data
-.PHONY: sqlite-db-populate
-sqlite-db-populate:
-	@sqlite3 ${DEVDB} < database/sqlite/populate-tables.migrations.sql
+.PHONY: sqlite-db-populate-dev-dataset
+sqlite-db-populate-dev-dataset:
+	@sqlite3 ${DEVDB} < database/sqlite/populate-dev-dataset.migrations.sql
 
 # create jar file
 .PHONY: jar-build
@@ -44,11 +44,11 @@ jar-run:
 
 # run application in development mode locally
 .PHONY: run-development-local
-run-development-local: clean-all sqlite-db-build sqlite-db-populate jar-build jar-run
+run-development-local: clean-all sqlite-db-build sqlite-db-populate-dev-dataset jar-build jar-run
 
 # run application in development mode (to be used inside docker container)
 .PHONY: run-development-docker
-run-development-docker: sqlite-db-build sqlite-db-populate
+run-development-docker: sqlite-db-build sqlite-db-populate-dev-dataset
 	# TODO add jar-run to list of commands
 	/bin/bash
 

@@ -9,9 +9,9 @@ public class DrsServiceInfoDefaults {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
-    public static final String ID = "org.ga4gh.drs-server";
+    public static final String ID = "org.ga4gh.starterkit.drs";
 
-    public static final String NAME = "GA4GH Open DRS Implementation";
+    public static final String NAME = "GA4GH Starter Kit DRS Service";
 
     public static final String DESCRIPTION = "An open source, community-driven"
         + " implementation of the GA4GH Data Repository Service (DRS)"
@@ -19,7 +19,7 @@ public class DrsServiceInfoDefaults {
 
     public static final String CONTACT_URL = "mailto:info@ga4gh.org";
 
-    public static final String DOCUMENTATION_URL = "https://github.com/ga4gh/drs-server";
+    public static final String DOCUMENTATION_URL = "https://github.com/ga4gh/ga4gh-starter-kit-drs";
 
     public static final LocalDateTime CREATED_AT = LocalDateTime.parse("2020-01-15T12:00:00Z", DATE_FORMATTER);
 
