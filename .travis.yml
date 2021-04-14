@@ -15,7 +15,7 @@ before_script:
   - make -version
   - make clean-all
   - make sqlite-db-build
-  - make sqlite-db-populate
+  - make sqlite-db-populate-dev-dataset
 script: "./gradlew test"
 after_success:
     - "./gradlew jacocoTestReport"

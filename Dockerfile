@@ -30,7 +30,7 @@ COPY --from=builder /usr/local/bin/sqlite3 /usr/local/bin/sqlite3
 COPY --from=builder /usr/bin/make /usr/bin/make
 COPY Makefile Makefile
 COPY project.properties project.properties
-COPY drs-server.jar drs-server.jar
+COPY ga4gh-starter-kit-drs.jar ga4gh-starter-kit-drs.jar
 COPY src/test/resources/ src/test/resources/
 COPY database/sqlite database/sqlite
 

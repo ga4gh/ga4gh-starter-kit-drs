@@ -27,6 +27,9 @@ repositories {
     jcenter()
 }
 
+group 'org.ga4gh'
+version '0.1.1'
+
 dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.1-jre'
@@ -44,7 +47,6 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.4.11.Final'
     compile 'org.springframework:spring-orm:5.1.6.RELEASE'
     compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
-
     compile 'org.hibernate:hibernate-core:5.4.11.Final'
     compile 'org.postgresql:postgresql:42.2.10'
     compile 'javax.xml.bind:jaxb-api:2.2.8'
@@ -54,6 +56,7 @@ dependencies {
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.4.4'
     compile 'org.springdoc:springdoc-openapi-ui:1.2.33'
     compile 'org.xerial:sqlite-jdbc:3.8.11.2'
+    compile 'org.ga4gh:ga4gh-starter-kit-common:0.1.1'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile ("org.springframework.security:spring-security-test")
@@ -61,11 +64,11 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'org.ga4gh.drs.App'
+    mainClassName = 'org.ga4gh.starterkit.drs.App'
 }
 
 bootJar {
-    mainClassName = 'org.ga4gh.drs.App'
+    mainClassName = 'org.ga4gh.starterkit.drs.App'
     destinationDirectory = file(project.rootDir)
 }
 
