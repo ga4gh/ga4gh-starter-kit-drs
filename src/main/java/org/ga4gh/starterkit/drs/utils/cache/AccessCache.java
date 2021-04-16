@@ -33,6 +33,6 @@ public class AccessCache {
     }
 
     private String getCompositeKey(String objectId, String accessId) {
-        return objectId + ":" + accessId;
+        return objectId.toString() + ":" + accessId;
     }
 }

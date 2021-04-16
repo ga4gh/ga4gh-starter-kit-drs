@@ -38,12 +38,15 @@ public class DrsHibernateUtil extends HibernateUtil {
         Long sizeSum = 0L;
         List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
 
-        if (childrenDrsObjects.size() == 0) {
-            sizeSum = parentDrsObject.getSize();
-        } else {
-            for (int i = 0; i < childrenDrsObjects.size(); i ++) {
-                childrenDrsObjects.get(i).loadRelations();
-                sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+        if (childrenDrsObjects != null) {
+            if (childrenDrsObjects.size() == 0) {
+                sizeSum = parentDrsObject.getSize();
+                sizeSum = sizeSum == null ? 0L : sizeSum;
+            } else {
+                for (int i = 0; i < childrenDrsObjects.size(); i ++) {
+                    childrenDrsObjects.get(i).loadRelations();
+                    sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+                }
             }
         }
 

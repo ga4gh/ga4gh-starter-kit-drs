@@ -12,11 +12,12 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.springframework.lang.NonNull;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -43,7 +44,7 @@ public class DrsObject implements HibernateEntity<String> {
     */
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false, nullable = false)
     @NonNull
     @JsonView(SerializeView.Always.class)
     private String id;
@@ -86,12 +87,13 @@ public class DrsObject implements HibernateEntity<String> {
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "drs_object_alias", joinColumns = @JoinColumn(name = "drs_object_id"))
     @Column(name = "alias")
+    @Cascade(value = {CascadeType.ALL})
     @JsonView(SerializeView.Always.class)
     private List<String> aliases;
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL)
+               cascade = javax.persistence.CascadeType.ALL)
     @JsonView(SerializeView.Always.class)
     private List<Checksum> checksums;
 
@@ -125,13 +127,13 @@ public class DrsObject implements HibernateEntity<String> {
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL)
+               cascade = javax.persistence.CascadeType.ALL)
     @JsonView(SerializeView.Admin.class)
     private List<FileAccessObject> fileAccessObjects;
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL)
+               cascade = javax.persistence.CascadeType.ALL)
     @JsonView(SerializeView.Admin.class)
     private List<AwsS3AccessObject> awsS3AccessObjects;
 

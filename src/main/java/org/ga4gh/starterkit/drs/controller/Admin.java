@@ -1,13 +1,6 @@
 package org.ga4gh.starterkit.drs.controller;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.ga4gh.starterkit.common.requesthandler.BasicCreateRequestHandler;
-import org.ga4gh.starterkit.common.requesthandler.BasicDeleteRequestHandler;
-import org.ga4gh.starterkit.common.requesthandler.BasicShowRequestHandler;
-import org.ga4gh.starterkit.common.requesthandler.BasicUpdateRequestHandler;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
@@ -29,20 +22,6 @@ public class Admin {
     @Autowired
     DrsHibernateUtil hibernateUtil;
 
-    /*
-    @Resource(name = "showObjectRequestHandler")
-    BasicShowRequestHandler<String, DrsObject> showObjectRequestHandler;
-
-    @Resource(name = "createObjectRequestHandler")
-    BasicCreateRequestHandler<String, DrsObject> createObjectRequestHandler;
-
-    @Resource(name = "updateObjectRequestHandler")
-    BasicUpdateRequestHandler<String, DrsObject> updateObjectRequestHandler;
-
-    @Resource(name = "deleteObjectRequestHandler")
-    BasicDeleteRequestHandler<String, DrsObject> deleteObjectRequestHandler;
-    */
-
     // Non-standard endpoints - write operations
 
     @GetMapping(path = "/{object_id:.+}")
@@ -50,36 +29,40 @@ public class Admin {
     public DrsObject showDrsObject(
         @PathVariable(name = "object_id") String id
     ) {
-        DrsObject drsObject = hibernateUtil.loadDrsObject(id, false);
-        breakInterminableFetchForChildrenAndParents(drsObject);
-        return drsObject;
+        return getAdminFormattedDrsObject(id);
     }
 
-    /*
     @PostMapping
     public DrsObject createDrsObject(
         @RequestBody DrsObject drsObject
     ) {
-        return createObjectRequestHandler.prepare(drsObject).handleRequest();
+        hibernateUtil.createEntityObject(DrsObject.class, drsObject);
+        return getAdminFormattedDrsObject(drsObject.getId());
     }
-    */
 
-    /*
     @PutMapping(path = "/{object_id:.+}")
     public DrsObject updateDrsObject(
-        @PathVariable(name = "object_id") String id,
+        @PathVariable(name = "object_id") String oldId,
         @RequestBody DrsObject drsObject
     ) {
-        return updateObjectRequestHandler.prepare(id, drsObject).handleRequest();
+        String newId = drsObject.getId();
+        hibernateUtil.updateEntityObject(DrsObject.class, oldId, newId, drsObject);
+        return getAdminFormattedDrsObject(newId);
     }
 
     @DeleteMapping(path = "/{object_id:.+}")
     public DrsObject deleteDrsObject(
         @PathVariable(name = "object_id") String id
     ) {
-        return deleteObjectRequestHandler.prepare(id).handleRequest();
+        hibernateUtil.deleteEntityObject(DrsObject.class, id);
+        return hibernateUtil.readEntityObject(DrsObject.class, id, false);
     }
-    */
+
+    private DrsObject getAdminFormattedDrsObject(String id) {
+        DrsObject drsObject = hibernateUtil.loadDrsObject(id, false);
+        breakInterminableFetchForChildrenAndParents(drsObject);
+        return drsObject;
+    }
 
     private void breakInterminableFetchForChildrenAndParents(DrsObject drsObject) {
         for (DrsObject childDrsObject: drsObject.getDrsObjectChildren()) {
