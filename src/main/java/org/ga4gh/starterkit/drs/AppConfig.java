@@ -17,6 +17,10 @@ import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.model.FileAccessObject;
 import org.ga4gh.starterkit.common.model.ServiceInfo;
+import org.ga4gh.starterkit.common.requesthandler.BasicCreateRequestHandler;
+import org.ga4gh.starterkit.common.requesthandler.BasicDeleteRequestHandler;
+import org.ga4gh.starterkit.common.requesthandler.BasicShowRequestHandler;
+import org.ga4gh.starterkit.common.requesthandler.BasicUpdateRequestHandler;
 import org.ga4gh.starterkit.common.util.DeepObjectMerger;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
@@ -33,9 +37,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
+import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,8 +133,9 @@ public class AppConfig implements WebMvcConfigurer {
      * HIBERNATE CONFIG BEANS
      * ****************************** */
 
-    @Bean List<Class<? extends HibernateEntity>> getAnnotatedClasses() {
-        List<Class<? extends HibernateEntity>> annotatedClasses = new ArrayList<>();
+    @Bean
+    public List<Class<? extends HibernateEntity<? extends Serializable>>> getAnnotatedClasses() {
+        List<Class<? extends HibernateEntity<? extends Serializable>>> annotatedClasses = new ArrayList<>();
         annotatedClasses.add(DrsObject.class);
         annotatedClasses.add(Checksum.class);
         annotatedClasses.add(FileAccessObject.class);
@@ -138,7 +145,7 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     public DrsHibernateUtil getDrsHibernateUtil(
-        @Autowired List<Class<? extends HibernateEntity>> annotatedClasses,
+        @Autowired List<Class<? extends HibernateEntity<? extends Serializable>>> annotatedClasses,
         @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
         DrsHibernateUtil hibernateUtil = new DrsHibernateUtil();
@@ -174,6 +181,46 @@ public class AppConfig implements WebMvcConfigurer {
     @RequestScope
     public FileStreamRequestHandler fileStreamRequestHandler() {
         return new FileStreamRequestHandler();
+    }
+
+    @Bean
+    @RequestScope
+    public BasicShowRequestHandler<String, DrsObject> showObjectRequestHandler(
+        @Autowired HibernateUtil hibernateUtil
+    ) {
+        BasicShowRequestHandler<String, DrsObject> handler = new BasicShowRequestHandler<>(DrsObject.class);
+        handler.setHibernateUtil(hibernateUtil);
+        return handler;
+    }
+
+    @Bean
+    @RequestScope
+    public BasicCreateRequestHandler<String, DrsObject> createObjectRequestHandler(
+        @Autowired HibernateUtil hibernateUtil
+    ) {
+        BasicCreateRequestHandler<String, DrsObject> handler = new BasicCreateRequestHandler<>(DrsObject.class);
+        handler.setHibernateUtil(hibernateUtil);
+        return handler;
+    }
+
+    @Bean
+    @RequestScope
+    public BasicUpdateRequestHandler<String, DrsObject> updateObjectRequestHandler(
+        @Autowired HibernateUtil hibernateUtil
+    ) {
+        BasicUpdateRequestHandler<String, DrsObject> handler = new BasicUpdateRequestHandler<>(DrsObject.class);
+        handler.setHibernateUtil(hibernateUtil);
+        return handler;
+    }
+
+    @Bean
+    @RequestScope
+    public BasicDeleteRequestHandler<String, DrsObject> deleteObjectRequestHandler(
+        @Autowired HibernateUtil hibernateUtil
+    ) {
+        BasicDeleteRequestHandler<String, DrsObject> handler = new BasicDeleteRequestHandler<>(DrsObject.class);
+        handler.setHibernateUtil(hibernateUtil);
+        return handler;
     }
 
     /* ******************************

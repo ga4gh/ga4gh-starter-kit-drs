@@ -2,6 +2,7 @@ package org.ga4gh.starterkit.drs.controller;
 
 import org.ga4gh.starterkit.drs.App;
 import org.ga4gh.starterkit.drs.AppConfig;
+import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,8 @@ import org.testng.annotations.Test;
 @WebAppConfiguration
 public class ServiceInfoTest extends AbstractTestNGSpringContextTests {
 
+    static final String API_PREFIX = DrsServerConstants.DRS_API_PREFIX;
+
     @Autowired
     private WebApplicationContext webAppContext;
 
@@ -39,7 +42,7 @@ public class ServiceInfoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testGetServiceInfo() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/service-info"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(API_PREFIX + "/service-info"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
         String responseBody = result.getResponse().getContentAsString();

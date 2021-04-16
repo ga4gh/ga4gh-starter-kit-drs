@@ -2,6 +2,7 @@ package org.ga4gh.starterkit.drs.controller;
 
 import org.ga4gh.starterkit.drs.AppConfigConstants;
 import org.ga4gh.starterkit.drs.configuration.DrsConfigContainer;
+import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @RestController
-@RequestMapping("/service-info")
+@RequestMapping(DrsServerConstants.DRS_API_PREFIX + "/service-info")
 public class ServiceInfo {
 
     @Autowired
