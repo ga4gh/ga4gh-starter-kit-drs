@@ -9,18 +9,19 @@ import org.hibernate.Session;
 
 public class DrsHibernateUtil extends HibernateUtil {
 
-    public DrsObject loadDrsObject(String id, boolean recursiveChildLoad, boolean recursiveParentLoad) throws HibernateException {
+    public DrsObject loadDrsObject(String id, boolean recursiveChildLoad) throws HibernateException {
         Session session = newTransaction();
         DrsObject drsObject = null;
         try {
             drsObject = session.get(DrsObject.class, id);
             if (drsObject != null) {
                 drsObject.loadRelations();
+
+                // detach entity so computed fields (size, checksum)
+                // aren't saved to db
+                session.evict(drsObject);
                 if (recursiveChildLoad) {
                     drsObject.setSize(recursiveDrsObjectChildLoad(drsObject));
-                }
-                if (recursiveParentLoad) {
-                    recursiveDrsObjectParentLoad(drsObject);
                 }
             }
         } catch (PersistenceException e) {
@@ -47,13 +48,5 @@ public class DrsHibernateUtil extends HibernateUtil {
         }
 
         return sizeSum;
-    }
-
-    private void recursiveDrsObjectParentLoad(DrsObject childDrsObject) {
-        List<DrsObject> parentDrsObjects = childDrsObject.getDrsObjectParents();
-        for (int i = 0; i < parentDrsObjects.size(); i++) {
-            parentDrsObjects.get(i).loadRelations();
-            recursiveDrsObjectParentLoad(parentDrsObjects.get(i));
-        }
     }
 }

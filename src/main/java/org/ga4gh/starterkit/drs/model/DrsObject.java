@@ -159,7 +159,7 @@ public class DrsObject implements HibernateEntity<String> {
 
     /* Constructors */
 
-    public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, long size) {
+    public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, Long size) {
         this.setId(id);
         this.setSelfURI(selfURI);
         this.setChecksums(checksums);
@@ -173,6 +173,7 @@ public class DrsObject implements HibernateEntity<String> {
         Hibernate.initialize(getAliases());
         Hibernate.initialize(getChecksums());
         Hibernate.initialize(getDrsObjectChildren());
+        Hibernate.initialize(getDrsObjectParents());
         Hibernate.initialize(getFileAccessObjects());
         Hibernate.initialize(getAwsS3AccessObjects());
     }
@@ -219,11 +220,11 @@ public class DrsObject implements HibernateEntity<String> {
         return name;
     }
 
-    public void setSize(long size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 
-    public long getSize() {
+    public Long getSize() {
         return size;
     }
 

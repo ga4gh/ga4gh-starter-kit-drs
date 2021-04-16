@@ -1,10 +1,9 @@
 package org.ga4gh.starterkit.drs.controller;
 
 import javax.annotation.Resource;
-
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import com.fasterxml.jackson.annotation.JsonView;
-
-import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import org.ga4gh.starterkit.common.requesthandler.BasicCreateRequestHandler;
 import org.ga4gh.starterkit.common.requesthandler.BasicDeleteRequestHandler;
 import org.ga4gh.starterkit.common.requesthandler.BasicShowRequestHandler;
@@ -30,6 +29,7 @@ public class Admin {
     @Autowired
     DrsHibernateUtil hibernateUtil;
 
+    /*
     @Resource(name = "showObjectRequestHandler")
     BasicShowRequestHandler<String, DrsObject> showObjectRequestHandler;
 
@@ -41,6 +41,7 @@ public class Admin {
 
     @Resource(name = "deleteObjectRequestHandler")
     BasicDeleteRequestHandler<String, DrsObject> deleteObjectRequestHandler;
+    */
 
     // Non-standard endpoints - write operations
 
@@ -49,16 +50,21 @@ public class Admin {
     public DrsObject showDrsObject(
         @PathVariable(name = "object_id") String id
     ) {
-        return hibernateUtil.loadDrsObject(id, true, true);
+        DrsObject drsObject = hibernateUtil.loadDrsObject(id, false);
+        breakInterminableFetchForChildrenAndParents(drsObject);
+        return drsObject;
     }
 
+    /*
     @PostMapping
     public DrsObject createDrsObject(
         @RequestBody DrsObject drsObject
     ) {
         return createObjectRequestHandler.prepare(drsObject).handleRequest();
     }
+    */
 
+    /*
     @PutMapping(path = "/{object_id:.+}")
     public DrsObject updateDrsObject(
         @PathVariable(name = "object_id") String id,
@@ -72,5 +78,24 @@ public class Admin {
         @PathVariable(name = "object_id") String id
     ) {
         return deleteObjectRequestHandler.prepare(id).handleRequest();
+    }
+    */
+
+    private void breakInterminableFetchForChildrenAndParents(DrsObject drsObject) {
+        for (DrsObject childDrsObject: drsObject.getDrsObjectChildren()) {
+            breakInterminableFetch(childDrsObject);
+        }
+        for (DrsObject parentDrsObject: drsObject.getDrsObjectParents()) {
+            breakInterminableFetch(parentDrsObject);
+        }
+    }
+
+    private void breakInterminableFetch(DrsObject drsObject) {
+        drsObject.setAliases(null);
+        drsObject.setChecksums(null);
+        drsObject.setFileAccessObjects(null);
+        drsObject.setAwsS3AccessObjects(null);
+        drsObject.setDrsObjectChildren(null);
+        drsObject.setDrsObjectParents(null);
     }
 }
