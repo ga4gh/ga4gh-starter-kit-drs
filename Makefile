@@ -32,6 +32,9 @@ sqlite-db-build: clean-sqlite
 sqlite-db-populate-dev-dataset:
 	@sqlite3 ${DEVDB} < database/sqlite/populate-dev-dataset.migrations.sql
 
+.PHONY: sqlite-db-refresh
+sqlite-db-refresh: clean-sqlite sqlite-db-build sqlite-db-populate-dev-dataset
+
 # create jar file
 .PHONY: jar-build
 jar-build:

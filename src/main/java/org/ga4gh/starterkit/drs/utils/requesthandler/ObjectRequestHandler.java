@@ -49,7 +49,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         // Get DrsObject from db
         DrsObject drsObject = hibernateUtil.loadDrsObject(getObjectId(), true);
         if (drsObject == null) {
-            throw new ResourceNotFoundException("no DrsObject found by id: " + getObjectId());
+            throw new ResourceNotFoundException("No DrsObject found by id: " + getObjectId());
         }
 
         // post query prep of response

@@ -143,6 +143,11 @@ public class AppConfig implements WebMvcConfigurer {
         @Autowired List<Class<? extends HibernateEntity<? extends Serializable>>> annotatedClasses,
         @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
     ) {
+        System.out.println("***");
+        System.out.println("Setting up DRS Hibernate UTIL!");
+        System.out.println(drsConfigContainer.getDrsConfig().getHibernateProps().getPoolSize());
+        System.out.println(drsConfigContainer.getDrsConfig().getHibernateProps().getHbm2ddlAuto());
+        System.out.println("***");
         DrsHibernateUtil hibernateUtil = new DrsHibernateUtil();
         hibernateUtil.setAnnotatedClasses(annotatedClasses);
         hibernateUtil.setHibernateProps(drsConfigContainer.getDrsConfig().getHibernateProps());

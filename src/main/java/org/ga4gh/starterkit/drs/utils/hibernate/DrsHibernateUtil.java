@@ -1,8 +1,12 @@
 package org.ga4gh.starterkit.drs.utils.hibernate;
 
+import java.io.Serializable;
 import java.util.List;
+
+import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 import org.ga4gh.starterkit.drs.model.DrsObject;
+import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -52,4 +56,19 @@ public class DrsHibernateUtil extends HibernateUtil {
 
         return sizeSum;
     }
+
+    /*
+    @Override
+    public <I extends Serializable, T extends HibernateEntity<I>> void createEntityObject(Class<T> entityClass, T newObject) throws EntityExistsException {
+        System.out.println("CHILD CREATE ENTITY METHOD");
+        Session session = newTransaction();
+        T existingObject = session.get(entityClass, newObject.getId());
+        if (existingObject != null) {
+            endTransaction(session);
+            throw new EntityExistsException("A(n) " + entityClass.getSimpleName() + " already exists at id " + newObject.getId());
+        }
+        session.saveOrUpdate(newObject);
+        endTransaction(session);
+    }
+    */
 }

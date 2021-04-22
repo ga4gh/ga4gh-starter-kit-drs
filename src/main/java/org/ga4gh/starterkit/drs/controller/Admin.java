@@ -1,11 +1,24 @@
 package org.ga4gh.starterkit.drs.controller;
 
+import java.util.function.Consumer;
+
+import javax.el.LambdaExpression;
+
 import com.fasterxml.jackson.annotation.JsonView;
+import org.ga4gh.starterkit.common.exception.BadRequestException;
+import org.ga4gh.starterkit.common.exception.ConflictException;
+import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
+import org.ga4gh.starterkit.common.hibernate.exception.EntityDoesntExistException;
+import org.ga4gh.starterkit.common.hibernate.exception.EntityExistsException;
+import org.ga4gh.starterkit.common.hibernate.exception.EntityMismatchException;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
+import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
+import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,33 +42,54 @@ public class Admin {
     public DrsObject showDrsObject(
         @PathVariable(name = "object_id") String id
     ) {
+        DrsObject drsObject = hibernateUtil.loadDrsObject(id, false);
+        if (drsObject == null) {
+            throw new ResourceNotFoundException("No DrsObject found by id: " + id);
+        }
         return getAdminFormattedDrsObject(id);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DrsObject createDrsObject(
         @RequestBody DrsObject drsObject
     ) {
-        hibernateUtil.createEntityObject(DrsObject.class, drsObject);
-        return getAdminFormattedDrsObject(drsObject.getId());
+        try {
+            setBidirectionalRelationships(drsObject);
+            hibernateUtil.createEntityObject(DrsObject.class, drsObject);
+            return getAdminFormattedDrsObject(drsObject.getId());
+        } catch (EntityExistsException ex) {
+            throw new ConflictException(ex.getMessage());
+        }
     }
 
     @PutMapping(path = "/{object_id:.+}")
     public DrsObject updateDrsObject(
-        @PathVariable(name = "object_id") String oldId,
+        @PathVariable(name = "object_id") String id,
         @RequestBody DrsObject drsObject
     ) {
-        String newId = drsObject.getId();
-        hibernateUtil.updateEntityObject(DrsObject.class, oldId, newId, drsObject);
-        return getAdminFormattedDrsObject(newId);
+        try {
+            setBidirectionalRelationships(drsObject);
+            hibernateUtil.updateEntityObject(DrsObject.class, id, drsObject);
+            return getAdminFormattedDrsObject(id);
+        } catch (EntityMismatchException ex) {
+            throw new BadRequestException(ex.getMessage());
+        } catch (EntityDoesntExistException ex) {
+            throw new ConflictException(ex.getMessage());
+        }
     }
 
     @DeleteMapping(path = "/{object_id:.+}")
     public DrsObject deleteDrsObject(
         @PathVariable(name = "object_id") String id
     ) {
-        hibernateUtil.deleteEntityObject(DrsObject.class, id);
-        return hibernateUtil.readEntityObject(DrsObject.class, id, false);
+        try {
+            hibernateUtil.deleteEntityObject(DrsObject.class, id);
+            return hibernateUtil.readEntityObject(DrsObject.class, id, false);
+        } catch (EntityDoesntExistException ex) {
+            throw new ConflictException(ex.getMessage());
+        } catch (EntityExistsException ex) {
+            throw new ConflictException(ex.getMessage());
+        }
     }
 
     private DrsObject getAdminFormattedDrsObject(String id) {
@@ -80,5 +114,17 @@ public class Admin {
         drsObject.setAwsS3AccessObjects(null);
         drsObject.setDrsObjectChildren(null);
         drsObject.setDrsObjectParents(null);
+    }
+
+    private void setBidirectionalRelationships(DrsObject drsObject) {
+        if (drsObject.getChecksums() != null) {
+            drsObject.getChecksums().forEach(checksum -> checksum.setDrsObject(drsObject));
+        }
+        if (drsObject.getFileAccessObjects() != null) {
+            drsObject.getFileAccessObjects().forEach(fileAccessObject -> fileAccessObject.setDrsObject(drsObject));
+        }
+        if (drsObject.getAwsS3AccessObjects() != null) {
+            drsObject.getAwsS3AccessObjects().forEach(awsS3AccessObject -> awsS3AccessObject.setDrsObject(drsObject));
+        }
     }
 }

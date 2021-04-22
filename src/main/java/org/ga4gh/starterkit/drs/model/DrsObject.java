@@ -2,6 +2,7 @@ package org.ga4gh.starterkit.drs.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.CascadeType;
 import org.springframework.lang.NonNull;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -93,7 +95,8 @@ public class DrsObject implements HibernateEntity<String> {
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = javax.persistence.CascadeType.ALL)
+               cascade = {javax.persistence.CascadeType.ALL},
+               orphanRemoval = true)
     @JsonView(SerializeView.Always.class)
     private List<Checksum> checksums;
 
@@ -127,13 +130,15 @@ public class DrsObject implements HibernateEntity<String> {
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = javax.persistence.CascadeType.ALL)
+               cascade = javax.persistence.CascadeType.ALL,
+               orphanRemoval = true)
     @JsonView(SerializeView.Admin.class)
     private List<FileAccessObject> fileAccessObjects;
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = javax.persistence.CascadeType.ALL)
+               cascade = javax.persistence.CascadeType.ALL,
+               orphanRemoval = true)
     @JsonView(SerializeView.Admin.class)
     private List<AwsS3AccessObject> awsS3AccessObjects;
 
@@ -156,12 +161,15 @@ public class DrsObject implements HibernateEntity<String> {
     private List<ContentsObject> contents;
 
     public DrsObject() {
-        
+        checksums = new ArrayList<>();
+        fileAccessObjects = new ArrayList<>();
+        awsS3AccessObjects = new ArrayList<>();
     }
 
     /* Constructors */
 
     public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, Long size) {
+        super();
         this.setId(id);
         this.setSelfURI(selfURI);
         this.setChecksums(checksums);

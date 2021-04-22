@@ -57,7 +57,7 @@ public class DrsObjectTest {
                 "id:00001",
                 new URI("drs://drs.exampleserver.org/id:00001"),
                 new ArrayList<Checksum>() {{
-                    add(new Checksum("51430d4cc2306f850cfbd8315badc53a", "md5"));
+                    add(new Checksum(Long.valueOf(487965321), "51430d4cc2306f850cfbd8315badc53a", "md5"));
                 }},
                 LocalDateTime.now(),
                 Long.valueOf(1024),
