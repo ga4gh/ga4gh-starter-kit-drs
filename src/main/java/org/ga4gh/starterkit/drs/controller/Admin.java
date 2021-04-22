@@ -1,9 +1,5 @@
 package org.ga4gh.starterkit.drs.controller;
 
-import java.util.function.Consumer;
-
-import javax.el.LambdaExpression;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import org.ga4gh.starterkit.common.exception.BadRequestException;
 import org.ga4gh.starterkit.common.exception.ConflictException;
@@ -12,11 +8,9 @@ import org.ga4gh.starterkit.common.hibernate.exception.EntityDoesntExistExceptio
 import org.ga4gh.starterkit.common.hibernate.exception.EntityExistsException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityMismatchException;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
-import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
-import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
