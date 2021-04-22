@@ -125,7 +125,6 @@ public class AdminTest extends AbstractTestNGSpringContextTests {
                 "success-00.json",
                 null
             },
-            /*
             {
                 "e7b5f232-a0a7-4113-a072-2b6a6233e267",
                 "success-01.json",
@@ -133,30 +132,51 @@ public class AdminTest extends AbstractTestNGSpringContextTests {
                 true,
                 "success-01.json",
                 null
+            },
+            {
+                "00000000-0000-0000-0000-000000000000",
+                "failure-00.json",
+                status().isConflict(),
+                false,
+                null,
+                "No DrsObject at id 00000000-0000-0000-0000-000000000000"
+            },
+            {
+                "e7b5f232-a0a7-4113-a072-2b6a6233e267",
+                "failure-01.json",
+                status().isBadRequest(),
+                false,
+                null,
+                "Update requested at id e7b5f232-a0a7-4113-a072-2b6a6233e267, but new DrsObject has an id of 4ac53482-c146-412b-9dfb-1b9cc8e34460"
             }
-            */
         };
     }
 
-    //String id, String payloadFilename, ResultMatcher expStatus, boolean expSuccess, String expFilename, String expMessage
-
-    /*
     @DataProvider
     public Object[][] deleteDrsObjectCases() {
         return new Object[][] {
-
+            {
+                "22100588-a60d-4d8f-9a58-a369443f4a58",
+                status().isOk(),
+                true,
+                null
+            },
+            {
+                "e7b5f232-a0a7-4113-a072-2b6a6233e267",
+                status().isOk(),
+                true,
+                null
+            },
+            {
+                "00000000-0000-0000-0000-000000000000",
+                status().isConflict(),
+                false,
+                "No DrsObject at id 00000000-0000-0000-0000-000000000000"
+            }
         };
     }
-    */
 
-    @AfterGroups("create")
-    public void cleanupCreate() throws Exception {
-        hibernateUtil.deleteEntityObject(DrsObject.class, "22100588-a60d-4d8f-9a58-a369443f4a58");
-        hibernateUtil.deleteEntityObject(DrsObject.class, "e7b5f232-a0a7-4113-a072-2b6a6233e267");
-    }
-
-    @BeforeGroups("update")
-    public void setupUpdate() throws Exception {
+    private void createTestEntities() throws Exception {
         String[] payloadFiles = {
             "/payloads/admin/create/success-00.json",
             "/payloads/admin/create/success-01.json"
@@ -169,18 +189,30 @@ public class AdminTest extends AbstractTestNGSpringContextTests {
         }
     }
 
-    @AfterGroups("update")
-    public void cleanupUpdate() throws Exception {
+    private void deleteTestEntities() throws Exception {
         hibernateUtil.deleteEntityObject(DrsObject.class, "22100588-a60d-4d8f-9a58-a369443f4a58");
         hibernateUtil.deleteEntityObject(DrsObject.class, "e7b5f232-a0a7-4113-a072-2b6a6233e267");
     }
 
-    /*
-    @BeforeGroups("delete")
-    public void setupDelete() {
-
+    @AfterGroups("create")
+    public void cleanupCreate() throws Exception {
+        deleteTestEntities();
     }
-    */
+
+    @BeforeGroups("update")
+    public void setupUpdate() throws Exception {
+        createTestEntities();
+    }
+
+    @AfterGroups("update")
+    public void cleanupUpdate() throws Exception {
+        deleteTestEntities();
+    }
+
+    @BeforeGroups("delete")
+    public void setupDelete() throws Exception {
+        createTestEntities();
+    }
 
     private void genericAdminApiRequestTest(MvcResult result, boolean expSuccess, String expSubdir, String expFilename, String expMessage) throws Exception {
         if (expSuccess) {
@@ -235,10 +267,16 @@ public class AdminTest extends AbstractTestNGSpringContextTests {
         genericAdminApiRequestTest(result, expSuccess, expSubdir, expFilename, expMessage);
     }
 
-    /*
     @Test(dataProvider = "deleteDrsObjectCases", groups = "delete")
-    public void testDeleteDrsObject() {
-
+    public void testDeleteDrsObject(String id, ResultMatcher expStatus, boolean expSuccess, String expMessage) throws Exception {
+        MvcResult result = mockMvc.perform(
+            delete(API_PREFIX + "/" + id)
+        )
+            .andExpect(expStatus)
+            .andReturn();
+        if (!expSuccess) {
+            String message = result.getResolvedException().getMessage();
+            Assert.assertEquals(message, expMessage);
+        }
     }
-    */
 }
