@@ -1,22 +1,24 @@
 package org.ga4gh.starterkit.drs.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
+import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.springframework.lang.NonNull;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -34,7 +36,7 @@ import javax.persistence.Transient;
 @Table(name = "drs_object")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class DrsObject implements HibernateEntity {
+public class DrsObject implements HibernateEntity<String> {
     
     /*
         Simple attributes lifted directly from the DRS spec: id, description,
@@ -43,46 +45,58 @@ public class DrsObject implements HibernateEntity {
     */
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false, nullable = false)
     @NonNull
+    @JsonView(SerializeView.Always.class)
     private String id;
 
     @Column(name = "description")
+    @JsonView(SerializeView.Always.class)
     private String description;
 
     @Column(name = "created_time")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    // @NonNull
+    @NonNull
+    @JsonView(SerializeView.Always.class)
     private LocalDateTime createdTime;
 
     @Column(name = "mime_type")
+    @JsonView(SerializeView.Always.class)
     private String mimeType;
 
     @Column(name = "name")
+    @JsonView(SerializeView.Always.class)
     private String name;
 
     @Column(name = "size")
+    @JsonView(SerializeView.Always.class)
     private Long size;
 
     @Column(name = "updated_time")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonView(SerializeView.Always.class)
     private LocalDateTime updatedTime;
 
     @Column(name = "version")
+    @JsonView(SerializeView.Always.class)
     private String version;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "drs_object_alias", joinColumns = @JoinColumn(name = "drs_object_id"))
     @Column(name = "alias")
+    @Cascade(value = {CascadeType.ALL})
+    @JsonView(SerializeView.Always.class)
     private List<String> aliases;
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL)
+               cascade = {javax.persistence.CascadeType.ALL},
+               orphanRemoval = true)
+    @JsonView(SerializeView.Always.class)
     private List<Checksum> checksums;
 
     /* 
@@ -96,7 +110,7 @@ public class DrsObject implements HibernateEntity {
         joinColumns = {@JoinColumn(name = "parent_id")},
         inverseJoinColumns = {@JoinColumn(name = "child_id")}
     )
-    @JsonIgnore
+    @JsonView(SerializeView.Admin.class)
     private List<DrsObject> drsObjectChildren;
 
     @ManyToMany
@@ -105,7 +119,7 @@ public class DrsObject implements HibernateEntity {
         joinColumns = {@JoinColumn(name = "child_id")},
         inverseJoinColumns = {@JoinColumn(name = "parent_id")}
     )
-    @JsonIgnore
+    @JsonView(SerializeView.Admin.class)
     private List<DrsObject> drsObjectParents;
 
     /*
@@ -115,14 +129,16 @@ public class DrsObject implements HibernateEntity {
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL)
-    @JsonIgnore
+               cascade = javax.persistence.CascadeType.ALL,
+               orphanRemoval = true)
+    @JsonView(SerializeView.Admin.class)
     private List<FileAccessObject> fileAccessObjects;
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL)
-    @JsonIgnore
+               cascade = javax.persistence.CascadeType.ALL,
+               orphanRemoval = true)
+    @JsonView(SerializeView.Admin.class)
     private List<AwsS3AccessObject> awsS3AccessObjects;
 
     /*
@@ -132,21 +148,27 @@ public class DrsObject implements HibernateEntity {
 
     @Transient
     @NonNull
+    @JsonView(SerializeView.Public.class)
     private URI selfURI;
 
     @Transient
+    @JsonView(SerializeView.Public.class)
     private List<AccessMethod> accessMethods;
 
     @Transient
+    @JsonView(SerializeView.Public.class)
     private List<ContentsObject> contents;
 
     public DrsObject() {
-        
+        checksums = new ArrayList<>();
+        fileAccessObjects = new ArrayList<>();
+        awsS3AccessObjects = new ArrayList<>();
     }
 
     /* Constructors */
 
-    public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, long size) {
+    public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, Long size) {
+        super();
         this.setId(id);
         this.setSelfURI(selfURI);
         this.setChecksums(checksums);
@@ -160,6 +182,7 @@ public class DrsObject implements HibernateEntity {
         Hibernate.initialize(getAliases());
         Hibernate.initialize(getChecksums());
         Hibernate.initialize(getDrsObjectChildren());
+        Hibernate.initialize(getDrsObjectParents());
         Hibernate.initialize(getFileAccessObjects());
         Hibernate.initialize(getAwsS3AccessObjects());
     }
@@ -206,11 +229,11 @@ public class DrsObject implements HibernateEntity {
         return name;
     }
 
-    public void setSize(long size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 
-    public long getSize() {
+    public Long getSize() {
         return size;
     }
 

@@ -47,9 +47,9 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     public DrsObject handleRequest() {
 
         // Get DrsObject from db
-        DrsObject drsObject = (DrsObject) hibernateUtil.loadDrsObject(getObjectId());
+        DrsObject drsObject = hibernateUtil.loadDrsObject(getObjectId(), true);
         if (drsObject == null) {
-            throw new ResourceNotFoundException("no DrsObject found by id: " + getObjectId());
+            throw new ResourceNotFoundException("No DrsObject found by id: " + getObjectId());
         }
 
         // post query prep of response
@@ -61,7 +61,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     private URI prepareSelfURI(String id) {
         String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
-        return URI.create("drs://" + hostname + "/" + id);
+        return URI.create("drs://" + hostname + "/" + id.toString());
     }
 
     private List<ContentsObject> prepareContents(DrsObject drsObject) {

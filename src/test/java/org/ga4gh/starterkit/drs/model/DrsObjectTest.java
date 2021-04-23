@@ -19,7 +19,7 @@ public class DrsObjectTest {
         protected URI selfURI;
         protected List<Checksum> checksums;
         protected LocalDateTime createdTime;
-        protected long size;
+        protected Long size;
         protected List<AccessMethod> accessMethods;
         protected List<String> aliases;
         protected List<ContentsObject> contents;
@@ -30,7 +30,7 @@ public class DrsObjectTest {
         protected String version;
 
         public TestCase(String id, URI selfURI, List<Checksum> checksums,
-            LocalDateTime createdTime, long size, List<AccessMethod> accessMethods,
+            LocalDateTime createdTime, Long size, List<AccessMethod> accessMethods,
             List<String> aliases, List<ContentsObject> contents, LocalDateTime updatedTime,
             String description, String mimeType, String name, String version) {
             
@@ -57,10 +57,10 @@ public class DrsObjectTest {
                 "id:00001",
                 new URI("drs://drs.exampleserver.org/id:00001"),
                 new ArrayList<Checksum>() {{
-                    add(new Checksum("51430d4cc2306f850cfbd8315badc53a", "md5"));
+                    add(new Checksum(Long.valueOf(487965321), "51430d4cc2306f850cfbd8315badc53a", "md5"));
                 }},
                 LocalDateTime.now(),
-                1024,
+                Long.valueOf(1024),
                 new ArrayList<AccessMethod>() {{
                     add(new AccessMethod("id:00001", AccessType.file));
                 }},
@@ -115,7 +115,7 @@ public class DrsObjectTest {
 
     @Test(dataProvider = "cases")
     public void testDrsObjectSetters(TestCase testCase) {
-        DrsObject drsObject = new DrsObject(null, null, null, null, 0);
+        DrsObject drsObject = new DrsObject(null, null, null, null, Long.valueOf(0));
         drsObject.setId(testCase.id);
         drsObject.setSelfURI(testCase.selfURI);
         drsObject.setChecksums(testCase.checksums);

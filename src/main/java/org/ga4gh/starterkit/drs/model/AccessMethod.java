@@ -1,12 +1,15 @@
 package org.ga4gh.starterkit.drs.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.springframework.lang.NonNull;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonView(SerializeView.Public.class)
 public class AccessMethod {
     /**
      * At least one of accessId or accessUrl is required

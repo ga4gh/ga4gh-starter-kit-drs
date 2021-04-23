@@ -3,6 +3,7 @@ package org.ga4gh.starterkit.drs.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ga4gh.starterkit.drs.App;
 import org.ga4gh.starterkit.drs.AppConfig;
+import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes={App.class, AppConfig.class, Objects.class})
 @WebAppConfiguration
 public class ObjectsTest extends AbstractTestNGSpringContextTests {
+
+    static final String API_PREFIX = DrsServerConstants.DRS_API_PREFIX; 
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -207,11 +210,11 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
 
         // construct mock mvc request with expand parameter if requested by test case
         if (includeExpand) {
-            result = mockMvc.perform(get("/objects/" + objectId).param("expand", expand))
+            result = mockMvc.perform(get(API_PREFIX + "/objects/" + objectId).param("expand", expand))
             .andExpect(expStatus)
             .andReturn();
         } else {
-            result = mockMvc.perform(get("/objects/" + objectId))
+            result = mockMvc.perform(get(API_PREFIX + "/objects/" + objectId))
             .andExpect(expStatus)
             .andReturn();
         }
@@ -243,12 +246,12 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
     @Test(dataProvider = "getAccessURLByIdCases", groups = "access", dependsOnGroups = "object")
     public void testGetAccessURLById(String objectId, boolean expSuccess, ResultMatcher expStatus, ITestContext context) throws Exception {
         String accessId = (String) context.getAttribute(objectId);
-        MvcResult result = mockMvc.perform(get("/objects/" + objectId + "/access/" + accessId))
+        MvcResult result = mockMvc.perform(get(API_PREFIX + "/objects/" + objectId + "/access/" + accessId))
             .andExpect(expStatus)
             .andReturn();
         if (expSuccess) {
             String responseBody = result.getResponse().getContentAsString();
-            String expResponseBody = "{\"url\":\"http://localhost:8080/stream/" + objectId + "/" + accessId + "\"}";
+            String expResponseBody = "{\"url\":\"http://localhost:8080" + DrsServerConstants.DRS_API_PREFIX + "/stream/" + objectId + "/" + accessId + "\"}";
             Assert.assertEquals(responseBody, expResponseBody);
         }
     }
@@ -256,7 +259,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
     @Test(dataProvider = "streamFileCases")
     public void testStreamFile(String objectId, boolean expSuccess, ResultMatcher expStatus, String expChecksum, ITestContext context) throws Exception {
         String accessId = (String) context.getAttribute(objectId);
-        MvcResult result = mockMvc.perform(get("/stream/" + objectId + "/" + accessId))
+        MvcResult result = mockMvc.perform(get(API_PREFIX + "/stream/" + objectId + "/" + accessId))
             .andExpect(expStatus)
             .andReturn();
         if (expSuccess) {

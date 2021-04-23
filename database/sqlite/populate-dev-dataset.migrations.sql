@@ -109,7 +109,7 @@ INSERT INTO drs_object_alias VALUES
     ("924901d5-6d31-4c33-b443-7931eadfac4b", "Cao-FBN1-3"),
     ("0f8abce3-e161-4bdf-981f-86257d505d69", "Cao-TGFBR2-4");
 
-INSERT INTO drs_object_checksum VALUES
+INSERT INTO drs_object_checksum (drs_object_id, checksum, type) VALUES
     ("1a570e4e-2489-4218-9333-f65549495872", "f81ea43c74824cc72c77a39a92bf7b71", "md5"),
     ("1a570e4e-2489-4218-9333-f65549495872", "34880a6b8aa517a6999da912614753ffb0a837a8", "sha1"),
     ("1a570e4e-2489-4218-9333-f65549495872", "ec44e2ad7ec84c7c42ba57b205e67c7c7416ae1932029d8364cc053cef7abe58", "sha256"),
@@ -123,13 +123,13 @@ INSERT INTO drs_object_checksum VALUES
     ("0f8abce3-e161-4bdf-981f-86257d505d69", "ae6c744487ddf785976893d1bdce2f81c017921e", "sha1"),
     ("0f8abce3-e161-4bdf-981f-86257d505d69", "69dd919e14d162ebd0132a395cf1967346fd203210428287c354b11eebdda8b3", "sha256");
 
-INSERT INTO file_access_object VALUES
+INSERT INTO file_access_object (drs_object_id, path) VALUES
     ("1a570e4e-2489-4218-9333-f65549495872", "./src/test/resources/data/phenopackets/Cao-2018-FBN1-Patient_1.json"),
     ("4d83ba3f-a476-4c7c-868f-3d1fcf77fe29", "./src/test/resources/data/phenopackets/Cao-2018-FBN1-Patient_2.json"),
     ("924901d5-6d31-4c33-b443-7931eadfac4b", "./src/test/resources/data/phenopackets/Cao-2018-FBN1-Patient_3.json"),
     ("0f8abce3-e161-4bdf-981f-86257d505d69", "./src/test/resources/data/phenopackets/Cao-2018-TGFBR2-Patient_4.json");
 
-INSERT INTO aws_s3_access_object VALUES
+INSERT INTO aws_s3_access_object (drs_object_id, region, bucket, key) VALUES
     ("1a570e4e-2489-4218-9333-f65549495872", "us-east-2", "ga4gh-demo-data", "/phenopackets/Cao-2018-FBN1-Patient_1.json"),
     ("4d83ba3f-a476-4c7c-868f-3d1fcf77fe29", "us-east-2", "ga4gh-demo-data", "/phenopackets/Cao-2018-FBN1-Patient_2.json"),
     ("924901d5-6d31-4c33-b443-7931eadfac4b", "us-east-2", "ga4gh-demo-data", "/phenopackets/Cao-2018-FBN1-Patient_3.json"),
@@ -230,7 +230,7 @@ INSERT INTO drs_object_alias VALUES
     ("0bb9d297-2710-48f6-ab4d-80d5eb0c9eaa", "Lalani-TANGO2-5"),
     ("a3bb76d7-76ae-414b-81f7-97e663b02206", "Lalani-TANGO2-6");
 
-INSERT INTO drs_object_checksum VALUES
+INSERT INTO drs_object_checksum (drs_object_id, checksum, type) VALUES
     ("456e9ee0-5b60-4f38-82b5-83ba5d338038", "2262c06d95790324a76f09e2ee0ec418", "md5"),
     ("456e9ee0-5b60-4f38-82b5-83ba5d338038", "868177570cd7593aeb8e4b244d0ab4da47841037", "sha1"),
     ("456e9ee0-5b60-4f38-82b5-83ba5d338038", "317a5a0c3f12b607a81e711e776fccac28cadc6d48867bba51b8572bf56e77fa", "sha256"),
@@ -247,14 +247,14 @@ INSERT INTO drs_object_checksum VALUES
     ("a3bb76d7-76ae-414b-81f7-97e663b02206", "e381e836440c63d05bda9d68670114dac65977a2", "sha1"),
     ("a3bb76d7-76ae-414b-81f7-97e663b02206", "56c14073cd80e8fdb447f271d48f6f60321c5abe08cdc4cef992d55037f79949", "sha256");
 
-INSERT INTO file_access_object VALUES
+INSERT INTO file_access_object (drs_object_id, path) VALUES
     ("456e9ee0-5b60-4f38-82b5-83ba5d338038", "./src/test/resources/data/phenopackets/Lalani-2016-TANGO2-Suject_1.json"),
     ("1af6b862-7fc8-411a-86c5-d8e280e5b77a", "./src/test/resources/data/phenopackets/Lalani-2016-TANGO2-Subject_2.json"),
     ("c37b37fd-0450-432d-b6aa-9ffdece35ad0", "./src/test/resources/data/phenopackets/Lalani-2016-TANGO2-Subject_4.json"),
     ("0bb9d297-2710-48f6-ab4d-80d5eb0c9eaa", "./src/test/resources/data/phenopackets/Lalani-2016-TANGO2-Subject_5.json"),
     ("a3bb76d7-76ae-414b-81f7-97e663b02206", "./src/test/resources/data/phenopackets/Lalani-2016-TANGO2-Subject_6.json");
 
-INSERT INTO aws_s3_access_object VALUES
+INSERT INTO aws_s3_access_object (drs_object_id, region, bucket, key) VALUES
     ("456e9ee0-5b60-4f38-82b5-83ba5d338038", "us-east-2", "ga4gh-demo-data", "/phenopackets/Lalani-2016-TANGO2-Suject_1.json"),
     ("1af6b862-7fc8-411a-86c5-d8e280e5b77a", "us-east-2", "ga4gh-demo-data", "/phenopackets/Lalani-2016-TANGO2-Subject_2.json"),
     ("c37b37fd-0450-432d-b6aa-9ffdece35ad0", "us-east-2", "ga4gh-demo-data", "/phenopackets/Lalani-2016-TANGO2-Subject_4.json"),
@@ -324,7 +324,7 @@ INSERT INTO drs_object_alias VALUES
     ("2506f0e1-29e4-4132-9b37-f7452dc8a89b", "Mundhofir-FGFR2-1"),
     ("c00c264a-8f17-471f-8ded-1a1f10e965ac", "Mundhofir-FGFR2-2");
 
-INSERT INTO drs_object_checksum VALUES
+INSERT INTO drs_object_checksum (drs_object_id, checksum, type) VALUES
     ("2506f0e1-29e4-4132-9b37-f7452dc8a89b", "ed8dc271295fdea0f6df1fcb92f19d01", "md5"),
     ("2506f0e1-29e4-4132-9b37-f7452dc8a89b", "3210c0096eb14b6437a8b4f7438c0c0178cacb89", "sha1"),
     ("2506f0e1-29e4-4132-9b37-f7452dc8a89b", "bda2eaba66f9a328cf9f31916d0fb7c13126ecec0a44214684d851a8c389b046", "sha256"),
@@ -332,11 +332,11 @@ INSERT INTO drs_object_checksum VALUES
     ("c00c264a-8f17-471f-8ded-1a1f10e965ac", "bfff2ff28057eb81ceab73fb47df9d172821ee37", "sha1"),
     ("c00c264a-8f17-471f-8ded-1a1f10e965ac", "60fb8710f620dcf8af8296e89e08cb8ac9bab4ac489069105b8ca3fd3493e38c", "sha256");
 
-INSERT INTO file_access_object VALUES
+INSERT INTO file_access_object (drs_object_id, path) VALUES
     ("2506f0e1-29e4-4132-9b37-f7452dc8a89b", "./src/test/resources/data/phenopackets/Mundhofir-2013-FGFR2-Patient_1.json"),
     ("c00c264a-8f17-471f-8ded-1a1f10e965ac", "./src/test/resources/data/phenopackets/Mundhofir-2013-FGFR2-Patient_2.json");
 
-INSERT INTO aws_s3_access_object VALUES
+INSERT INTO aws_s3_access_object (drs_object_id, region, bucket, key) VALUES
     ("2506f0e1-29e4-4132-9b37-f7452dc8a89b", "us-east-2", "ga4gh-demo-data", "/phenopackets/Mundhofir-2013-FGFR2-Patient_1.json"),
     ("c00c264a-8f17-471f-8ded-1a1f10e965ac", "us-east-2", "ga4gh-demo-data", "/phenopackets/Mundhofir-2013-FGFR2-Patient_2.json");
 
@@ -456,7 +456,7 @@ INSERT INTO drs_object_alias VALUES
     ("6b994f18-6189-4233-bb83-139686490d68", "PMID:28851325-Zhang-2017-FOXG1-Patient_4"),
     ("6b994f18-6189-4233-bb83-139686490d68", "Zhang-FOXG1-4");
 
-INSERT INTO drs_object_checksum VALUES
+INSERT INTO drs_object_checksum (drs_object_id, checksum, type) VALUES
     ("697907bf-d5bd-433e-aac2-1747f1faf366", "71611ed3a3246fea6ce80916924c0722", "md5"),
     ("697907bf-d5bd-433e-aac2-1747f1faf366", "b7e976ef2a9d13c65f154ad72a5495139dc6ac32", "sha1"),
     ("697907bf-d5bd-433e-aac2-1747f1faf366", "70722813447e98baf8f79cd5828668f971676bcfe08c286f62a7decd84b03eb0", "sha256"),
@@ -479,7 +479,7 @@ INSERT INTO drs_object_checksum VALUES
     ("6b994f18-6189-4233-bb83-139686490d68", "e065fb118dee30730e641fb896c3f96474009f6f", "sha1"),
     ("6b994f18-6189-4233-bb83-139686490d68", "d6c7496a91de38e03e63940073ec6f7d2ccb41f6a28b8791178a6f16c05afb24", "sha256");
 
-INSERT INTO file_access_object VALUES
+INSERT INTO file_access_object (drs_object_id, path) VALUES
     ("697907bf-d5bd-433e-aac2-1747f1faf366", "./src/test/resources/data/phenopackets/Zhang-2009-EDA-proband.json"),
     ("3a45fab2-f350-445d-a137-4b1f946bf184", "./src/test/resources/data/phenopackets/Zhang-2011-TYRP1-patient_2.json"),
     ("ac53ca59-46f3-4f61-b1e7-bb75a49bfbfe", "./src/test/resources/data/phenopackets/Zhang-2016-RPS19-patient.json"),
@@ -488,7 +488,7 @@ INSERT INTO file_access_object VALUES
     ("41898242-62a9-4129-9a2c-5a4e8f5f0afb", "./src/test/resources/data/phenopackets/Zhang-2017-FOXG1-Patient_3.json"),
     ("6b994f18-6189-4233-bb83-139686490d68", "./src/test/resources/data/phenopackets/Zhang-2017-FOXG1-Patient_4.json");
 
-INSERT INTO aws_s3_access_object VALUES
+INSERT INTO aws_s3_access_object (drs_object_id, region, bucket, key) VALUES
     ("697907bf-d5bd-433e-aac2-1747f1faf366", "us-east-2", "ga4gh-demo-data", "/phenopackets/Zhang-2009-EDA-proband.json"),
     ("3a45fab2-f350-445d-a137-4b1f946bf184", "us-east-2", "ga4gh-demo-data", "/phenopackets/Zhang-2011-TYRP1-patient_2.json"),
     ("ac53ca59-46f3-4f61-b1e7-bb75a49bfbfe", "us-east-2", "ga4gh-demo-data", "/phenopackets/Zhang-2016-RPS19-patient.json"),

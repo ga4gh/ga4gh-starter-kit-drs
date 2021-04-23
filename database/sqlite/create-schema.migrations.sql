@@ -10,18 +10,18 @@ CREATE TABLE drs_object (
 );
 
 CREATE TABLE file_access_object(
+    id INTEGER PRIMARY KEY,
     drs_object_id TEXT,
     path TEXT,
-    PRIMARY KEY (drs_object_id, path),
     FOREIGN KEY (drs_object_id) REFERENCES drs_object(id)
 );
 
 CREATE TABLE aws_s3_access_object(
+    id INTEGER PRIMARY KEY,
     drs_object_id TEXT,
     region TEXT,
     bucket TEXT,
     key TEXT,
-    PRIMARY KEY (drs_object_id, key),
     FOREIGN KEY (drs_object_id) REFERENCES drs_object(id)
 );
 
@@ -33,10 +33,10 @@ CREATE TABLE drs_object_alias (
 );
 
 CREATE TABLE drs_object_checksum (
+    id INTEGER PRIMARY KEY,
     drs_object_id TEXT,
     checksum TEXT,
     type TEXT CHECK (type IN ('md5', 'etag', 'crc32c', 'trunc512', 'sha1', 'sha256')),
-    PRIMARY KEY (drs_object_id, type),
     FOREIGN KEY(drs_object_id) REFERENCES drs_object(id)
 );
 

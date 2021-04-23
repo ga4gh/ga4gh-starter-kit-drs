@@ -9,14 +9,20 @@ import org.hibernate.Session;
 
 public class DrsHibernateUtil extends HibernateUtil {
 
-    public DrsObject loadDrsObject(String id) throws HibernateException {
+    public DrsObject loadDrsObject(String id, boolean recursiveChildLoad) throws HibernateException {
         Session session = newTransaction();
         DrsObject drsObject = null;
         try {
             drsObject = session.get(DrsObject.class, id);
             if (drsObject != null) {
                 drsObject.loadRelations();
-                drsObject.setSize(recursiveDrsObjectChildLoad(drsObject));
+
+                // detach entity so computed fields (size, checksum)
+                // aren't saved to db
+                session.evict(drsObject);
+                if (recursiveChildLoad) {
+                    drsObject.setSize(recursiveDrsObjectChildLoad(drsObject));
+                }
             }
         } catch (PersistenceException e) {
             throw new HibernateException(e.getMessage());
@@ -32,11 +38,15 @@ public class DrsHibernateUtil extends HibernateUtil {
         Long sizeSum = 0L;
         List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
 
-        if (childrenDrsObjects.size() == 0) {
-            sizeSum = parentDrsObject.getSize();
-        } else {
-            for (int i = 0; i < childrenDrsObjects.size(); i ++) {
-                sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+        if (childrenDrsObjects != null) {
+            if (childrenDrsObjects.size() == 0) {
+                sizeSum = parentDrsObject.getSize();
+                sizeSum = sizeSum == null ? 0L : sizeSum;
+            } else {
+                for (int i = 0; i < childrenDrsObjects.size(); i ++) {
+                    childrenDrsObjects.get(i).loadRelations();
+                    sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+                }
             }
         }
 
