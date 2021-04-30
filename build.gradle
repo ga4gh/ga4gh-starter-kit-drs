@@ -6,12 +6,18 @@
  * User Manual available at https://docs.gradle.org/6.1.1/userguide/tutorial_java_projects.html
  */
 
-plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+    }
+}
 
-    // Apply the application plugin to add support for building a CLI application.
-    id 'application'
+plugins {
+    // Apply the java-library plugin to add support for Java Library
+    id 'java-library'
 
     // Apply the plugins to add support for Spring Boot
     id 'org.springframework.boot' version '2.0.5.RELEASE'
@@ -19,16 +25,22 @@ plugins {
 
     // Apply the plugin to add support for jacoco test coverage report
     id 'jacoco'
+
+    id 'io.codearte.nexus-staging' version '0.11.0'
 }
+
+apply plugin: 'com.bmuschko.nexus'
+
+archivesBaseName = 'ga4gh-starter-kit-drs'
+group 'org.ga4gh'
+version '0.1.1'
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
-
-group 'org.ga4gh'
-version '0.1.1'
 
 dependencies {
     // This dependency is used by the application.
@@ -62,14 +74,12 @@ dependencies {
     testCompile ("org.springframework.security:spring-security-test")
 }
 
-application {
-    // Define the main class for the application.
-    mainClassName = 'org.ga4gh.starterkit.drs.App'
+jar {
+    enabled = true
 }
 
 bootJar {
     mainClassName = 'org.ga4gh.starterkit.drs.App'
-    destinationDirectory = file(project.rootDir)
 }
 
 test {
@@ -90,4 +100,48 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
+}
+
+modifyPom {
+    project {
+        name 'ga4gh-starter-kit-drs'
+        description 'Starter Kit server implementation of the GA4GH Data Repository Service (DRS) specification'
+        url 'https://github.com/ga4gh/ga4gh-starter-kit-drs'
+        inceptionYear '2021'
+
+        scm {
+            url 'https://github.com/ga4gh/ga4gh-starter-kit-drs'
+            connection 'scm:https://github.com/ga4gh/ga4gh-starter-kit-drs.git'
+            developerConnection 'scm:git://github.com/ga4gh/ga4gh-starter-kit-drs.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'jb-adams'
+                name 'Jeremy Adams'
+                email 'jeremy.adams@ga4gh.org'
+            }
+        }
+    }
+
+}
+
+extraArchive {
+    sources = true
+    tests = true
+    javadoc = true
+}
+
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
