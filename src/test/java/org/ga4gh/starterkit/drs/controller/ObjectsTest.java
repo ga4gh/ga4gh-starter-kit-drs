@@ -1,8 +1,10 @@
 package org.ga4gh.starterkit.drs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ga4gh.starterkit.drs.App;
-import org.ga4gh.starterkit.drs.AppConfig;
+
+import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
+import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
@@ -26,7 +28,12 @@ import org.testng.ITestContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ContextConfiguration(classes={App.class, AppConfig.class, Objects.class})
+@ContextConfiguration(classes={
+    DrsStandaloneServer.class,
+    DrsStandaloneSpringConfig.class,
+    StarterKitDrsSpringConfig.class,
+    Objects.class
+})
 @WebAppConfiguration
 public class ObjectsTest extends AbstractTestNGSpringContextTests {
 

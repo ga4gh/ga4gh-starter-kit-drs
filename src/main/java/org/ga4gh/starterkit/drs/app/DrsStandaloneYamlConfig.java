@@ -1,17 +1,18 @@
-package org.ga4gh.starterkit.drs.configuration;
+package org.ga4gh.starterkit.drs.app;
 
-import org.ga4gh.starterkit.common.model.ServiceInfo;
 import org.ga4gh.starterkit.common.hibernate.HibernateProps;
+import org.ga4gh.starterkit.drs.configuration.ServerProps;
+import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 
-public class DrsConfig {
+public class DrsStandaloneYamlConfig {
 
     private ServerProps serverProps;
-    private ServiceInfo serviceInfo;
+    private DrsServiceInfo serviceInfo;
     private HibernateProps hibernateProps;
 
-    public DrsConfig() {
+    public DrsStandaloneYamlConfig() {
         serverProps = new ServerProps();
-        serviceInfo = new ServiceInfo();
+        serviceInfo = new DrsServiceInfo();
         hibernateProps = new HibernateProps();
     }
 
@@ -23,11 +24,11 @@ public class DrsConfig {
         return serverProps;
     }
 
-    public void setServiceInfo(ServiceInfo serviceInfo) {
+    public void setServiceInfo(DrsServiceInfo serviceInfo) {
         this.serviceInfo = serviceInfo;
     }
 
-    public ServiceInfo getServiceInfo() {
+    public DrsServiceInfo getServiceInfo() {
         return serviceInfo;
     }
 
@@ -38,4 +39,5 @@ public class DrsConfig {
     public HibernateProps getHibernateProps() {
         return hibernateProps;
     }
+    
 }

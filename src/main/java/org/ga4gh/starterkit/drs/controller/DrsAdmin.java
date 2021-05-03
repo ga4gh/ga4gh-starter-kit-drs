@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/admin" + DrsServerConstants.DRS_API_PREFIX + "/objects")
-public class Admin {
+public class DrsAdmin {
 
     @Autowired
     DrsHibernateUtil hibernateUtil;

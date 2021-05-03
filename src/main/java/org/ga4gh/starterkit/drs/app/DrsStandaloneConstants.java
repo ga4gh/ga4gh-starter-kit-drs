@@ -1,6 +1,6 @@
-package org.ga4gh.starterkit.drs;
+package org.ga4gh.starterkit.drs.app;
 
-public class AppConfigConstants {
+public class DrsStandaloneConstants {
 
     /* BEAN NAME - DRS CONFIG CONTAINER */
     public static final String EMPTY_DRS_CONFIG_CONTAINER = "emptyDrsConfigContainer";

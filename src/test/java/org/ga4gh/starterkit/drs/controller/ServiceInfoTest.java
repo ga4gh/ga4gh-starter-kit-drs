@@ -1,7 +1,8 @@
 package org.ga4gh.starterkit.drs.controller;
 
-import org.ga4gh.starterkit.drs.App;
-import org.ga4gh.starterkit.drs.AppConfig;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
+import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SpringBootTest
-@ContextConfiguration(classes={App.class, AppConfig.class, ServiceInfo.class})
+@ContextConfiguration(classes={
+    DrsStandaloneServer.class,
+    DrsStandaloneSpringConfig.class,
+    StarterKitDrsSpringConfig.class,
+    ServiceInfo.class
+})
 @WebAppConfiguration
 public class ServiceInfoTest extends AbstractTestNGSpringContextTests {
 

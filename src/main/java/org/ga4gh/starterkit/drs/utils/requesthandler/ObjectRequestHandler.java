@@ -4,8 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.ga4gh.starterkit.drs.AppConfigConstants;
-import org.ga4gh.starterkit.drs.configuration.DrsConfigContainer;
+import org.ga4gh.starterkit.drs.configuration.ServerProps;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.drs.model.AccessMethod;
 import org.ga4gh.starterkit.drs.model.AccessType;
@@ -18,13 +17,11 @@ import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCacheItem;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     @Autowired
-    @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER)
-    DrsConfigContainer drsConfigContainer;
+    ServerProps serverProps;
 
     @Autowired
     AccessCache accessCache;
@@ -60,7 +57,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     }
 
     private URI prepareSelfURI(String id) {
-        String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
+        String hostname = serverProps.getHostname();
         return URI.create("drs://" + hostname + "/" + id.toString());
     }
 

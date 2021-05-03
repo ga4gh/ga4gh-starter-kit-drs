@@ -1,7 +1,8 @@
 package org.ga4gh.starterkit.drs.controller;
 
-import org.ga4gh.starterkit.drs.App;
-import org.ga4gh.starterkit.drs.AppConfig;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
+import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
@@ -30,9 +31,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
-@ContextConfiguration(classes = {App.class, AppConfig.class, Admin.class})
+@ContextConfiguration(classes = {
+    DrsStandaloneServer.class,
+    DrsStandaloneSpringConfig.class,
+    StarterKitDrsSpringConfig.class,
+    DrsAdmin.class
+})
 @WebAppConfiguration
-public class AdminTest extends AbstractTestNGSpringContextTests {
+public class DrsAdminTest extends AbstractTestNGSpringContextTests {
 
     private static final String API_PREFIX = "/admin" + DrsServerConstants.DRS_API_PREFIX + "/objects";
 

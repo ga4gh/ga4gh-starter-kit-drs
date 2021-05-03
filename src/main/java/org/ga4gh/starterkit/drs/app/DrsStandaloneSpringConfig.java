@@ -1,4 +1,4 @@
-package org.ga4gh.starterkit.drs;
+package org.ga4gh.starterkit.drs.app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -7,22 +7,12 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.ga4gh.starterkit.drs.configuration.DrsConfig;
-import org.ga4gh.starterkit.drs.configuration.DrsConfigContainer;
 import org.ga4gh.starterkit.drs.configuration.ServerProps;
 import org.ga4gh.starterkit.drs.constant.DrsServerPropsDefaults;
 import org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults;
-import org.ga4gh.starterkit.drs.model.AwsS3AccessObject;
-import org.ga4gh.starterkit.drs.model.Checksum;
-import org.ga4gh.starterkit.drs.model.DrsObject;
-import org.ga4gh.starterkit.drs.model.FileAccessObject;
+import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 import org.ga4gh.starterkit.common.model.ServiceInfo;
 import org.ga4gh.starterkit.common.util.DeepObjectMerger;
-import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
-import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
-import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
-import org.ga4gh.starterkit.drs.utils.requesthandler.FileStreamRequestHandler;
-import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -30,40 +20,46 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
+import org.ga4gh.starterkit.common.hibernate.HibernateProps;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 @ConfigurationProperties
-public class AppConfig implements WebMvcConfigurer {
+public class DrsStandaloneSpringConfig implements WebMvcConfigurer {
 
     /* ******************************
      * DRS SERVER CONFIG BEANS
      * ****************************** */
 
     @Bean
-    @Scope(AppConfigConstants.PROTOTYPE)
-    @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER)
-    public DrsConfigContainer emptyDrsConfigContainer() {
-        return new DrsConfigContainer(new DrsConfig());
+    public Options getCommandLineOptions() {
+        final Options options = new Options();
+        options.addOption("c", "config", true, "Path to DRS YAML config file");
+        return options;
     }
 
     @Bean
-    @Qualifier(AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER)
-    public DrsConfigContainer defaultDrsConfigContainer(
-        @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+    @Scope(DrsStandaloneConstants.PROTOTYPE)
+    @Qualifier(DrsStandaloneConstants.EMPTY_DRS_CONFIG_CONTAINER)
+    public DrsStandaloneYamlConfigContainer emptyDrsConfigContainer() {
+        return new DrsStandaloneYamlConfigContainer(new DrsStandaloneYamlConfig());
+    }
+
+    @Bean
+    @Qualifier(DrsStandaloneConstants.DEFAULT_DRS_CONFIG_CONTAINER)
+    public DrsStandaloneYamlConfigContainer defaultDrsConfigContainer(
+        @Qualifier(DrsStandaloneConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer drsConfigContainer
     ) {
-        ServerProps serverProps = drsConfigContainer.getDrsConfig().getServerProps();
+        ServerProps serverProps = drsConfigContainer.getDrs().getServerProps();
         serverProps.setHostname(DrsServerPropsDefaults.HOSTNAME);
 
-        ServiceInfo serviceInfo = drsConfigContainer.getDrsConfig().getServiceInfo();
+        ServiceInfo serviceInfo = drsConfigContainer.getDrs().getServiceInfo();
         serviceInfo.setId(DrsServiceInfoDefaults.ID);
         serviceInfo.setName(DrsServiceInfoDefaults.NAME);
         serviceInfo.setDescription(DrsServiceInfoDefaults.DESCRIPTION);
@@ -83,11 +79,11 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @Qualifier(AppConfigConstants.USER_DRS_CONFIG_CONTAINER)
-    public DrsConfigContainer runtimeDrsConfigContainer(
+    @Qualifier(DrsStandaloneConstants.USER_DRS_CONFIG_CONTAINER)
+    public DrsStandaloneYamlConfigContainer runtimeDrsConfigContainer(
         @Autowired ApplicationArguments args,
         @Autowired() Options options,
-        @Qualifier(AppConfigConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+        @Qualifier(DrsStandaloneConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer drsConfigContainer
     ) {
 
         try {
@@ -98,7 +94,7 @@ public class AppConfig implements WebMvcConfigurer {
                 File configFile = new File(configFilePath);
                 if (configFile.exists() && !configFile.isDirectory()) {
                     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-                    drsConfigContainer = mapper.readValue(configFile, DrsConfigContainer.class);
+                    drsConfigContainer = mapper.readValue(configFile, DrsStandaloneYamlConfigContainer.class);
                 } else {
                     throw new FileNotFoundException();
                 }
@@ -115,75 +111,34 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER)
-    public DrsConfigContainer mergedDrsConfigContainer(
-        @Qualifier(AppConfigConstants.DEFAULT_DRS_CONFIG_CONTAINER) DrsConfigContainer defaultContainer,
-        @Qualifier(AppConfigConstants.USER_DRS_CONFIG_CONTAINER) DrsConfigContainer userContainer
+    @Qualifier(DrsStandaloneConstants.FINAL_DRS_CONFIG_CONTAINER)
+    public DrsStandaloneYamlConfigContainer mergedDrsConfigContainer(
+        @Qualifier(DrsStandaloneConstants.DEFAULT_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer defaultContainer,
+        @Qualifier(DrsStandaloneConstants.USER_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer userContainer
     ) {
         DeepObjectMerger.merge(userContainer, defaultContainer);
         return defaultContainer;
     }
 
-    /* ******************************
-     * HIBERNATE CONFIG BEANS
-     * ****************************** */
-
     @Bean
-    public List<Class<? extends HibernateEntity<? extends Serializable>>> getAnnotatedClasses() {
-        List<Class<? extends HibernateEntity<? extends Serializable>>> annotatedClasses = new ArrayList<>();
-        annotatedClasses.add(DrsObject.class);
-        annotatedClasses.add(Checksum.class);
-        annotatedClasses.add(FileAccessObject.class);
-        annotatedClasses.add(AwsS3AccessObject.class);
-        return annotatedClasses;
-    }
-
-    @Bean
-    public DrsHibernateUtil getDrsHibernateUtil(
+    public HibernateProps gethibernateProps(
         @Autowired List<Class<? extends HibernateEntity<? extends Serializable>>> annotatedClasses,
-        @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER) DrsConfigContainer drsConfigContainer
+        @Qualifier(DrsStandaloneConstants.FINAL_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer drsConfigContainer
     ) {
-        DrsHibernateUtil hibernateUtil = new DrsHibernateUtil();
-        hibernateUtil.setAnnotatedClasses(annotatedClasses);
-        hibernateUtil.setHibernateProps(drsConfigContainer.getDrsConfig().getHibernateProps());
-        return hibernateUtil;
+        return drsConfigContainer.getDrs().getHibernateProps();
     }
 
     @Bean
-    public Options getCommandLineOptions() {
-        final Options options = new Options();
-        options.addOption("c", "config", true, "Path to YAML config file");
-        return options;
-    }
-
-    /* ******************************
-     * REQUEST HANDLER BEANS
-     * ****************************** */
-
-    @Bean
-    @RequestScope
-    public ObjectRequestHandler objectRequestHandler() {
-        return new ObjectRequestHandler();
+    public ServerProps getServerProps(
+        @Qualifier(DrsStandaloneConstants.FINAL_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer drsConfigContainer
+    ) {
+        return drsConfigContainer.getDrs().getServerProps();
     }
 
     @Bean
-    @RequestScope
-    public AccessRequestHandler accessRequestHandler() {
-        return new AccessRequestHandler();
-    }
-
-    @Bean
-    @RequestScope
-    public FileStreamRequestHandler fileStreamRequestHandler() {
-        return new FileStreamRequestHandler();
-    }
-
-    /* ******************************
-     * OTHER UTILS BEANS
-     * ****************************** */
-
-    @Bean
-    public AccessCache accessCache() {
-        return new AccessCache();
+    public DrsServiceInfo getServiceInfo(
+        @Qualifier(DrsStandaloneConstants.FINAL_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer drsConfigContainer
+    ) {
+        return drsConfigContainer.getDrs().getServiceInfo();
     }
 }

@@ -1,21 +1,18 @@
 package org.ga4gh.starterkit.drs.utils.requesthandler;
 
 import java.net.URI;
-import org.ga4gh.starterkit.drs.AppConfigConstants;
-import org.ga4gh.starterkit.drs.configuration.DrsConfigContainer;
+import org.ga4gh.starterkit.drs.configuration.ServerProps;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.drs.model.AccessURL;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCacheItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 public class AccessRequestHandler implements RequestHandler<AccessURL> {
 
     @Autowired
-    @Qualifier(AppConfigConstants.FINAL_DRS_CONFIG_CONTAINER)
-    private DrsConfigContainer drsConfigContainer;
+    private ServerProps serverProps;
 
     @Autowired
     private AccessCache accessCache;
@@ -38,7 +35,7 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
     }
 
     private AccessURL generateAccessURLForFile() {
-        String hostname = drsConfigContainer.getDrsConfig().getServerProps().getHostname();
+        String hostname = serverProps.getHostname();
         String path = DrsServerConstants.DRS_API_PREFIX + "/stream/" + getObjectId() + "/" + getAccessId();
         return new AccessURL(URI.create("http://" + hostname + path));
     }

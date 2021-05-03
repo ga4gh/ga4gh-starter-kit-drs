@@ -1,9 +1,10 @@
 package e2e;
 
-import org.ga4gh.starterkit.drs.App;
-import org.ga4gh.starterkit.drs.AppConfig;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
+import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
 import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
-import org.ga4gh.starterkit.drs.controller.Admin;
+import org.ga4gh.starterkit.drs.controller.DrsAdmin;
 import org.ga4gh.starterkit.drs.controller.Objects;
 import org.ga4gh.starterkit.drs.controller.Stream;
 import org.ga4gh.starterkit.drs.model.AccessURL;
@@ -37,7 +38,14 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
-@ContextConfiguration(classes = {App.class, AppConfig.class, Admin.class, Objects.class, Stream.class})
+@ContextConfiguration(classes = {
+    DrsStandaloneServer.class,
+    DrsStandaloneSpringConfig.class,
+    StarterKitDrsSpringConfig.class,
+    DrsAdmin.class,
+    Objects.class,
+    Stream.class,
+})
 @WebAppConfiguration
 public class PhenopacketBundleAdminE2ETest extends AbstractTestNGSpringContextTests {
 
