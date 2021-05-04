@@ -7,7 +7,7 @@ import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityDoesntExistException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityExistsException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityMismatchException;
-import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
+import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin" + DrsServerConstants.DRS_API_PREFIX + "/objects")
+@RequestMapping(ADMIN_DRS_API_V1 + "/objects")
 public class DrsAdmin {
 
     @Autowired

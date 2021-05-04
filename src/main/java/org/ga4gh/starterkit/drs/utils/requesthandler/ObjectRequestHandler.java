@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.ga4gh.starterkit.drs.configuration.ServerProps;
+import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.drs.model.AccessMethod;
 import org.ga4gh.starterkit.drs.model.AccessType;

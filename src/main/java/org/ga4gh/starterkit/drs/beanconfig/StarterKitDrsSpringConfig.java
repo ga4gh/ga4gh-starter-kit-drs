@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
-import org.ga4gh.starterkit.common.hibernate.HibernateProps;
+import org.ga4gh.starterkit.common.config.DatabaseProps;
 import org.ga4gh.starterkit.drs.model.AwsS3AccessObject;
 import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
@@ -41,11 +41,11 @@ public class StarterKitDrsSpringConfig {
     @Bean
     public DrsHibernateUtil getDrsHibernateUtil(
         @Autowired List<Class<? extends HibernateEntity<? extends Serializable>>> annotatedClasses,
-        @Autowired HibernateProps hibernateProps
+        @Autowired DatabaseProps databaseProps
     ) {
         DrsHibernateUtil hibernateUtil = new DrsHibernateUtil();
         hibernateUtil.setAnnotatedClasses(annotatedClasses);
-        hibernateUtil.setHibernateProps(hibernateProps);
+        hibernateUtil.setDatabaseProps(databaseProps);
         return hibernateUtil;
     }
 

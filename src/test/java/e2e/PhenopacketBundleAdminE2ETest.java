@@ -3,7 +3,8 @@ package e2e;
 import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
 import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
 import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
-import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
+import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
+import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
 import org.ga4gh.starterkit.drs.controller.DrsAdmin;
 import org.ga4gh.starterkit.drs.controller.Objects;
 import org.ga4gh.starterkit.drs.controller.Stream;
@@ -63,8 +64,8 @@ public class PhenopacketBundleAdminE2ETest extends AbstractTestNGSpringContextTe
     private static final String PAYLOAD_DIR = "/payloads/e2e/phenopackets-bundle-admin";
     private static final String RESPONSE_DIR = "/responses/e2e/phenopackets-bundle-admin";
 
-    private static final String PUBLIC_API_PREFIX = DrsServerConstants.DRS_API_PREFIX + "/objects";
-    private static final String ADMIN_API_PREFIX = "/admin" + DrsServerConstants.DRS_API_PREFIX + "/objects";
+    private static final String PUBLIC_API_PREFIX = DRS_API_V1+ "/objects";
+    private static final String ADMIN_API_PREFIX = ADMIN_DRS_API_V1 + "/objects";
 
     private static final Map<String, String> expMd5HexStrings = new HashMap<>() {{
         put("phenopackets.jordan.2", "26d1b78394962b3a0a07010f5c52fde7");

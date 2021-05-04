@@ -1,8 +1,8 @@
 package org.ga4gh.starterkit.drs.utils.requesthandler;
 
 import java.net.URI;
-import org.ga4gh.starterkit.drs.configuration.ServerProps;
-import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
+import org.ga4gh.starterkit.common.config.ServerProps;
+import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.drs.model.AccessURL;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
@@ -35,9 +35,10 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
     }
 
     private AccessURL generateAccessURLForFile() {
+        String scheme = serverProps.getScheme();
         String hostname = serverProps.getHostname();
-        String path = DrsServerConstants.DRS_API_PREFIX + "/stream/" + getObjectId() + "/" + getAccessId();
-        return new AccessURL(URI.create("http://" + hostname + path));
+        String path = DRS_API_V1 + "/stream/" + getObjectId() + "/" + getAccessId();
+        return new AccessURL(URI.create(scheme + "://" + hostname + path));
     }
 
     public void setObjectId(String objectId) {
