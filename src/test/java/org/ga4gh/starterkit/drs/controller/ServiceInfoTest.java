@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
     DrsStandaloneServer.class,
     DrsStandaloneSpringConfig.class,
     StarterKitDrsSpringConfig.class,
-    ServiceInfo.class
+    DrsServiceInfo.class
 })
 @WebAppConfiguration
 public class ServiceInfoTest extends AbstractTestNGSpringContextTests {
