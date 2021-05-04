@@ -1,9 +1,11 @@
 package org.ga4gh.starterkit.drs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ga4gh.starterkit.drs.App;
-import org.ga4gh.starterkit.drs.AppConfig;
-import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
+
+import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
+import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
+import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,16 @@ import org.testng.ITestContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ContextConfiguration(classes={App.class, AppConfig.class, Objects.class})
+@ContextConfiguration(classes={
+    DrsStandaloneServer.class,
+    DrsStandaloneSpringConfig.class,
+    StarterKitDrsSpringConfig.class,
+    Objects.class
+})
 @WebAppConfiguration
 public class ObjectsTest extends AbstractTestNGSpringContextTests {
 
-    static final String API_PREFIX = DrsServerConstants.DRS_API_PREFIX; 
+    static final String API_PREFIX = DRS_API_V1;
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -251,7 +258,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             .andReturn();
         if (expSuccess) {
             String responseBody = result.getResponse().getContentAsString();
-            String expResponseBody = "{\"url\":\"http://localhost:8080" + DrsServerConstants.DRS_API_PREFIX + "/stream/" + objectId + "/" + accessId + "\"}";
+            String expResponseBody = "{\"url\":\"http://localhost:8080" + DRS_API_V1 + "/stream/" + objectId + "/" + accessId + "\"}";
             Assert.assertEquals(responseBody, expResponseBody);
         }
     }

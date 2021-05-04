@@ -2,7 +2,7 @@ package org.ga4gh.starterkit.drs.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import org.ga4gh.starterkit.drs.constant.DrsServerConstants;
+import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 import org.ga4gh.starterkit.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(DrsServerConstants.DRS_API_PREFIX + "/stream")
+@RequestMapping(DRS_API_V1 + "/stream")
 public class Stream {
 
     @Resource(name = "fileStreamRequestHandler")

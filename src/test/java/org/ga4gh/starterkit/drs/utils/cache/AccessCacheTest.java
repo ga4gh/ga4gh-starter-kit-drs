@@ -1,7 +1,7 @@
 package org.ga4gh.starterkit.drs.utils.cache;
 
-import org.ga4gh.starterkit.drs.App;
-import org.ga4gh.starterkit.drs.AppConfig;
+import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
+import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,7 +12,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @SpringBootTest
-@ContextConfiguration(classes={App.class, AppConfig.class})
+@ContextConfiguration(classes={
+    StarterKitDrsSpringConfig.class,
+    DrsStandaloneSpringConfig.class
+})
 @WebAppConfiguration
 public class AccessCacheTest extends AbstractTestNGSpringContextTests {
 
