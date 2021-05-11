@@ -1,9 +1,9 @@
-ORG := $(shell cat build.gradle | grep "^group" | cut -f 2 -d ' ' | sed "s/'//g")
-REPO := $(shell cat settings.gradle | grep "rootProject.name" | cut -f 3 -d ' ' | sed "s/'//g")
-TAG := $(shell cat build.gradle | grep "^version" | cut -f 2 -d ' ' | sed "s/'//g")
-IMG := ${ORG}/${REPO}:${TAG}
+DOCKER_ORG := ga4gh
+DOCKER_REPO := ga4gh-starter-kit-drs
+DOCKER_TAG := $(shell cat build.gradle | grep "^version" | cut -f 2 -d ' ' | sed "s/'//g")
+DOCKER_IMG := ${DOCKER_ORG}/${DOCKER_REPO}:${DOCKER_TAG}
 DEVDB := ga4gh-starter-kit.dev.db
-JAR := ga4gh-starter-kit-drs.jar
+JAR := build/libs/ga4gh-starter-kit-drs-${TAG}.jar
 
 Nothing:
 	@echo "No target provided. Stop"
@@ -45,37 +45,12 @@ jar-build:
 jar-run:
 	java -jar ${JAR}
 
-# run application in development mode locally
-.PHONY: run-development-local
-run-development-local: clean-all sqlite-db-build sqlite-db-populate-dev-dataset jar-build jar-run
-
-# run application in development mode (to be used inside docker container)
-.PHONY: run-development-docker
-run-development-docker: sqlite-db-build sqlite-db-populate-dev-dataset
-	# TODO add jar-run to list of commands
-	/bin/bash
-
-# run application in production mode
-.PHONY: run-production
-run-production:
-	@echo "cannot run in production yet"
-
 # build docker image
 .PHONY: docker-build
 docker-build: jar-build
-	docker build -t ${IMG} .
-
-# create docker container and run server in development mode
-.PHONY: docker-run-development
-docker-run-development: docker-build
-	docker run -it --rm ${IMG}
-
-# create docker container and run server in production mode
-.PHONY: docker-run-production
-docker-run-production:
-	@echo "not implemented yet"
+	docker build -t ${DOCKER_IMG} --build-arg VERSION=${DOCKER_TAG} .
 
 # push image to docker hub
 .PHONY: docker-publish
-docker-publish: docker-build
-	docker image push ${IMG}
+docker-publish:
+	docker image push ${DOCKER_IMG}

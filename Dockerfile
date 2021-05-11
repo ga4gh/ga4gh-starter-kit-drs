@@ -1,13 +1,14 @@
+##################################################
+# BUILDER CONTAINER
+##################################################
+
 FROM openjdk:11.0.10 as builder
 
 USER root
 
-##################################################
-# INSTALLATION OF DEPENDENCIES
-##################################################
-
 WORKDIR /usr/src/dependencies
 
+# INSTALL MAKE
 RUN apt update
 RUN apt install build-essential -y
 
@@ -19,20 +20,28 @@ RUN wget https://www.sqlite.org/2021/sqlite-autoconf-3340100.tar.gz \
     && make \
     && make install
 
-FROM openjdk:11.0.10
+# USER 'make' and 'sqlite3' to create the dev database
+COPY Makefile Makefile
+COPY settings.gradle settings.gradle
+COPY build.gradle build.gradle
+COPY database/sqlite database/sqlite
+RUN make sqlite-db-refresh
+
+##################################################
+# FINAL CONTAINER
+##################################################
+
+FROM adoptopenjdk/openjdk11:jre-11.0.11_9-alpine
 
 USER root
 
-ARG mode
+ARG VERSION
 
 WORKDIR /usr/src/app
-COPY --from=builder /usr/local/bin/sqlite3 /usr/local/bin/sqlite3
-COPY --from=builder /usr/bin/make /usr/bin/make
-COPY Makefile Makefile
-COPY project.properties project.properties
-COPY ga4gh-starter-kit-drs.jar ga4gh-starter-kit-drs.jar
-COPY src/test/resources/ src/test/resources/
-COPY database/sqlite database/sqlite
 
-ENV mode=${mode}
-CMD ["make", "run-development-docker"]
+# copy jar, dev db, and dev resource files
+COPY build/libs/ga4gh-starter-kit-drs-${VERSION}.jar ga4gh-starter-kit-drs.jar
+COPY --from=builder /usr/src/dependencies/ga4gh-starter-kit.dev.db ga4gh-starter-kit.dev.db
+COPY src/test/resources/ src/test/resources/
+
+CMD ["java", "-jar", "ga4gh-starter-kit-drs.jar"]
