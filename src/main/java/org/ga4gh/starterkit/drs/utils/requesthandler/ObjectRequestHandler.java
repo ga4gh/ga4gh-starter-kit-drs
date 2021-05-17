@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
+import org.ga4gh.starterkit.drs.config.DrsServiceProps;
 import org.ga4gh.starterkit.drs.model.AccessMethod;
 import org.ga4gh.starterkit.drs.model.AccessType;
 import org.ga4gh.starterkit.drs.model.AccessURL;
@@ -22,6 +23,9 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     @Autowired
     ServerProps serverProps;
+
+    @Autowired
+    DrsServiceProps drsServiceProps;
 
     @Autowired
     AccessCache accessCache;
@@ -93,8 +97,12 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         List<AccessMethod> accessMethods = new ArrayList<>();
 
         for (FileAccessObject fileAccessObject : drsObject.getFileAccessObjects()) {
-            accessMethods.add(createAccessMethod(fileAccessObject));
-
+            if (drsServiceProps.getServeFileURLForFileObjects()) {
+                accessMethods.add(createFileURLAccessMethodForFileObject(fileAccessObject));
+            }
+            if (drsServiceProps.getServeStreamURLForFileObjects()) {
+                accessMethods.add(createStreamAccessMethodForFileObject(fileAccessObject));
+            }
         }
 
         for (AwsS3AccessObject awsS3AccessObject : drsObject.getAwsS3AccessObjects()) {
@@ -104,7 +112,17 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         return accessMethods;
     }
 
-    private AccessMethod createAccessMethod(FileAccessObject fileAccessObject) {
+    private AccessMethod createFileURLAccessMethodForFileObject(FileAccessObject fileAccessObject) {
+        AccessMethod accessMethod = new AccessMethod();
+        accessMethod.setType(AccessType.file);
+        AccessURL accessURL = new AccessURL(URI.create(
+            "file://" + fileAccessObject.getPath()
+        ));
+        accessMethod.setAccessUrl(accessURL);
+        return accessMethod;
+    }
+
+    private AccessMethod createStreamAccessMethodForFileObject(FileAccessObject fileAccessObject) {
         AccessMethod accessMethod = new AccessMethod();
         accessMethod.setType(AccessType.https);
 
