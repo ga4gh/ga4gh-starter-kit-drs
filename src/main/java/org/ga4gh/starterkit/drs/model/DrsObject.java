@@ -89,14 +89,20 @@ public class DrsObject implements HibernateEntity<String> {
     @CollectionTable(name = "drs_object_alias", joinColumns = @JoinColumn(name = "drs_object_id"))
     @Column(name = "alias")
     @Cascade(value = {CascadeType.ALL})
-    @JsonView(SerializeView.Always.class)
+    @JsonView({
+        SerializeView.Public.class,
+        SerializeView.Admin.class
+    })
     private List<String> aliases;
 
     @OneToMany(mappedBy = "drsObject",
                fetch = FetchType.LAZY,
                cascade = {javax.persistence.CascadeType.ALL},
                orphanRemoval = true)
-    @JsonView(SerializeView.Always.class)
+    @JsonView({
+        SerializeView.Public.class,
+        SerializeView.Admin.class
+    })
     private List<Checksum> checksums;
 
     /* 
