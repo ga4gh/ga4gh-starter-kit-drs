@@ -8,6 +8,7 @@ import org.ga4gh.starterkit.common.hibernate.exception.EntityDoesntExistExceptio
 import org.ga4gh.starterkit.common.hibernate.exception.EntityExistsException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityMismatchException;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
+import java.util.List;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
@@ -29,7 +30,13 @@ public class DrsAdmin {
     @Autowired
     DrsHibernateUtil hibernateUtil;
 
-    // Non-standard endpoints - write operations
+    // Non-standard endpoints - admin views
+
+    @GetMapping
+    @JsonView(SerializeView.Always.class)
+    public List<DrsObject> indexDrsObjects() {
+        return hibernateUtil.getEntityList(DrsObject.class);
+    }
 
     @GetMapping(path = "/{object_id:.+}")
     @JsonView(SerializeView.Admin.class)
@@ -42,6 +49,8 @@ public class DrsAdmin {
         }
         return getAdminFormattedDrsObject(id);
     }
+
+    // Non-standard endpoints - write operations
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public DrsObject createDrsObject(

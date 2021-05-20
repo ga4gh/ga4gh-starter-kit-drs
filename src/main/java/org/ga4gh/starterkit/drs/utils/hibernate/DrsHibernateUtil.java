@@ -1,8 +1,12 @@
 package org.ga4gh.starterkit.drs.utils.hibernate;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.PersistenceException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import org.ga4gh.starterkit.drs.model.DrsObject;
+import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -51,5 +55,19 @@ public class DrsHibernateUtil extends HibernateUtil {
         }
 
         return sizeSum;
+    }
+
+    public <T extends HibernateEntity<? extends Serializable>> List<T> getEntityList(Class<T> entityClass) {
+        Session session = newTransaction();
+        List<T> entities = null;
+        try {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<T> criteria = builder.createQuery(entityClass);
+            criteria.from(entityClass);
+            entities = session.createQuery(criteria).getResultList();
+        } finally {
+            endTransaction(session);
+        }
+        return entities;
     }
 }
