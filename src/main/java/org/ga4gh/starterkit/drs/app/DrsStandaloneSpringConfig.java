@@ -2,6 +2,7 @@ package org.ga4gh.starterkit.drs.app;
 
 import org.apache.commons.cli.Options;
 import org.ga4gh.starterkit.common.config.ServerProps;
+import org.ga4gh.starterkit.drs.config.DrsServiceProps;
 import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 import org.ga4gh.starterkit.common.util.CliYamlConfigLoader;
 import org.ga4gh.starterkit.common.util.DeepObjectMerger;
@@ -90,5 +91,12 @@ public class DrsStandaloneSpringConfig implements WebMvcConfigurer {
         @Qualifier(DrsStandaloneConstants.FINAL_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer drsConfigContainer
     ) {
         return drsConfigContainer.getDrs().getServiceInfo();
+    }
+
+    @Bean
+    public DrsServiceProps getDrsServiceProps(
+        @Qualifier(DrsStandaloneConstants.FINAL_DRS_CONFIG_CONTAINER) DrsStandaloneYamlConfigContainer drsConfigContainer
+    ) {
+        return drsConfigContainer.getDrs().getDrsServiceProps();
     }
 }
