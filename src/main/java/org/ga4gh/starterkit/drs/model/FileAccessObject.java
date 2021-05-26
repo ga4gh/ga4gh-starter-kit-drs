@@ -16,6 +16,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 
+/**
+ * Inferred from DRS specification, indicates a byte source for a DRSObject with
+ * a 'file' access type. References a file that is locally available wherever 
+ * the server is deployed. Contains required info to facilitate access to a
+ * local file (generally just file path)
+ */
 @Entity
 @Table(name = "file_access_object")
 @JsonView(SerializeView.Admin.class)
@@ -29,6 +35,9 @@ public class FileAccessObject implements Serializable, HibernateEntity<Long> {
     @JsonIgnore
     private Long id;
 
+    /**
+     * Local file path
+     */
     @Column(name = "path")
     private String path;
 
@@ -41,36 +50,66 @@ public class FileAccessObject implements Serializable, HibernateEntity<Long> {
 
     /* Constructors */
 
+    /**
+     * Instantiates a new FileAccessObject
+     */
     public FileAccessObject() {
 
     }
 
+    /**
+     * Fetch relational data that is not loaded automatically (lazy load)
+     */
     public void loadRelations() {
         
     }
 
     /* Setters and Getters */
 
+    /**
+     * Assign id
+     * @param id identifier
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Retrieve id
+     * @return identifier
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Assign path
+     * @param path local file path
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * Retrive path
+     * @return local file path
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Assign drsObject
+     * @param drsObject DrsObject owning this access object
+     */
     public void setDrsObject(DrsObject drsObject) {
         this.drsObject = drsObject;
     }
 
+    /**
+     * Retrieve drsObject
+     * @return DrsObject owning this access object
+     */
     public DrsObject getDrsObject() {
         return drsObject;
     }

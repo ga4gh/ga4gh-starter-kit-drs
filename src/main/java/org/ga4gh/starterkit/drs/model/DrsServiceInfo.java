@@ -16,13 +16,23 @@ import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.SERVICE_T
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.SERVICE_TYPE_ARTIFACT;
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.SERVICE_TYPE_VERSION;
 
+/**
+ * Extension of the GA4GH base service info specification to include DRS-specific
+ * properties
+ */
 public class DrsServiceInfo extends ServiceInfo {
 
+    /**
+     * Instantiates a new DrsServiceInfo object
+     */
     public DrsServiceInfo() {
         super();
         setAllDefaults();
     }
 
+    /**
+     * Sets all default properties
+     */
     private void setAllDefaults() {
         setId(ID);
         setName(NAME);
