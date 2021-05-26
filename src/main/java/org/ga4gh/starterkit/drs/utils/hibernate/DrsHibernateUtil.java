@@ -11,8 +11,20 @@ import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+/**
+ * Provides access to DRS entities/tables in the database, enabling access, creation,
+ * updating, and deleting of DRSObjects and associated entities
+ */
 public class DrsHibernateUtil extends HibernateUtil {
 
+    /**
+     * Fully loads a DRS Object, performing recursive inspection/loading of child
+     * objects (in the case of bundles)
+     * @param id DRSObject identifier
+     * @param recursiveChildLoad if true, recursively load the children of each child until termini DRSObjects have been reached 
+     * @return DRSObject with all necessary attributes loaded
+     * @throws HibernateException if problem encountered while interacting with db
+     */
     public DrsObject loadDrsObject(String id, boolean recursiveChildLoad) throws HibernateException {
         Session session = newTransaction();
         DrsObject drsObject = null;
@@ -38,6 +50,12 @@ public class DrsHibernateUtil extends HibernateUtil {
         return drsObject;
     }
 
+    /**
+     * Recursive function that loads all the children associated to a parent DrsObject.
+     * Recursively calls this function again if a child object has children itself.
+     * @param parentDrsObject root DRSObject to load all children for
+     * @return byte size sum of all recursive objects under the DrsObject node
+     */
     private Long recursiveDrsObjectChildLoad(DrsObject parentDrsObject) {
         Long sizeSum = 0L;
         List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
@@ -57,6 +75,12 @@ public class DrsHibernateUtil extends HibernateUtil {
         return sizeSum;
     }
 
+    /**
+     * Retrieve a list of objects from the database
+     * @param <T> The entity class to be retrieved
+     * @param entityClass The entity class to be retrieved
+     * @return List of entity objects
+     */
     public <T extends HibernateEntity<? extends Serializable>> List<T> getEntityList(Class<T> entityClass) {
         Session session = newTransaction();
         List<T> entities = null;
