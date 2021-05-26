@@ -31,7 +31,7 @@ public class Objects {
 
     /**
      * Show information about a DRS object
-     * @param id identifier of DRSObject of interest 
+     * @param objectId identifier of DRSObject of interest 
      * @param expand if true, display recursive bundling under 'contents' property
      * @return DRSObject by the requested id
      */
