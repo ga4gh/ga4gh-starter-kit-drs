@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
+import org.ga4gh.starterkit.common.requesthandler.RequestHandler;
 import org.ga4gh.starterkit.drs.config.DrsServiceProps;
 import org.ga4gh.starterkit.drs.model.AccessMethod;
 import org.ga4gh.starterkit.drs.model.AccessType;
@@ -19,6 +20,10 @@ import org.ga4gh.starterkit.drs.utils.cache.AccessCacheItem;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Request handling logic for loading a DRSObject and formatting it according
+ * to the DRS specification
+ */
 public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     @Autowired
@@ -39,12 +44,18 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     /* Constructors */
 
+    /**
+     * Instantiate a new ObjectRequestHandler
+     */
     public ObjectRequestHandler() {
         
     }
 
     /* Custom API methods */
 
+    /**
+     * Obtains information about a DRSObject and formats it to the DRS specification
+     */
     public DrsObject handleRequest() {
 
         // Get DrsObject from db
@@ -60,11 +71,21 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         return drsObject;
     }
 
+    /**
+     * Constructs the self URI from server hostname and object id
+     * @param id DrsObject identifier
+     * @return self-referencing URI
+     */
     private URI prepareSelfURI(String id) {
         String hostname = serverProps.getHostname();
         return URI.create("drs://" + hostname + "/" + id.toString());
     }
 
+    /**
+     * Constructs the contents object list from a DrsObject's children
+     * @param drsObject DrsObject with loaded children
+     * @return List of contents objects derived from children
+     */
     private List<ContentsObject> prepareContents(DrsObject drsObject) {
         List<ContentsObject> contents = new ArrayList<>();
         for (int i = 0; i < drsObject.getDrsObjectChildren().size(); i++) {
@@ -73,6 +94,11 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         return contents;
     }
 
+    /**
+     * Constructs a single contents object from a DrsObject
+     * @param drsObject DrsObject to be converted into a ContentsObject
+     * @return ContentsObject derived from the DrsObject
+     */
     private ContentsObject createContentsObject(DrsObject drsObject) {
         ContentsObject contentsObject = new ContentsObject();
         contentsObject.setId(drsObject.getId());
@@ -81,6 +107,8 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         }});
         contentsObject.setName(drsObject.getName());
 
+        // if 'expand' boolean is true, perform recursive function to recursively
+        // convert all children DrsObjects to ContentsObjects
         if (getExpand()) {
             List<ContentsObject> childContents = new ArrayList<>();
             for (int i = 0; i < drsObject.getDrsObjectChildren().size(); i++) {
@@ -92,10 +120,20 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         return contentsObject;
     }
 
+    /**
+     * Constructs a combined list of access methods from all different types
+     * of AccessObjects (eg FileAccessObjects, AwsS3AccessObjects)
+     * @param drsObject the DrsObject for which the access methods list will be constructed
+     * @return list of access methods
+     */
     private List<AccessMethod> prepareAccessMethods(DrsObject drsObject) {
 
         List<AccessMethod> accessMethods = new ArrayList<>();
 
+        // Convert file-based access objects to AccessMethods
+        // if indicated by the DrsServiceProps, return a 'file://' URL indicating
+        // the direct path and/or an 'http(s)://' URL pointing to the streaming
+        // endpoint
         for (FileAccessObject fileAccessObject : drsObject.getFileAccessObjects()) {
             if (drsServiceProps.getServeFileURLForFileObjects()) {
                 accessMethods.add(createFileURLAccessMethodForFileObject(fileAccessObject));
@@ -105,6 +143,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
             }
         }
 
+        // Convert s3-based access objects to AccessMethods
         for (AwsS3AccessObject awsS3AccessObject : drsObject.getAwsS3AccessObjects()) {
             accessMethods.add(createAccessMethod(awsS3AccessObject));
         }
@@ -112,6 +151,11 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         return accessMethods;
     }
 
+    /**
+     * Construct a file:// URL for a file-based access object
+     * @param fileAccessObject file-based access object
+     * @return access method with a file:// URL
+     */
     private AccessMethod createFileURLAccessMethodForFileObject(FileAccessObject fileAccessObject) {
         AccessMethod accessMethod = new AccessMethod();
         accessMethod.setType(AccessType.file);
@@ -122,10 +166,17 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         return accessMethod;
     }
 
+    /**
+     * Construct an http(s):// URL pointing to streaming endpoint for a file-based access object
+     * @param fileAccessObject file-based access object
+     * @return access method with a http(s):// URL
+     */
     private AccessMethod createStreamAccessMethodForFileObject(FileAccessObject fileAccessObject) {
         AccessMethod accessMethod = new AccessMethod();
         accessMethod.setType(AccessType.https);
 
+        // populate the cache with a new item containing the access ID so it
+        // can be recgonized by the access endpoint
         String accessID = UUID.randomUUID().toString();
         AccessCacheItem accessCacheItem = generateAccessCacheItem(
             fileAccessObject.getDrsObject().getId(),
@@ -139,6 +190,11 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         return accessMethod;
     }
 
+    /**
+     * Construct an s3:// URL for an s3-based access object
+     * @param awsS3AccessObject S3-based access object
+     * @return access method with s3:// URL
+     */
     private AccessMethod createAccessMethod(AwsS3AccessObject awsS3AccessObject) {
         AccessMethod accessMethod = new AccessMethod();
         accessMethod.setType(AccessType.s3);
@@ -152,6 +208,15 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     }
 
+    /**
+     * Create an access cache item with the supplied parameters
+     * @param objectId DrsObject identifier
+     * @param accessId access id
+     * @param objectPath file path/URL to byte source 
+     * @param accessType path/URL type
+     * @param mimeType media type
+     * @return access cache item populated with the supplied parameters
+     */
     private AccessCacheItem generateAccessCacheItem(String objectId, String accessId, String objectPath, AccessType accessType, String mimeType) {
         AccessCacheItem item = new AccessCacheItem();
         item.setObjectId(objectId);
@@ -164,18 +229,34 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     /* Setters and Getters */
 
+    /**
+     * Assign objectId
+     * @param objectId DrsObject identifier
+     */
     public void setObjectId(String objectId) {
         this.objectId = objectId;
     }
 
+    /**
+     * Retrieve objectId
+     * @return DrsObject identifier
+     */
     public String getObjectId() {
         return objectId;
     }
 
+    /**
+     * Assign expand
+     * @param expand boolean indicating whether to return nested/recursive bundles under 'contents'
+     */
     public void setExpand(boolean expand) {
         this.expand = expand;
     }
 
+    /**
+     * Retrieve expand
+     * @return boolean indicating whether to return nested bundles
+     */
     public boolean getExpand() {
         return expand;
     }
