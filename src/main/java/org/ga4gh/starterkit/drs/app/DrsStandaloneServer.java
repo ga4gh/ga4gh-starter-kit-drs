@@ -7,6 +7,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+/**
+ * Contains main method for running a standalone DRS deployment as a Spring Boot
+ * application
+ */
 @Configuration
 @EnableAutoConfiguration
 @Import({
@@ -18,6 +22,10 @@ import org.springframework.context.annotation.Import;
 })
 public class DrsStandaloneServer {
 
+    /**
+     * Run the DRS standalone server as a Spring Boot application.
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(DrsStandaloneServer.class, args);
     }
