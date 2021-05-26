@@ -51,7 +51,17 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         
     }
 
-    /* Custom API methods */
+    /**
+     * Prepares the request handler with input params from the controller function
+     * @param objectId DrsObject identifier
+     * @param expand boolean indicating whether to return nested/recursive bundles under 'contents'
+     * @return the prepared request handler
+     */
+    public ObjectRequestHandler prepare(String objectId, boolean expand) {
+        this.objectId = objectId;
+        this.expand = expand;
+        return this;
+    }
 
     /**
      * Obtains information about a DRSObject and formats it to the DRS specification
@@ -59,13 +69,13 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
     public DrsObject handleRequest() {
 
         // Get DrsObject from db
-        DrsObject drsObject = hibernateUtil.loadDrsObject(getObjectId(), true);
+        DrsObject drsObject = hibernateUtil.loadDrsObject(objectId, true);
         if (drsObject == null) {
-            throw new ResourceNotFoundException("No DrsObject found by id: " + getObjectId());
+            throw new ResourceNotFoundException("No DrsObject found by id: " + objectId);
         }
 
         // post query prep of response
-        drsObject.setSelfURI(prepareSelfURI(getObjectId()));
+        drsObject.setSelfURI(prepareSelfURI(objectId));
         drsObject.setContents(prepareContents(drsObject));
         drsObject.setAccessMethods(prepareAccessMethods(drsObject));
         return drsObject;
@@ -109,7 +119,7 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
         // if 'expand' boolean is true, perform recursive function to recursively
         // convert all children DrsObjects to ContentsObjects
-        if (getExpand()) {
+        if (expand) {
             List<ContentsObject> childContents = new ArrayList<>();
             for (int i = 0; i < drsObject.getDrsObjectChildren().size(); i++) {
                 childContents.add(createContentsObject(drsObject.getDrsObjectChildren().get(i)));
@@ -225,39 +235,5 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
         item.setAccessType(accessType);
         item.setMimeType(mimeType);
         return item;
-    }
-
-    /* Setters and Getters */
-
-    /**
-     * Assign objectId
-     * @param objectId DrsObject identifier
-     */
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    /**
-     * Retrieve objectId
-     * @return DrsObject identifier
-     */
-    public String getObjectId() {
-        return objectId;
-    }
-
-    /**
-     * Assign expand
-     * @param expand boolean indicating whether to return nested/recursive bundles under 'contents'
-     */
-    public void setExpand(boolean expand) {
-        this.expand = expand;
-    }
-
-    /**
-     * Retrieve expand
-     * @return boolean indicating whether to return nested bundles
-     */
-    public boolean getExpand() {
-        return expand;
     }
 }

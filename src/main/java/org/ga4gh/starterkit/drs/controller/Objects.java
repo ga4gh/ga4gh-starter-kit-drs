@@ -38,12 +38,10 @@ public class Objects {
     @GetMapping(path = "/{object_id:.+}")
     @JsonView(SerializeView.Public.class)
     public DrsObject getObjectById(
-        @PathVariable(name = "object_id") String id,
+        @PathVariable(name = "object_id") String objectId,
         @RequestParam(name = "expand", required = false) boolean expand
     ) {
-        objectRequestHandler.setObjectId(id);
-        objectRequestHandler.setExpand(expand);
-        return objectRequestHandler.handleRequest();
+        return objectRequestHandler.prepare(objectId, expand).handleRequest();
     }
 
     /**
@@ -57,8 +55,6 @@ public class Objects {
         @PathVariable(name = "object_id") String objectId,
         @PathVariable(name = "access_id") String accessId
     ) {
-        accessRequestHandler.setObjectId(objectId);
-        accessRequestHandler.setAccessId(accessId);
-        return accessRequestHandler.handleRequest();
+        return accessRequestHandler.prepare(objectId, accessId).handleRequest();
     }
 }

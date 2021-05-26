@@ -33,6 +33,18 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
     }
 
     /**
+     * Prepares the request handler with input params from the controller function
+     * @param objectId DrsObject identifier
+     * @param accessId access identifier
+     * @return the prepared request handler
+     */
+    public AccessRequestHandler prepare(String objectId, String accessId) {
+        this.objectId = objectId;
+        this.accessId = accessId;
+        return this;
+    }
+
+    /**
      * Provides an AccessURL for the given DrsObject id and access ID
      */
     public AccessURL handleRequest() {
@@ -52,41 +64,7 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
     private AccessURL generateAccessURLForFile() {
         String scheme = serverProps.getScheme();
         String hostname = serverProps.getHostname();
-        String path = DRS_API_V1 + "/stream/" + getObjectId() + "/" + getAccessId();
+        String path = DRS_API_V1 + "/stream/" + objectId + "/" + accessId;
         return new AccessURL(URI.create(scheme + "://" + hostname + path));
-    }
-
-    /* Setters and Getters */
-
-    /**
-     * Assign objectId
-     * @param objectId DrsObject id
-     */
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    /**
-     * Retrieve objectId
-     * @return DrsObject id
-     */
-    public String getObjectId() {
-        return objectId;
-    }
-
-    /**
-     * Assign accessId
-     * @param accessId access identifier
-     */
-    public void setAccessId(String accessId) {
-        this.accessId = accessId;
-    }
-
-    /**
-     * Retrieve accessId
-     * @return access identifier
-     */
-    public String getAccessId() {
-        return accessId;
     }
 }

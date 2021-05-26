@@ -32,9 +32,6 @@ public class Stream {
         @PathVariable(name = "access_id") String accessId,
         HttpServletResponse response
     ) {
-        fileStreamRequestHandler.setObjectId(objectId);
-        fileStreamRequestHandler.setAccessId(accessId);
-        fileStreamRequestHandler.setResponse(response);
-        fileStreamRequestHandler.handleRequest();
+        fileStreamRequestHandler.prepare(objectId, accessId, response).handleRequest();
     }
 }

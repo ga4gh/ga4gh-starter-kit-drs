@@ -26,13 +26,27 @@ public class FileStreamRequestHandler implements RequestHandler<Void> {
     private HttpServletResponse response;
 
     /**
+     * Prepares the request handler with input params from the controller function
+     * @param objectId DrsObject identifier
+     * @param accessId access identifier
+     * @param response low-level Spring response object handling file streaming
+     * @return the prepared request handler
+     */
+    public FileStreamRequestHandler prepare(String objectId, String accessId, HttpServletResponse response) {
+        this.objectId = objectId;
+        this.accessId = accessId;
+        this.response = response;
+        return this;
+    }
+
+    /**
      * Streams the file contents referenced by the provided object id and access id
      * to client
      */
     public Void handleRequest() {
         // look up the access cache to see if a valid set of object id and 
         // access id was provided
-        AccessCacheItem cacheItem = accessCache.get(getObjectId(), getAccessId());
+        AccessCacheItem cacheItem = accessCache.get(objectId, accessId);
         if (cacheItem == null) {
             throw new ResourceNotFoundException("invalid access_id/object_id");
         }
@@ -56,55 +70,5 @@ public class FileStreamRequestHandler implements RequestHandler<Void> {
         }
 
         return null;
-    }
-
-    /* Setters and getters */
-
-    /**
-     * Assign objectId
-     * @param objectId DrsObject id
-     */
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    /**
-     * Retrieve objectId
-     * @return DrsObject id
-     */
-    public String getObjectId() {
-        return objectId;
-    }
-
-    /**
-     * Assign accessId
-     * @param accessId access identifier
-     */
-    public void setAccessId(String accessId) {
-        this.accessId = accessId;
-    }
-
-    /**
-     * Retrieve accessId
-     * @return access identifier
-     */
-    public String getAccessId() {
-        return accessId;
-    }
-
-    /**
-     * Assign response
-     * @param response low-level Spring response object handling file streaming
-     */
-    public void setResponse(HttpServletResponse response) {
-        this.response = response;
-    }
-
-    /**
-     * Retrieve response
-     * @return low-level Spring response object handling file streaming
-     */
-    public HttpServletResponse getResponse() {
-        return response;
     }
 }
