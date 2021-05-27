@@ -18,7 +18,8 @@ import org.springframework.context.annotation.Import;
     StarterKitDrsSpringConfig.class
 })
 @ComponentScan(basePackages = {
-    "org.ga4gh.starterkit.drs.controller"
+    "org.ga4gh.starterkit.drs.controller",
+    "org.ga4gh.starterkit.drs.utils.response.header"
 })
 public class DrsStandaloneServer {
 
