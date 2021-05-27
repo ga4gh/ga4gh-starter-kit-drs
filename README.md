@@ -38,6 +38,12 @@ The service can also be installed locally in cases where docker deployments are 
 * Gradle 6.1.1+
 * SQLite (for creating the dev database)
 
+First, clone the repository from Github:
+```
+git clone https://github.com/ga4gh/ga4gh-starter-kit-drs.git
+cd ga4gh-starter-kit-drs
+```
+
 The service can be run in development mode directly via gradle:
 
 Run with all defaults
