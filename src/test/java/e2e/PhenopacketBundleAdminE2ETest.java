@@ -38,6 +38,12 @@ import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Simulates an end-to-end use case in which an administrative user inspects,
+ * creates, updates, and deletes various DRSObjects (both bundles and non-bundles).
+ * Asserts that the correct output is returned for each request in a chain of
+ * requests
+ */
 @SpringBootTest
 @ContextConfiguration(classes = {
     DrsStandaloneServer.class,
