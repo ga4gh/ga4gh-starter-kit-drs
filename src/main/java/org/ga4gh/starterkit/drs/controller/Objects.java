@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import com.fasterxml.jackson.annotation.JsonView;
 
+/**
+ * Controller functions for accessing DRSObjects according to the DRS specification
+ */
 @RestController
 @RequestMapping(DRS_API_V1 + "/objects")
 public class Objects {
@@ -26,24 +29,32 @@ public class Objects {
 
     // Standard endpoints
 
+    /**
+     * Show information about a DRS object
+     * @param objectId identifier of DRSObject of interest 
+     * @param expand if true, display recursive bundling under 'contents' property
+     * @return DRSObject by the requested id
+     */
     @GetMapping(path = "/{object_id:.+}")
     @JsonView(SerializeView.Public.class)
     public DrsObject getObjectById(
-        @PathVariable(name = "object_id") String id,
+        @PathVariable(name = "object_id") String objectId,
         @RequestParam(name = "expand", required = false) boolean expand
     ) {
-        objectRequestHandler.setObjectId(id);
-        objectRequestHandler.setExpand(expand);
-        return objectRequestHandler.handleRequest();
+        return objectRequestHandler.prepare(objectId, expand).handleRequest();
     }
 
+    /**
+     * Get an access URL for fetching the DRS Object's  file bytes
+     * @param objectId DRSObject identifier
+     * @param accessId access identifier
+     * @return a DRS-spec AccessURL indicating file bytes location
+     */
     @GetMapping(path = "/{object_id:.+}/access/{access_id:.+}")
     public AccessURL getAccessURLById(
         @PathVariable(name = "object_id") String objectId,
         @PathVariable(name = "access_id") String accessId
     ) {
-        accessRequestHandler.setObjectId(objectId);
-        accessRequestHandler.setAccessId(accessId);
-        return accessRequestHandler.handleRequest();
+        return accessRequestHandler.prepare(objectId, accessId).handleRequest();
     }
 }

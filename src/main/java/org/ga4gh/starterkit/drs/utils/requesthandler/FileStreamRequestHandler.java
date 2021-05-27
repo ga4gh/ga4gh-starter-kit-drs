@@ -7,10 +7,15 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
+import org.ga4gh.starterkit.common.requesthandler.RequestHandler;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCacheItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Enables handling logic for the streaming endpoint, allows files stored on the 
+ * service's file system to be streamed over the API
+ */
 public class FileStreamRequestHandler implements RequestHandler<Void> {
 
     @Autowired
@@ -20,8 +25,28 @@ public class FileStreamRequestHandler implements RequestHandler<Void> {
     private String accessId;
     private HttpServletResponse response;
 
+    /**
+     * Prepares the request handler with input params from the controller function
+     * @param objectId DrsObject identifier
+     * @param accessId access identifier
+     * @param response low-level Spring response object handling file streaming
+     * @return the prepared request handler
+     */
+    public FileStreamRequestHandler prepare(String objectId, String accessId, HttpServletResponse response) {
+        this.objectId = objectId;
+        this.accessId = accessId;
+        this.response = response;
+        return this;
+    }
+
+    /**
+     * Streams the file contents referenced by the provided object id and access id
+     * to client
+     */
     public Void handleRequest() {
-        AccessCacheItem cacheItem = accessCache.get(getObjectId(), getAccessId());
+        // look up the access cache to see if a valid set of object id and 
+        // access id was provided
+        AccessCacheItem cacheItem = accessCache.get(objectId, accessId);
         if (cacheItem == null) {
             throw new ResourceNotFoundException("invalid access_id/object_id");
         }
@@ -45,29 +70,5 @@ public class FileStreamRequestHandler implements RequestHandler<Void> {
         }
 
         return null;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setAccessId(String accessId) {
-        this.accessId = accessId;
-    }
-
-    public String getAccessId() {
-        return accessId;
-    }
-
-    public void setResponse(HttpServletResponse response) {
-        this.response = response;
-    }
-
-    public HttpServletResponse getResponse() {
-        return response;
     }
 }
