@@ -192,9 +192,6 @@ public class DrsAdminTest extends AbstractTestNGSpringContextTests {
             String payloadBody = ResourceLoader.load(payloadFile);
             ObjectMapper objectMapper = new ObjectMapper();
             DrsObject drsObject = objectMapper.readValue(payloadBody, DrsObject.class);
-            for (Checksum checksum : drsObject.getChecksums()) {
-                checksum.setDrsObject(drsObject);
-            }
             hibernateUtil.createEntityObject(DrsObject.class, drsObject);
         }
     }

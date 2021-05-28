@@ -2,6 +2,7 @@ package org.ga4gh.starterkit.drs.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -110,6 +111,7 @@ public class DrsObject implements HibernateEntity<String> {
         SerializeView.Public.class,
         SerializeView.Admin.class
     })
+    @JsonManagedReference
     private List<Checksum> checksums;
 
     /* 
@@ -154,6 +156,7 @@ public class DrsObject implements HibernateEntity<String> {
                cascade = javax.persistence.CascadeType.ALL,
                orphanRemoval = true)
     @JsonView(SerializeView.Admin.class)
+    @JsonManagedReference
     private List<FileAccessObject> fileAccessObjects;
 
     /**
@@ -164,6 +167,7 @@ public class DrsObject implements HibernateEntity<String> {
                cascade = javax.persistence.CascadeType.ALL,
                orphanRemoval = true)
     @JsonView(SerializeView.Admin.class)
+    @JsonManagedReference
     private List<AwsS3AccessObject> awsS3AccessObjects;
 
     /*
