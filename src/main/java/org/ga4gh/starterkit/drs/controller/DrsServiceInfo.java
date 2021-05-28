@@ -21,7 +21,7 @@ public class DrsServiceInfo {
      * Display service info
      * @return DRS service info
      */
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public org.ga4gh.starterkit.drs.model.DrsServiceInfo getServiceInfo() {
         return drsServiceInfo;
     }
