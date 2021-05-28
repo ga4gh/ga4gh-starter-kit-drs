@@ -46,10 +46,6 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.1-jre'
 
-    // Use TestNG framework, also requires calling test.useTestNG() below
-    testImplementation 'org.testng:testng:7.0.0'
-
-    compile 'org.springframework.boot:spring-boot-starter-aop'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'commons-cli:commons-cli:1.4'
     compile 'commons-io:commons-io:2.8.0'
@@ -70,8 +66,9 @@ dependencies {
     compile 'org.xerial:sqlite-jdbc:3.8.11.2'
     compile 'org.ga4gh:ga4gh-starter-kit-common:0.3.3'
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile ("org.springframework.security:spring-security-test")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.0'
+    testImplementation 'org.testng:testng:7.0.0'
+    // testImplementation 'org.springframework.security:spring-security-test'
 }
 
 jar {

@@ -149,14 +149,4 @@ public class Checksum implements HibernateEntity<Long> {
     public DrsObject getDrsObject() {
         return drsObject;
     }
-
-    @Override
-	public boolean equals(Object that) {
-		return (this == that) || ((that instanceof Checksum) && this.getId().equals(((Checksum) that).getId()));
-	}
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
-    }
 }
