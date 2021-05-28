@@ -70,12 +70,11 @@ public class DrsAdmin {
      * @param drsObject new, non persistent DRSObject
      * @return persistent DRSObject saved with the requested attributes
      */
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public DrsObject createDrsObject(
         @RequestBody DrsObject drsObject
     ) {
         try {
-            setBidirectionalRelationships(drsObject);
             hibernateUtil.createEntityObject(DrsObject.class, drsObject);
             return getAdminFormattedDrsObject(drsObject.getId());
         } catch (EntityExistsException ex) {
@@ -95,7 +94,6 @@ public class DrsAdmin {
         @RequestBody DrsObject drsObject
     ) {
         try {
-            setBidirectionalRelationships(drsObject);
             hibernateUtil.updateEntityObject(DrsObject.class, id, drsObject);
             return getAdminFormattedDrsObject(id);
         } catch (EntityMismatchException ex) {
@@ -168,26 +166,5 @@ public class DrsAdmin {
         drsObject.setAwsS3AccessObjects(null);
         drsObject.setDrsObjectChildren(null);
         drsObject.setDrsObjectParents(null);
-    }
-
-    /**
-     * Set bidrectional reciprocal relationships in case they haven't been
-     * automatically loaded by Spring Boot. Required to ensure the correct 
-     * foreign keys are populated in the database
-     * @param drsObject DRSObject to be viewed/persisted/updated
-     */
-    private void setBidirectionalRelationships(DrsObject drsObject) {
-        // all checksums have their DRSObject set to the current DRSObject
-        if (drsObject.getChecksums() != null) {
-            drsObject.getChecksums().forEach(checksum -> checksum.setDrsObject(drsObject));
-        }
-        // all file access objects have their DRSObject set to the current DRSObject
-        if (drsObject.getFileAccessObjects() != null) {
-            drsObject.getFileAccessObjects().forEach(fileAccessObject -> fileAccessObject.setDrsObject(drsObject));
-        }
-        // all s3 access objects have their DRSObject set to the current DRSObject
-        if (drsObject.getAwsS3AccessObjects() != null) {
-            drsObject.getAwsS3AccessObjects().forEach(awsS3AccessObject -> awsS3AccessObject.setDrsObject(drsObject));
-        }
     }
 }

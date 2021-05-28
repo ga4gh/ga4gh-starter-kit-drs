@@ -33,7 +33,7 @@ public class DrsServiceInfoDefaults {
      */
     public static final String DESCRIPTION = "An open source, community-driven"
         + " implementation of the GA4GH Data Repository Service (DRS)"
-        + "API specification.";
+        + " API specification.";
 
     /**
      * Default service contact URL
