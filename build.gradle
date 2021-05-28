@@ -17,7 +17,7 @@ plugins {
     id 'java-library'
 
     // Apply the plugins to add support for Spring Boot
-    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'org.springframework.boot' version '2.5.0'
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 
     // Apply the plugin to add support for jacoco test coverage report
@@ -38,9 +38,7 @@ repositories {
 }
 
 dependencies {
-    // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.1-jre'
-
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.0'
     implementation 'commons-cli:commons-cli:1.4'
     implementation 'commons-io:commons-io:2.8.0'
@@ -61,9 +59,9 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.8.11.2'
     implementation 'org.ga4gh:ga4gh-starter-kit-common:0.3.3'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.0'
     testImplementation 'org.testng:testng:7.0.0'
-    // testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.0'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 jar {
