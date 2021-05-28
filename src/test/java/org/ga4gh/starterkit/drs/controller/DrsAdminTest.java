@@ -4,7 +4,6 @@ import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
 import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
 import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
-import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
