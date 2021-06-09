@@ -1,8 +1,7 @@
 package org.ga4gh.starterkit.drs.controller;
 
-import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
-import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
-import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
+import org.ga4gh.starterkit.drs.app.DrsServer;
+import org.ga4gh.starterkit.drs.app.DrsServerSpringConfig;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,9 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(args = {"--config", "./src/test/resources/config/test-config-00.yml"})
 @ContextConfiguration(classes={
-    DrsStandaloneServer.class,
-    DrsStandaloneSpringConfig.class,
-    StarterKitDrsSpringConfig.class,
+    DrsServer.class,
+    DrsServerSpringConfig.class,
     Objects.class
 })
 @WebAppConfiguration

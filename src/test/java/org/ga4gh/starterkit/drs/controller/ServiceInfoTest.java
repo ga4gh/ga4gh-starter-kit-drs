@@ -1,8 +1,7 @@
 package org.ga4gh.starterkit.drs.controller;
 
-import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
-import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
-import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
+import org.ga4gh.starterkit.drs.app.DrsServer;
+import org.ga4gh.starterkit.drs.app.DrsServerSpringConfig;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,8 @@ import org.testng.annotations.Test;
 
 @SpringBootTest
 @ContextConfiguration(classes={
-    DrsStandaloneServer.class,
-    DrsStandaloneSpringConfig.class,
-    StarterKitDrsSpringConfig.class,
+    DrsServer.class,
+    DrsServerSpringConfig.class,
     DrsServiceInfo.class
 })
 @WebAppConfiguration

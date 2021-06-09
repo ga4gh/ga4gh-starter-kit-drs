@@ -1,8 +1,7 @@
 package e2e;
 
-import org.ga4gh.starterkit.drs.app.DrsStandaloneServer;
-import org.ga4gh.starterkit.drs.app.DrsStandaloneSpringConfig;
-import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
+import org.ga4gh.starterkit.drs.app.DrsServer;
+import org.ga4gh.starterkit.drs.app.DrsServerSpringConfig;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
 import org.ga4gh.starterkit.drs.controller.DrsAdmin;
@@ -46,9 +45,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @SpringBootTest
 @ContextConfiguration(classes = {
-    DrsStandaloneServer.class,
-    DrsStandaloneSpringConfig.class,
-    StarterKitDrsSpringConfig.class,
+    DrsServer.class,
+    DrsServerSpringConfig.class,
     DrsAdmin.class,
     Objects.class,
     Stream.class,

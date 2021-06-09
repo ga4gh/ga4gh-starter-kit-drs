@@ -5,25 +5,25 @@ package org.ga4gh.starterkit.drs.app;
  * be deserialized/loaded as part of a YAML config file specified on the command
  * line.
  */
-public class DrsStandaloneYamlConfigContainer {
+public class DrsServerYamlConfigContainer {
 
     /**
      * Nested configuration object
      */
-    private DrsStandaloneYamlConfig drs;
+    private DrsServerYamlConfig drs;
 
     /**
      * Instantiates a new DrsStandaloneYamlConfigContainer object with default properties
      */
-    public DrsStandaloneYamlConfigContainer() {
-        drs = new DrsStandaloneYamlConfig();
+    public DrsServerYamlConfigContainer() {
+        drs = new DrsServerYamlConfig();
     }
 
     /**
      * Instantiates a new DrsStandaloneYamlConfigContainer with a preconfigured DrsStandaloneYamlConfig object
      * @param drs preconfigured DrsStandaloneYamlConfig object
      */
-    public DrsStandaloneYamlConfigContainer(DrsStandaloneYamlConfig drs) {
+    public DrsServerYamlConfigContainer(DrsServerYamlConfig drs) {
         this.drs = drs;
     }
 
@@ -31,7 +31,7 @@ public class DrsStandaloneYamlConfigContainer {
      * Assign drs
      * @param drs DrsStandaloneYamlConfig object
      */
-    public void setDrs(DrsStandaloneYamlConfig drs) {
+    public void setDrs(DrsServerYamlConfig drs) {
         this.drs = drs;
     }
 
@@ -39,7 +39,7 @@ public class DrsStandaloneYamlConfigContainer {
      * Retrieve drs
      * @return DrsStandaloneYamlConfig object
      */
-    public DrsStandaloneYamlConfig getDrs() {
+    public DrsServerYamlConfig getDrs() {
         return drs;
     }
 }
