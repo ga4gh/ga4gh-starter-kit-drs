@@ -1,7 +1,6 @@
 package org.ga4gh.starterkit.drs.model;
 
 import java.io.Serializable;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,12 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
@@ -30,7 +28,7 @@ import org.ga4gh.starterkit.drs.utils.SerializeView;
 @Entity
 @Table(name = "aws_s3_access_object")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonView(SerializeView.Admin.class)
 public class AwsS3AccessObject implements Serializable, HibernateEntity<Long> {
 
