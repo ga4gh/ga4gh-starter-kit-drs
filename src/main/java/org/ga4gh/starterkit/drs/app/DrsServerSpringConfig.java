@@ -6,6 +6,11 @@ import java.util.List;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.util.CliYamlConfigLoader;
 import org.ga4gh.starterkit.common.util.DeepObjectMerger;
+import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
+import org.ga4gh.starterkit.common.util.webserver.AdminEndpointsConnector;
+import org.ga4gh.starterkit.common.util.webserver.AdminEndpointsFilter;
+import org.ga4gh.starterkit.common.util.webserver.TomcatMultiConnectorServletWebServerFactoryCustomizer;
+import org.apache.catalina.connector.Connector;
 import org.apache.commons.cli.Options;
 import org.ga4gh.starterkit.common.config.DatabaseProps;
 import org.ga4gh.starterkit.common.config.ServerProps;
@@ -22,8 +27,12 @@ import org.ga4gh.starterkit.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -41,7 +50,26 @@ import org.springframework.web.context.annotation.RequestScope;
 public class DrsServerSpringConfig {
 
     /* ******************************
-     * DRS SERVER CONFIG BEANS
+     * TOMCAT SERVER
+     * ****************************** */
+
+    @Value("${server.admin.port:4501}")
+    private String serverAdminPort;
+
+    @Bean
+    public WebServerFactoryCustomizer servletContainer() {
+        Connector[] additionalConnectors = AdminEndpointsConnector.additionalConnector(serverAdminPort);
+        ServerProperties serverProperties = new ServerProperties();
+        return new TomcatMultiConnectorServletWebServerFactoryCustomizer(serverProperties, additionalConnectors);
+    }
+
+    @Bean
+    public FilterRegistrationBean<AdminEndpointsFilter> adminEndpointsFilter() {
+        return new FilterRegistrationBean<AdminEndpointsFilter>(new AdminEndpointsFilter(Integer.valueOf(serverAdminPort)));
+    }
+
+    /* ******************************
+     * YAML CONFIG
      * ****************************** */
 
     /**
@@ -165,7 +193,16 @@ public class DrsServerSpringConfig {
     }
 
     /* ******************************
-     * HIBERNATE CONFIG BEANS
+     * LOGGING
+     * ****************************** */
+
+    @Bean
+    public LoggingUtil loggingUtil() {
+        return new LoggingUtil();
+    }
+
+    /* ******************************
+     * HIBERNATE CONFIG
      * ****************************** */
 
     /**
@@ -200,7 +237,7 @@ public class DrsServerSpringConfig {
     }
 
     /* ******************************
-     * REQUEST HANDLER BEANS
+     * REQUEST HANDLER
      * ****************************** */
 
     /**
@@ -235,7 +272,7 @@ public class DrsServerSpringConfig {
     }
 
     /* ******************************
-     * OTHER UTILS BEANS
+     * OTHER UTILS
      * ****************************** */
 
     /**

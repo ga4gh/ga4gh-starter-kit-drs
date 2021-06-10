@@ -62,9 +62,14 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
      * @return AccessURL pointing to this service's streaming endpoint
      */
     private AccessURL generateAccessURLForFile() {
-        String scheme = serverProps.getScheme();
-        String hostname = serverProps.getHostname();
         String path = DRS_API_V1 + "/stream/" + objectId + "/" + accessId;
-        return new AccessURL(URI.create(scheme + "://" + hostname + path));
+
+        StringBuffer uriBuffer = new StringBuffer(serverProps.getScheme() + "://");
+        uriBuffer.append(serverProps.getHostname());
+        if (!serverProps.getPublicApiPort().equals("80")) {
+            uriBuffer.append(":" + serverProps.getPublicApiPort());
+        }
+        uriBuffer.append(path);
+        return new AccessURL(URI.create(uriBuffer.toString()));
     }
 }

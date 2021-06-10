@@ -256,7 +256,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             .andReturn();
         if (expSuccess) {
             String responseBody = result.getResponse().getContentAsString();
-            String expResponseBody = "{\"url\":\"http://localhost:8080" + DRS_API_V1 + "/stream/" + objectId + "/" + accessId + "\"}";
+            String expResponseBody = "{\"url\":\"http://localhost:4500" + DRS_API_V1 + "/stream/" + objectId + "/" + accessId + "\"}";
             Assert.assertEquals(responseBody, expResponseBody);
         }
     }

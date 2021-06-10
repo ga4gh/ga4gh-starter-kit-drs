@@ -23,12 +23,12 @@ docker pull ga4gh/ga4gh-starter-kit-drs:latest
 
 Run container with default settings:
 ```
-docker run -p 8080:8080 ga4gh/ga4gh-starter-kit-drs:latest
+docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest
 ```
 
 OR, run container with config file overriding defaults
 ```
-docker run -p 8080:8080 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-starter-kit-drs.jar -c path/to/config.yml
+docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-starter-kit-drs.jar -c path/to/config.yml
 ```
 
 ### Native
@@ -78,7 +78,7 @@ java -jar build/libs/ga4gh-starter-kit-drs-${VERSION}.jar --config path/to/confi
 Whether running via docker or natively on a local machine, confirm the DRS API is up running by visiting its `service-info` endpoint, you should receive a valid `ServiceInfo` response.
 
 ```
-GET http://localhost:8080/ga4gh/drs/v1/service-info
+GET http://localhost:4500/ga4gh/drs/v1/service-info
 
 Response:
 {
@@ -122,7 +122,7 @@ If `make` and/or `sqlite` are not installed, [this file](./database/sqlite/creat
 Confirm the DRS service can connect to the dev database by submitting a `DRS id` to the `/objects/{object_id}` endpoint. For example, a `DRS id` of `b8cd0667-2c33-4c9f-967b-161b905932c9` represents a root `DRS bundle` for a phenopacket test dataset:
 
 ```
-GET http://localhost:8080/ga4gh/drs/v1/objects/b8cd0667-2c33-4c9f-967b-161b905932c9
+GET http://localhost:4500/ga4gh/drs/v1/objects/b8cd0667-2c33-4c9f-967b-161b905932c9
 
 Response:
 {
@@ -133,33 +133,33 @@ Response:
     "size": 143601,
     "updated_time": "2021-03-13T12:30:45Z",
     "version": "1.0.0",
-    "self_uri": "drs://localhost:8080/b8cd0667-2c33-4c9f-967b-161b905932c9",
+    "self_uri": "drs://localhost:4500/b8cd0667-2c33-4c9f-967b-161b905932c9",
     "contents": [
         {
             "name": "phenopackets.mundhofir.family",
             "drs_uri": [
-                "drs://localhost:8080/1af5cdcf-898c-4dbc-944e-1ac95e82c0ea"
+                "drs://localhost:4500/1af5cdcf-898c-4dbc-944e-1ac95e82c0ea"
             ],
             "id": "1af5cdcf-898c-4dbc-944e-1ac95e82c0ea"
         },
         {
             "name": "phenopackets.zhang.family",
             "drs_uri": [
-                "drs://localhost:8080/355a74bd-6571-4d4a-8602-a9989936717f"
+                "drs://localhost:4500/355a74bd-6571-4d4a-8602-a9989936717f"
             ],
             "id": "355a74bd-6571-4d4a-8602-a9989936717f"
         },
         {
             "name": "phenopackets.cao.family",
             "drs_uri": [
-                "drs://localhost:8080/a1dd4ae2-8d26-43b0-a199-342b64c7dff6"
+                "drs://localhost:4500/a1dd4ae2-8d26-43b0-a199-342b64c7dff6"
             ],
             "id": "a1dd4ae2-8d26-43b0-a199-342b64c7dff6"
         },
         {
             "name": "phenopackets.lalani.family",
             "drs_uri": [
-                "drs://localhost:8080/c69a3d6c-4a28-4b7c-b215-0782f8d62429"
+                "drs://localhost:4500/c69a3d6c-4a28-4b7c-b215-0782f8d62429"
             ],
             "id": "c69a3d6c-4a28-4b7c-b215-0782f8d62429"
         }

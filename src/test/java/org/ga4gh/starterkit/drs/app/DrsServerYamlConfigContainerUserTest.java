@@ -33,7 +33,8 @@ public class DrsServerYamlConfigContainerUserTest extends AbstractTestNGSpringCo
         ServerProps serverProps = drs.getDrs().getServerProps();
         Assert.assertEquals(serverProps.getScheme(), "https");
         Assert.assertEquals(serverProps.getHostname(), "starterkit.ga4gh.org");
-        Assert.assertEquals(serverProps.getPort(), "80");
+        Assert.assertEquals(serverProps.getPublicApiPort(), "80");
+        Assert.assertEquals(serverProps.getAdminApiPort(), "7001");
 
         DatabaseProps databaseProps = drs.getDrs().getDatabaseProps();
         Assert.assertEquals(databaseProps.getUrl(), "jdbc:sqlite:./ga4gh-starter-kit.dev.db");

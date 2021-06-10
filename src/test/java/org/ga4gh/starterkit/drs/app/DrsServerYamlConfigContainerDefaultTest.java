@@ -31,8 +31,9 @@ public class DrsServerYamlConfigContainerDefaultTest extends AbstractTestNGSprin
     public void testYamlConfigContainer() {
         ServerProps serverProps = drs.getDrs().getServerProps();
         Assert.assertEquals(serverProps.getScheme(), "http");
-        Assert.assertEquals(serverProps.getHostname(), "localhost:8080");
-        Assert.assertEquals(serverProps.getPort(), "8080");
+        Assert.assertEquals(serverProps.getHostname(), "localhost");
+        Assert.assertEquals(serverProps.getPublicApiPort(), "4500");
+        Assert.assertEquals(serverProps.getAdminApiPort(), "4501");
 
         DatabaseProps databaseProps = drs.getDrs().getDatabaseProps();
         Assert.assertEquals(databaseProps.getUrl(), "jdbc:sqlite:./ga4gh-starter-kit.dev.db");

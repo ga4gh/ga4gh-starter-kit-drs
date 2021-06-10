@@ -191,7 +191,7 @@ public class PhenopacketBundleAdminE2ETest extends AbstractTestNGSpringContextTe
     }
 
     private String getStringFromStreamEndpoint(URI streamURL) throws Exception {
-        String mockMvcURL = streamURL.toString().replaceFirst("http://localhost:8080", "");
+        String mockMvcURL = streamURL.toString().replaceFirst("http://localhost:4500", "");
         MvcResult result = mockMvc.perform(get(mockMvcURL)).andExpect(status().isOk()).andReturn();
         return  result.getResponse().getContentAsString();
     }
