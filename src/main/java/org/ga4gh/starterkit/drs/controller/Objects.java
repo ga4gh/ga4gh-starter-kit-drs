@@ -1,11 +1,14 @@
 package org.ga4gh.starterkit.drs.controller;
 
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
+
+import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.ga4gh.starterkit.drs.model.AccessURL;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +25,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class Objects {
 
     @Resource(name = "objectRequestHandler")
-    ObjectRequestHandler objectRequestHandler;
+    private ObjectRequestHandler objectRequestHandler;
 
     @Resource(name = "accessRequestHandler")
-    AccessRequestHandler accessRequestHandler;
+    private AccessRequestHandler accessRequestHandler;
+
+    @Autowired
+    private LoggingUtil loggingUtil;
 
     // Standard endpoints
 
@@ -41,6 +47,7 @@ public class Objects {
         @PathVariable(name = "object_id") String objectId,
         @RequestParam(name = "expand", required = false) boolean expand
     ) {
+        loggingUtil.debug("Public API request: DrsObject with id '" + objectId + "', expand=" + expand);
         return objectRequestHandler.prepare(objectId, expand).handleRequest();
     }
 
@@ -55,6 +62,7 @@ public class Objects {
         @PathVariable(name = "object_id") String objectId,
         @PathVariable(name = "access_id") String accessId
     ) {
+        loggingUtil.debug("Public API request: AccessURL for DRS id '" + objectId + "', access id '" + accessId + "'");
         return accessRequestHandler.prepare(objectId, accessId).handleRequest();
     }
 }

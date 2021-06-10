@@ -23,7 +23,7 @@ public class DrsServer {
         if (setupSuccess) {
             SpringApplication.run(DrsServer.class, args);
         } else {
-            System.out.println("Setup failure, exiting");
+            System.out.println("Application failed at initial setup phase, this is likely an error in the YAML config file. Exiting");
         }
     }
 

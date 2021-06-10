@@ -65,7 +65,7 @@ jar {
 }
 
 bootJar {
-    mainClassName = 'org.ga4gh.starterkit.drs.app.DrsStandaloneServer'
+    mainClassName = 'org.ga4gh.starterkit.drs.app.DrsServer'
 }
 
 test {

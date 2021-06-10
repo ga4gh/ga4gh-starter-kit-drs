@@ -3,7 +3,9 @@ package org.ga4gh.starterkit.drs.controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
+import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.ga4gh.starterkit.drs.utils.requesthandler.FileStreamRequestHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class Stream {
 
     @Resource(name = "fileStreamRequestHandler")
-    FileStreamRequestHandler fileStreamRequestHandler;
+    private FileStreamRequestHandler fileStreamRequestHandler;
+
+    @Autowired
+    private LoggingUtil loggingUtil;
 
     /**
      * Stream file bytes for the requested DRSObject and access id
@@ -32,6 +37,7 @@ public class Stream {
         @PathVariable(name = "access_id") String accessId,
         HttpServletResponse response
     ) {
+        loggingUtil.debug("Public API request: local file streaming. drs id='" + objectId + "', access id='" + accessId + "'");
         fileStreamRequestHandler.prepare(objectId, accessId, response).handleRequest();
     }
 }
