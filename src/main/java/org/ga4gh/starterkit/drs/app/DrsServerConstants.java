@@ -4,7 +4,7 @@ package org.ga4gh.starterkit.drs.app;
  * String constants for deployment config, generally Spring bean name/qualifier
  * constants
  */
-public class DrsStandaloneConstants {
+public class DrsServerConstants {
 
     /* Spring bean names - DRS config container */
 

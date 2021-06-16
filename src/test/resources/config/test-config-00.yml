@@ -2,7 +2,8 @@ drs:
   serverProps:
     scheme: https
     hostname: starterkit.ga4gh.org
-    port: 80
+    publicApiPort: 80
+    adminApiPort: 7001
   databaseProps:
     username: ga4gh-user
     password: password01234

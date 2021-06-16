@@ -7,6 +7,7 @@ import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityDoesntExistException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityExistsException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityMismatchException;
+import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
 import java.util.List;
 import org.ga4gh.starterkit.drs.model.DrsObject;
@@ -32,7 +33,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class DrsAdmin {
 
     @Autowired
-    DrsHibernateUtil hibernateUtil;
+    private DrsHibernateUtil hibernateUtil;
+
+    @Autowired
+    private LoggingUtil loggingUtil;
 
     // Non-standard endpoints - admin views
 
@@ -43,6 +47,7 @@ public class DrsAdmin {
     @GetMapping
     @JsonView(SerializeView.Always.class)
     public List<DrsObject> indexDrsObjects() {
+        loggingUtil.debug("Admin API request: DrsObject list");
         return hibernateUtil.getEntityList(DrsObject.class);
     }
 
@@ -56,6 +61,7 @@ public class DrsAdmin {
     public DrsObject showDrsObject(
         @PathVariable(name = "object_id") String id
     ) {
+        loggingUtil.debug("Admin API request: DrsObject with id '" + id + "'");
         DrsObject drsObject = hibernateUtil.loadDrsObject(id, false);
         if (drsObject == null) {
             throw new ResourceNotFoundException("No DrsObject found by id: " + id);
@@ -74,6 +80,8 @@ public class DrsAdmin {
     public DrsObject createDrsObject(
         @RequestBody DrsObject drsObject
     ) {
+        loggingUtil.debug("Admin API request: create new DrsObject");
+        loggingUtil.trace(drsObject.toString());
         try {
             hibernateUtil.createEntityObject(DrsObject.class, drsObject);
             return getAdminFormattedDrsObject(drsObject.getId());
@@ -93,6 +101,8 @@ public class DrsAdmin {
         @PathVariable(name = "object_id") String id,
         @RequestBody DrsObject drsObject
     ) {
+        loggingUtil.debug("Admin API request: update DrsObject with id '" + id + "'");
+        loggingUtil.trace(drsObject.toString());
         try {
             hibernateUtil.updateEntityObject(DrsObject.class, id, drsObject);
             return getAdminFormattedDrsObject(id);
@@ -112,6 +122,7 @@ public class DrsAdmin {
     public DrsObject deleteDrsObject(
         @PathVariable(name = "object_id") String id
     ) {
+        loggingUtil.debug("Admin API request: delete DrsObject with id '" + id + "'");
         try {
             hibernateUtil.deleteEntityObject(DrsObject.class, id);
             return hibernateUtil.readEntityObject(DrsObject.class, id, false);

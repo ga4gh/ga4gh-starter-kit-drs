@@ -10,6 +10,11 @@ import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.CREATED_A
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.UPDATED_AT;
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.ENVIRONMENT;
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.VERSION;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.ORGANIZATION_NAME;
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.ORGANIZATION_URL;
 import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.SERVICE_TYPE_GROUP;
@@ -20,6 +25,8 @@ import static org.ga4gh.starterkit.drs.constant.DrsServiceInfoDefaults.SERVICE_T
  * Extension of the GA4GH base service info specification to include DRS-specific
  * properties
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
 public class DrsServiceInfo extends ServiceInfo {
 
     /**

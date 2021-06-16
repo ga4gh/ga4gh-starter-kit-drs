@@ -2,7 +2,6 @@ package org.ga4gh.starterkit.drs.app;
 
 import org.ga4gh.starterkit.common.config.DatabaseProps;
 import org.ga4gh.starterkit.common.config.ServerProps;
-import org.ga4gh.starterkit.drs.beanconfig.StarterKitDrsSpringConfig;
 import org.ga4gh.starterkit.drs.config.DrsServiceProps;
 import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +18,22 @@ import org.testng.annotations.Test;
  */
 @SpringBootTest
 @ContextConfiguration(classes = {
-    DrsStandaloneServer.class,
-    DrsStandaloneSpringConfig.class,
-    StarterKitDrsSpringConfig.class
+    DrsServer.class,
+    DrsServerSpringConfig.class
 })
-public class DrsStandaloneYamlConfigContainerDefaultTest extends AbstractTestNGSpringContextTests {
+public class DrsServerYamlConfigContainerDefaultTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    @Qualifier(DrsStandaloneConstants.FINAL_DRS_CONFIG_CONTAINER)
-    private DrsStandaloneYamlConfigContainer drs;
+    @Qualifier(DrsServerConstants.FINAL_DRS_CONFIG_CONTAINER)
+    private DrsServerYamlConfigContainer drs;
 
     @Test
     public void testYamlConfigContainer() {
         ServerProps serverProps = drs.getDrs().getServerProps();
         Assert.assertEquals(serverProps.getScheme(), "http");
-        Assert.assertEquals(serverProps.getHostname(), "localhost:8080");
-        Assert.assertEquals(serverProps.getPort(), "8080");
+        Assert.assertEquals(serverProps.getHostname(), "localhost");
+        Assert.assertEquals(serverProps.getPublicApiPort(), "4500");
+        Assert.assertEquals(serverProps.getAdminApiPort(), "4501");
 
         DatabaseProps databaseProps = drs.getDrs().getDatabaseProps();
         Assert.assertEquals(databaseProps.getUrl(), "jdbc:sqlite:./ga4gh-starter-kit.dev.db");

@@ -15,7 +15,7 @@ java -jar ga4gh-starter-kit-drs.jar -c /path/to/config.yml
 If running with a custom properties file via docker, be sure to mount the config file into the container with `-v`. For example:
 
 ```
-docker run -v /host/directory/with/config:/config -p 8080:8080 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-starter-kit-drs.jar -c /config/config.yml
+docker run -v /host/directory/with/config:/config -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-starter-kit-drs.jar -c /config/config.yml
 ```
 
 Each property has a default value. Any property that is not overridden in the YAML config will use its default.
@@ -60,8 +60,8 @@ drs:
 | Attribute | Description | Default |
 |-----------|-------------|---------|
 | scheme | The URL scheme/protocol by which the service can be accessed. (`http` or `https`). Allows `http` in dev/local deployments, but real-world deployments should use `https` | http |
-| hostname | The URL domain name (including subdomain and port) that this service is running at. Used to reference clients back to the service | localhost:8080 |
-| port | The port that the server will run on | 8080 |
+| hostname | The URL domain name (including subdomain and port) that this service is running at. Used to reference clients back to the service | localhost:4500 |
+| port | The port that the server will run on | 4500 |
 
 ## databaseProps
 

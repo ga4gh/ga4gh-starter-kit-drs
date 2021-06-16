@@ -10,7 +10,7 @@ import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
  * To be deserialized/loaded as part of a YAML config file specified on the 
  * command line
  */
-public class DrsStandaloneYamlConfig {
+public class DrsServerYamlConfig {
 
     private ServerProps serverProps;
     private DatabaseProps databaseProps;
@@ -20,7 +20,7 @@ public class DrsStandaloneYamlConfig {
     /**
      * Instantiates a new DrsStandaloneYamlConfig object with default properties
      */
-    public DrsStandaloneYamlConfig() {
+    public DrsServerYamlConfig() {
         serverProps = new ServerProps();
         databaseProps = new DatabaseProps();
         serviceInfo = new DrsServiceInfo();

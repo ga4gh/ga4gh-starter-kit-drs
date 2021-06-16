@@ -87,8 +87,13 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
      * @return self-referencing URI
      */
     private URI prepareSelfURI(String id) {
-        String hostname = serverProps.getHostname();
-        return URI.create("drs://" + hostname + "/" + id.toString());
+        StringBuffer uriBuffer = new StringBuffer("drs://");
+        uriBuffer.append(serverProps.getHostname());
+        if (!serverProps.getPublicApiPort().equals("80")) {
+            uriBuffer.append(":" + serverProps.getPublicApiPort());
+        }
+        uriBuffer.append("/" + id.toString());
+        return URI.create(uriBuffer.toString());
     }
 
     /**

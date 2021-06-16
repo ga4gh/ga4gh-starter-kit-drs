@@ -1,13 +1,13 @@
 package org.ga4gh.starterkit.drs.model;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 /**
  * Directly from DRS specification, error object returned to client whenever a
  * server or client-side error is encountered during a DRS controller function
  */
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Error extends Exception {
 
     public static final long serialVersionUID = 1L;
