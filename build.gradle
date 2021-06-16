@@ -28,7 +28,7 @@ plugins {
 
 archivesBaseName = 'ga4gh-starter-kit-drs'
 group 'org.ga4gh'
-version '0.1.5'
+version '0.1.6'
 
 repositories {
     // Use jcenter for resolving dependencies.
