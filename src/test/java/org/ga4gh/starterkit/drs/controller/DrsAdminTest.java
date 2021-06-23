@@ -6,7 +6,6 @@ import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.testutils.ResourceLoader;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
-import org.ga4gh.starterkit.drs.utils.response.header.CorsHeaderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,8 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ContextConfiguration(classes = {
     DrsServer.class,
     DrsServerSpringConfig.class,
-    DrsAdmin.class,
-    CorsHeaderFilter.class
+    DrsAdmin.class
 })
 @WebAppConfiguration
 public class DrsAdminTest extends AbstractTestNGSpringContextTests {

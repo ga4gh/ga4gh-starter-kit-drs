@@ -9,6 +9,7 @@ import org.ga4gh.starterkit.common.util.DeepObjectMerger;
 import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.ga4gh.starterkit.common.util.webserver.AdminEndpointsConnector;
 import org.ga4gh.starterkit.common.util.webserver.AdminEndpointsFilter;
+import org.ga4gh.starterkit.common.util.webserver.CorsFilterBuilder;
 import org.ga4gh.starterkit.common.util.webserver.TomcatMultiConnectorServletWebServerFactoryCustomizer;
 import org.apache.catalina.connector.Connector;
 import org.apache.commons.cli.Options;
@@ -37,6 +38,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * Contains Spring bean definitions that are to be loaded for the DRS service
@@ -66,6 +68,13 @@ public class DrsServerSpringConfig {
     @Bean
     public FilterRegistrationBean<AdminEndpointsFilter> adminEndpointsFilter() {
         return new FilterRegistrationBean<AdminEndpointsFilter>(new AdminEndpointsFilter(Integer.valueOf(serverAdminPort)));
+    }
+
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilter(
+        @Autowired ServerProps serverProps
+    ) {
+        return new CorsFilterBuilder(serverProps).buildFilter();
     }
 
     /* ******************************
