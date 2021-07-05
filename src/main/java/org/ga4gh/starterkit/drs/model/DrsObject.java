@@ -120,6 +120,11 @@ public class DrsObject implements HibernateEntity<String> {
         nested/sub bundles, to single blob DRS Objects
     */
 
+    @Column(name = "is_bundle")
+    @NonNull
+    @JsonView(SerializeView.Admin.class)
+    private Boolean isBundle;
+
     /**
      * List of bundles to which this DRSObject belongs, ie its 'parents'
      */
@@ -401,6 +406,14 @@ public class DrsObject implements HibernateEntity<String> {
      */
     public List<Checksum> getChecksums() {
         return checksums;
+    }
+
+    public void setIsBundle(Boolean isBundle) {
+        this.isBundle = isBundle;
+    }
+
+    public Boolean getIsBundle() {
+        return isBundle;
     }
 
     /**
