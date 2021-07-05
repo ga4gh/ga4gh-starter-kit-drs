@@ -6,7 +6,8 @@ CREATE TABLE drs_object (
     name TEXT,
     size UNSIGNED BIG INT,
     updated_time TEXT,
-    version TEXT
+    version TEXT,
+    is_bundle INT
 );
 
 CREATE TABLE file_access_object(

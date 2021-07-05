@@ -266,7 +266,6 @@ public class PhenopacketBundleAdminE2ETest extends AbstractTestNGSpringContextTe
             Assert.assertEquals(md5, expMd5);
         }
         
-
         // STEP 6: delete individual DRSObject's and the family bundle
         executeApiRequestAndAssert(Route.ADMIN_DELETE, SUBJECT_2_ID, null, status().isOk(), true, "empty-response.json");
         executeApiRequestAndAssert(Route.ADMIN_DELETE, SUBJECT_3_ID, null, status().isOk(), true, "empty-response.json");

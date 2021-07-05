@@ -15,14 +15,16 @@ INSERT INTO drs_object (
     created_time,
     name,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES (
     "b8cd0667-2c33-4c9f-967b-161b905932c9",
     "Open dataset of 384 phenopackets",
     "2021-03-12 20:00:00.000",
     "phenopackets.test.dataset",
     "2021-03-13 12:30:45.000",
-    "1.0.0"
+    "1.0.0",
+    1
 );
 
 /*
@@ -42,14 +44,16 @@ INSERT INTO drs_object (
     created_time,
     name,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES (
     "a1dd4ae2-8d26-43b0-a199-342b64c7dff6",
     "Synthetic Phenopacket dataset: Cao family",
     "2021-03-12 20:00:00.000",
     "phenopackets.cao.family",
     "2021-03-13 12:30:45.000",
-    "1.0.0"
+    "1.0.0",
+    1
 );
 
 INSERT INTO drs_object (
@@ -60,7 +64,8 @@ INSERT INTO drs_object (
     name,
     size,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES
     (
         "1a570e4e-2489-4218-9333-f65549495872",
@@ -70,7 +75,8 @@ INSERT INTO drs_object (
         "phenopackets.cao.1",
         4257,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "4d83ba3f-a476-4c7c-868f-3d1fcf77fe29",
@@ -80,7 +86,8 @@ INSERT INTO drs_object (
         "phenopackets.cao.2",
         7401,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "924901d5-6d31-4c33-b443-7931eadfac4b",
@@ -90,7 +97,8 @@ INSERT INTO drs_object (
         "phenopackets.cao.3",
         4251,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "0f8abce3-e161-4bdf-981f-86257d505d69",
@@ -100,7 +108,8 @@ INSERT INTO drs_object (
         "phenopackets.cao.4",
         9264,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     );
 
 INSERT INTO drs_object_alias VALUES
@@ -152,14 +161,16 @@ INSERT INTO drs_object (
     created_time,
     name,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES (
     "c69a3d6c-4a28-4b7c-b215-0782f8d62429",
     "Synthetic Phenopacket dataset: Lalani family",
     "2021-03-12 20:00:00.000",
     "phenopackets.lalani.family",
     "2021-03-13 12:30:45.000",
-    "1.0.0"
+    "1.0.0",
+    1
 );
 
 INSERT INTO drs_object (
@@ -170,7 +181,8 @@ INSERT INTO drs_object (
     name,
     size,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES
     (
         "456e9ee0-5b60-4f38-82b5-83ba5d338038",
@@ -180,7 +192,8 @@ INSERT INTO drs_object (
         "phenopackets.lalani.1",
         11606,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "1af6b862-7fc8-411a-86c5-d8e280e5b77a",
@@ -190,7 +203,8 @@ INSERT INTO drs_object (
         "phenopackets.lalani.2",
         17531,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "c37b37fd-0450-432d-b6aa-9ffdece35ad0",
@@ -200,7 +214,8 @@ INSERT INTO drs_object (
         "phenopackets.lalani.4",
         9827,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "0bb9d297-2710-48f6-ab4d-80d5eb0c9eaa",
@@ -210,7 +225,8 @@ INSERT INTO drs_object (
         "phenopackets.lalani.5",
         12111,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "a3bb76d7-76ae-414b-81f7-97e663b02206",
@@ -220,7 +236,8 @@ INSERT INTO drs_object (
         "phenopackets.lalani.6",
         10316,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     );
 
 INSERT INTO drs_object_alias VALUES
@@ -279,14 +296,16 @@ INSERT INTO drs_object (
     created_time,
     name,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES (
     "1af5cdcf-898c-4dbc-944e-1ac95e82c0ea",
     "Synthetic Phenopacket dataset: Mundhofir family",
     "2021-03-12 20:00:00.000",
     "phenopackets.mundhofir.family",
     "2021-03-13 12:30:45.000",
-    "1.0.0"
+    "1.0.0",
+    1
 );
 
 INSERT INTO drs_object (
@@ -297,7 +316,8 @@ INSERT INTO drs_object (
     name,
     size,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES
     (
         "2506f0e1-29e4-4132-9b37-f7452dc8a89b",
@@ -307,7 +327,8 @@ INSERT INTO drs_object (
         "phenopackets.mundhofir.1",
         7002,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "c00c264a-8f17-471f-8ded-1a1f10e965ac",
@@ -317,7 +338,8 @@ INSERT INTO drs_object (
         "phenopackets.mundhofir.2",
         7634,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     );
 
 INSERT INTO drs_object_alias VALUES
@@ -355,14 +377,16 @@ INSERT INTO drs_object (
     created_time,
     name,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES (
     "355a74bd-6571-4d4a-8602-a9989936717f",
     "Synthetic Phenopacket dataset: Zhang family",
     "2021-03-12 20:00:00.000",
     "phenopackets.zhang.family",
     "2021-03-13 12:30:45.000",
-    "1.0.0"
+    "1.0.0",
+    1
 );
 
 INSERT INTO drs_object (
@@ -373,7 +397,8 @@ INSERT INTO drs_object (
     name,
     size,
     updated_time,
-    version
+    version,
+    is_bundle
 ) VALUES
     (
         "697907bf-d5bd-433e-aac2-1747f1faf366",
@@ -383,7 +408,8 @@ INSERT INTO drs_object (
         "phenopackets.zhang.2009.proband",
         6471,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "3a45fab2-f350-445d-a137-4b1f946bf184",
@@ -393,7 +419,8 @@ INSERT INTO drs_object (
         "phenopackets.zhang.2011.2",
         4001,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "ac53ca59-46f3-4f61-b1e7-bb75a49bfbfe",
@@ -403,7 +430,8 @@ INSERT INTO drs_object (
         "phenopackets.zhang.2016.1",
         4709,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "1275f896-4c8f-47e1-99a1-873a6b2ef5fb",
@@ -413,7 +441,8 @@ INSERT INTO drs_object (
         "phenopackets.zhang.2017.1",
         7555,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "8f40acc0-0c54-45c5-8c85-a6f5fb32a1a7",
@@ -423,7 +452,8 @@ INSERT INTO drs_object (
         "phenopackets.zhang.2017.2",
         7114,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "41898242-62a9-4129-9a2c-5a4e8f5f0afb",
@@ -433,7 +463,8 @@ INSERT INTO drs_object (
         "phenopackets.zhang.2017.3",
         6262,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     ),
     (
         "6b994f18-6189-4233-bb83-139686490d68",
@@ -443,7 +474,8 @@ INSERT INTO drs_object (
         "phenopackets.zhang.2017.4",
         6289,
         "2021-03-13 12:30:45.000",
-        "1.0.0"
+        "1.0.0",
+        0
     );
 
 INSERT INTO drs_object_alias VALUES
