@@ -13,6 +13,10 @@ Nothing:
 clean-sqlite:
 	@rm -f ${DEVDB}
 
+.PHONY: clean-psql
+clean-psql:
+	psql -c "drop database starter_kit_db;" -U postgres
+
 # remove local jar
 .PHONY: clean-jar
 clean-jar:
@@ -25,15 +29,30 @@ clean-all: clean-sqlite clean-jar
 # create the sqlite database
 .PHONY: sqlite-db-build
 sqlite-db-build: clean-sqlite
-	@sqlite3 ${DEVDB} < database/sqlite/create-schema.migrations.sql
+	@sqlite3 ${DEVDB} < database/sqlite/create-tables.sql
 
 # populate the sqlite database with test data
 .PHONY: sqlite-db-populate-dev-dataset
 sqlite-db-populate-dev-dataset:
-	@sqlite3 ${DEVDB} < database/sqlite/populate-dev-dataset.migrations.sql
+	@sqlite3 ${DEVDB} < database/sqlite/add-dev-dataset.sql
 
 .PHONY: sqlite-db-refresh
 sqlite-db-refresh: clean-sqlite sqlite-db-build sqlite-db-populate-dev-dataset
+
+.PHONY: psql-db-build
+psql-db-build:
+	@psql -c "create database starter_kit_db;" -U postgres
+	@psql starter_kit_db < database/postgresql/create-tables.sql -U postgres
+
+.PHONY: psql-db-populate
+psql-db-populate:
+	@psql starter_kit_db < database/postgresql/add-dev-dataset.sql -U postgres
+
+.PHONY: psql-db-build-populate
+psql-db-build-populate: psql-db-build psql-db-populate
+
+.PHONY: psql-db-refresh
+psql-db-refresh: clean-psql psql-db-build-populate
 
 # create jar file
 .PHONY: jar-build

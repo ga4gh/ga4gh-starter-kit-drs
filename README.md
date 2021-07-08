@@ -117,7 +117,7 @@ make sqlite-db-refresh
 
 This will create a SQLite database named `ga4gh-starter-kit.dev.db` in the current directory.
 
-If `make` and/or `sqlite` are not installed, [this file](./database/sqlite/create-schema.migrations.sql) contains SQLite commands for creating the database schema, and [this file](./database/sqlite/populate-dev-dataset.migrations.sql) contains SQLite commands for populating it with the dev dataset.
+If `make` and/or `sqlite` are not installed, [this file](./database/sqlite/create-tables.sql) contains SQLite commands for creating the database schema, and [this file](./database/sqlite/add-dev-dataset.sql) contains SQLite commands for populating it with the dev dataset.
 
 Confirm the DRS service can connect to the dev database by submitting a `DRS id` to the `/objects/{object_id}` endpoint. For example, a `DRS id` of `b8cd0667-2c33-4c9f-967b-161b905932c9` represents a root `DRS bundle` for a phenopacket test dataset:
 
