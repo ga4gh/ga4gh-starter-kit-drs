@@ -6,48 +6,84 @@
  * User Manual available at https://docs.gradle.org/6.1.1/userguide/tutorial_java_projects.html
  */
 
-plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
 
-    // Apply the application plugin to add support for building a CLI application.
-    id 'application'
+plugins {
+    // Apply the java-library plugin to add support for Java Library
+    id 'java-library'
 
     // Apply the plugins to add support for Spring Boot
-    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'org.springframework.boot' version '2.5.0'
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+
+    // Apply the plugin to add support for jacoco test coverage report
+    id 'jacoco'
+
+    id 'io.codearte.nexus-staging' version '0.30.0'
 }
+
+archivesBaseName = 'ga4gh-starter-kit-drs'
+group 'org.ga4gh'
+version '0.1.9'
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.1-jre'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.0'
+    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
+    implementation 'org.hibernate:hibernate-core:5.4.11.Final'
+    implementation 'org.springframework:spring-orm:5.1.6.RELEASE'
+    implementation 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+    implementation 'org.hibernate:hibernate-core:5.4.11.Final'
+    implementation 'org.postgresql:postgresql:42.2.10'
+    implementation 'javax.xml.bind:jaxb-api:2.2.8'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.2.33'
+    implementation 'org.xerial:sqlite-jdbc:3.8.11.2'
+    implementation 'org.ga4gh:ga4gh-starter-kit-common:0.5.3'
 
-    // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation 'org.testng:testng:7.0.0'
-
-    compile 'org.springframework.boot:spring-boot-starter-aop'
-    compile 'org.springframework.boot:spring-boot-starter-web'
-
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile ("org.springframework.security:spring-security-test")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.0'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
-application {
-    // Define the main class for the application.
-    mainClassName = 'org.ga4gh.drs.App'
+jar {
+    enabled = true
 }
 
 bootJar {
-    mainClassName = 'org.ga4gh.drs.App'
+    mainClassName = 'org.ga4gh.starterkit.drs.app.DrsServer'
 }
 
 test {
+    testLogging {
+        showStandardStreams = false // make true for log output to console
+    }
     // Use TestNG for unit tests
     useTestNG()
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
