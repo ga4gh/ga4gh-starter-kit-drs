@@ -16,6 +16,7 @@ import org.apache.commons.cli.Options;
 import org.ga4gh.starterkit.common.config.DatabaseProps;
 import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.drs.config.DrsServiceProps;
+import org.ga4gh.starterkit.drs.exception.DrsCustomExceptionHandling;
 import org.ga4gh.starterkit.drs.model.AwsS3AccessObject;
 import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
@@ -68,6 +69,11 @@ public class DrsServerSpringConfig {
     @Bean
     public FilterRegistrationBean<AdminEndpointsFilter> adminEndpointsFilter() {
         return new FilterRegistrationBean<AdminEndpointsFilter>(new AdminEndpointsFilter(Integer.valueOf(serverAdminPort)));
+    }
+    
+    @Bean
+    public DrsCustomExceptionHandling customExceptionHandling() {
+        return new DrsCustomExceptionHandling();
     }
 
     @Bean
