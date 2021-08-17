@@ -6,6 +6,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import org.ga4gh.starterkit.drs.model.DrsObject;
+import org.ga4gh.starterkit.drs.utils.BundleRecursiveChecksumCalculator;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import org.hibernate.HibernateException;
@@ -37,7 +38,9 @@ public class DrsHibernateUtil extends HibernateUtil {
                 // aren't saved to db
                 session.evict(drsObject);
                 if (recursiveChildLoad) {
-                    drsObject.setSize(recursiveDrsObjectChildLoad(drsObject));
+                    recursiveDrsObjectChildLoad(drsObject);
+                    drsObject.setSize(recursiveSize(drsObject));
+                    drsObject.setChecksums(BundleRecursiveChecksumCalculator.getChecksums(drsObject));
                 }
             }
         } catch (PersistenceException e) {
@@ -56,7 +59,20 @@ public class DrsHibernateUtil extends HibernateUtil {
      * @param parentDrsObject root DRSObject to load all children for
      * @return byte size sum of all recursive objects under the DrsObject node
      */
-    private Long recursiveDrsObjectChildLoad(DrsObject parentDrsObject) {
+    private void recursiveDrsObjectChildLoad(DrsObject parentDrsObject) {
+        List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
+
+        if (childrenDrsObjects != null) {
+            if (childrenDrsObjects.size() != 0) {
+                for (int i = 0; i < childrenDrsObjects.size(); i ++) {
+                    childrenDrsObjects.get(i).loadRelations();
+                    recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+                }
+            }
+        }
+    }
+
+    private Long recursiveSize(DrsObject parentDrsObject) {
         Long sizeSum = 0L;
         List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
 
@@ -66,12 +82,10 @@ public class DrsHibernateUtil extends HibernateUtil {
                 sizeSum = sizeSum == null ? 0L : sizeSum;
             } else {
                 for (int i = 0; i < childrenDrsObjects.size(); i ++) {
-                    childrenDrsObjects.get(i).loadRelations();
-                    sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+                    sizeSum += recursiveSize(childrenDrsObjects.get(i));
                 }
             }
         }
-
         return sizeSum;
     }
 
