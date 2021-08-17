@@ -1,15 +1,23 @@
 package org.ga4gh.starterkit.drs.utils.hibernate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
+import org.apache.commons.lang3.StringUtils;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 
 /**
  * Provides access to DRS entities/tables in the database, enabling access, creation,
@@ -37,7 +45,9 @@ public class DrsHibernateUtil extends HibernateUtil {
                 // aren't saved to db
                 session.evict(drsObject);
                 if (recursiveChildLoad) {
-                    drsObject.setSize(recursiveDrsObjectChildLoad(drsObject));
+                    recursiveDrsObjectChildLoad(drsObject);
+                    drsObject.setSize(recursiveSize(drsObject));
+                    drsObject.setChecksums(checksumMapToList(recursiveChecksums(drsObject)));
                 }
             }
         } catch (PersistenceException e) {
@@ -56,7 +66,20 @@ public class DrsHibernateUtil extends HibernateUtil {
      * @param parentDrsObject root DRSObject to load all children for
      * @return byte size sum of all recursive objects under the DrsObject node
      */
-    private Long recursiveDrsObjectChildLoad(DrsObject parentDrsObject) {
+    private void recursiveDrsObjectChildLoad(DrsObject parentDrsObject) {
+        List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
+
+        if (childrenDrsObjects != null) {
+            if (childrenDrsObjects.size() != 0) {
+                for (int i = 0; i < childrenDrsObjects.size(); i ++) {
+                    childrenDrsObjects.get(i).loadRelations();
+                    recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+                }
+            }
+        }
+    }
+
+    private Long recursiveSize(DrsObject parentDrsObject) {
         Long sizeSum = 0L;
         List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
 
@@ -66,13 +89,94 @@ public class DrsHibernateUtil extends HibernateUtil {
                 sizeSum = sizeSum == null ? 0L : sizeSum;
             } else {
                 for (int i = 0; i < childrenDrsObjects.size(); i ++) {
-                    childrenDrsObjects.get(i).loadRelations();
-                    sizeSum += recursiveDrsObjectChildLoad(childrenDrsObjects.get(i));
+                    sizeSum += recursiveSize(childrenDrsObjects.get(i));
                 }
             }
         }
-
         return sizeSum;
+    }
+
+    private Map<String, String> recursiveChecksums(DrsObject parentDrsObject) {
+        Map<String, String> checksumMap = null;
+        List<DrsObject> childrenDrsObjects = parentDrsObject.getDrsObjectChildren();
+
+        if (childrenDrsObjects != null) {
+            if (childrenDrsObjects.size() == 0) {
+                checksumMap = createChecksumMapFromDrsObjectBlob(parentDrsObject);
+            } else {
+                List<Map<String, String>> childChecksumMaps = new ArrayList<>();
+                for (int i = 0; i < childrenDrsObjects.size(); i++) {
+                    childChecksumMaps.add(recursiveChecksums(childrenDrsObjects.get(i)));
+                }
+                checksumMap = mergeChecksumMaps(childChecksumMaps);
+            }
+        }
+        return checksumMap;
+    }
+
+    private List<Checksum> checksumMapToList(Map<String, String> checksumMap) {
+        List<Checksum> checksumList = new ArrayList<>();
+        for (String key : checksumMap.keySet()) {
+            Checksum checksum = new Checksum();
+            checksum.setType(key);
+            checksum.setChecksum(checksumMap.get(key));
+            checksumList.add(checksum);
+        }
+        return checksumList;
+    }
+
+    private Map<String, String> createChecksumMapFromDrsObjectBlob(DrsObject drsObject) {
+        Map<String, String> checksumMap = new HashMap<>();
+        for (Checksum checksum: drsObject.getChecksums()) {
+            checksumMap.put(checksum.getType(), checksum.getChecksum());
+        }
+        return checksumMap;
+    }
+
+    private Map<String, String> mergeChecksumMaps(List<Map<String, String>> checksumMaps) {
+        // initial setup
+        Map<String, String> mergedChecksumMap = new HashMap<>();
+        Map<String, Integer> checksumTypeCounts = new HashMap<>();
+        int nMaps = checksumMaps.size();
+
+        // first loop, determine the checksum types shared by all children
+        for (Map<String, String> checksumMap : checksumMaps) {
+            for (String key : checksumMap.keySet()) {
+                if (!checksumTypeCounts.containsKey(key)) {
+                    checksumTypeCounts.put(key, 0);
+                }
+                checksumTypeCounts.put(key, checksumTypeCounts.get(key) + 1);
+            }
+        }
+
+        // second loop, for each final checksum type, sort and concatenate values
+        for (String key : checksumTypeCounts.keySet()) {
+            if (checksumTypeCounts.get(key) == nMaps) {
+                List<String> checksumValues = new ArrayList<>();
+                for (Map<String, String> checksumMap : checksumMaps) {
+                    checksumValues.add(checksumMap.get(key));
+                }
+                Collections.sort(checksumValues);
+                String concatenated = StringUtils.join(checksumValues, "");
+
+                String algorithm = null;
+                switch (key) {
+                    case "md5":
+                        algorithm = MessageDigestAlgorithms.MD5;
+                        break;
+                    case "sha1":
+                        algorithm = MessageDigestAlgorithms.SHA_1;
+                        break;
+                    case "sha256":
+                        algorithm = MessageDigestAlgorithms.SHA_256;
+                        break;
+                }
+                String concatDigest = new DigestUtils(algorithm).digestAsHex(concatenated);
+                mergedChecksumMap.put(key, concatDigest);
+            }
+        }
+
+        return mergedChecksumMap;
     }
 
     /**
