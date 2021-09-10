@@ -9,7 +9,7 @@ addons:
 git:
   depth: false
 language: java
-jdk: oraclejdk11
+jdk: oraclejdk12
 before_script:
   - sqlite3 -version
   - make -version
