@@ -28,7 +28,7 @@ plugins {
 
 archivesBaseName = 'ga4gh-starter-kit-drs'
 group 'org.ga4gh'
-version '0.2.0'
+version '0.2.1'
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -54,7 +54,7 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.2.8'
     implementation 'org.springdoc:springdoc-openapi-ui:1.2.33'
     implementation 'org.xerial:sqlite-jdbc:3.8.11.2'
-    implementation 'org.ga4gh:ga4gh-starter-kit-common:0.5.3'
+    implementation 'org.ga4gh:ga4gh-starter-kit-common:0.5.4'
 
     testImplementation 'org.testng:testng:7.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.0'
