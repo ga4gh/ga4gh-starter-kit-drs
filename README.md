@@ -183,3 +183,8 @@ Multiple datasets are currently contained in this repo for development and testi
 * Open dataset of 384 Phenopackets: [Paper](https://pubmed.ncbi.nlm.nih.gov/32755546/), [Dataset homepage](https://zenodo.org/record/3905420#.YArkBzpKhPZ)
 
   - see the [datasets page](./DATASETS.md#Phenopackets) for a list of `DRS IDs` for `DrsObjects` in the Phenopackets dataset
+
+## Changelog
+
+### v0.2.2
+* patched log4j dependencies to v2.16.0 to avoid [Log4j Vulnerability](https://www.cisa.gov/uscert/apache-log4j-vulnerability-guidance)
