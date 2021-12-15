@@ -153,7 +153,8 @@ public class DrsServerSpringConfig {
         @Qualifier(DrsServerConstants.DEFAULT_DRS_CONFIG_CONTAINER) DrsServerYamlConfigContainer defaultContainer,
         @Qualifier(DrsServerConstants.USER_DRS_CONFIG_CONTAINER) DrsServerYamlConfigContainer userContainer
     ) {
-        DeepObjectMerger.merge(userContainer, defaultContainer);
+        DeepObjectMerger merger = new DeepObjectMerger();
+        merger.merge(userContainer, defaultContainer);
         return defaultContainer;
     }
 

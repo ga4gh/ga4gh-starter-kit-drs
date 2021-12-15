@@ -29,6 +29,7 @@ public class DrsServer {
 
     private static boolean setup(String[] args) {
         Options options = new DrsServerSpringConfig().getCommandLineOptions();
-        return ServerPropertySetter.setServerProperties(DrsServerYamlConfigContainer.class, args, options, "config");
+        ServerPropertySetter setter = new ServerPropertySetter();
+        return setter.setServerProperties(DrsServerYamlConfigContainer.class, args, options, "config");
     }
 }
