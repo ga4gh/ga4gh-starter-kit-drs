@@ -30,7 +30,7 @@ jobs:
         make sqlite-db-populate-dev-dataset
 
     - name: Running Tests
-      run: "./gradlew test"
+      run: "./gradlew test --tests=org.*"
 
     - name: After Success Submitting Code Coverage
       run: | #jacocoTestReport is for testing code coverage, submits the last report to the link
