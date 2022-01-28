@@ -9,8 +9,8 @@ USER root
 WORKDIR /usr/src/dependencies
 
 # INSTALL MAKE
-RUN apt update
-RUN apt install build-essential -y
+RUN apt update \
+    && apt install build-essential -y
 
 # INSTALL SQLITE3
 RUN wget https://www.sqlite.org/2021/sqlite-autoconf-3340100.tar.gz \
@@ -46,7 +46,7 @@ RUN ./gradlew bootJar
 # FINAL CONTAINER
 ##################################################
 
-FROM adoptopenjdk/openjdk12:jre-12.0.2_10-alpine
+FROM adoptopenjdk/openjdk12:jre-11.0.12_10-alpine
 
 USER root
 
