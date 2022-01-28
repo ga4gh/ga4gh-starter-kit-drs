@@ -46,7 +46,7 @@ RUN ./gradlew bootJar
 # FINAL CONTAINER
 ##################################################
 
-FROM adoptopenjdk/openjdk12:jre-11.0.12_10-alpine
+FROM adoptopenjdk/openjdk12:jre-12.0.2_10-alpine
 
 USER root
 
