@@ -38,3 +38,6 @@ bin
 *.db
 
 gradle.properties
+
+# Mac OS files
+**/.DS_Store
