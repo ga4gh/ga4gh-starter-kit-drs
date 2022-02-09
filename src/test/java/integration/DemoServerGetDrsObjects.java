@@ -52,11 +52,11 @@ public class DemoServerGetDrsObjects
                 "b8cd0667-2c33-4c9f-967b-161b905932c9",
                 "04.json"
             },
-            // { 
-            //     LOCAL_ADMIN_URL,
-            //     "697907bf-d5bd-433e-aac2-1747f1faf366",
-            //     "06.json"
-            // },             
+            { 
+                LOCAL_ADMIN_URL,
+                "697907bf-d5bd-433e-aac2-1747f1faf366",
+                "06.json"
+            },             
         };
     }
 
