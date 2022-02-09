@@ -83,13 +83,6 @@ public class DemoServerCheckExpand
         requestedObj = req_JSON.toString();
         expResponseBody = exp_JSON.toString();
 
-        // For Debugging
-        System.out.print("---------- \n");
-        System.out.print(requestedObj + "\n");
-        System.out.print("---------- \n");
-        System.out.print(expResponseBody + "\n");
-        System.out.print("---------- \n");
-
         Assert.assertEquals(requestedObj, expResponseBody);
     }
 }

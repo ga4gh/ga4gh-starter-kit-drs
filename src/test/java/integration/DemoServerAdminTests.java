@@ -103,13 +103,6 @@ public class DemoServerAdminTests
         HttpResponse<String> createResponse = client.send(createRequest,
             HttpResponse.BodyHandlers.ofString());
 
-        // (2.2) Confirm object creation
-        // System.out.print("Object Creation \n");
-        // System.out.print(newObject + "\n");
-        // System.out.print("---------- \n");
-        // System.out.print(createResponse.body() + "\n");
-        // System.out.print("---------- \n");
-
         JSONObject createResponseJO = new JSONObject(createResponse.body());
         String createResponseFixed = createResponseJO.toString();
         
