@@ -198,12 +198,12 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
                 "ed8dc271295fdea0f6df1fcb92f19d01"
             },
             // single blob - lalani patient 1
-            {
-                "456e9ee0-5b60-4f38-82b5-83ba5d338038",
-                true,
-                status().isOk(),
-                "2262c06d95790324a76f09e2ee0ec418"
-            }
+            // {
+            //     "456e9ee0-5b60-4f38-82b5-83ba5d338038",
+            //     true,
+            //     status().isOk(),
+            //     "2262c06d95790324a76f09e2ee0ec418"
+            // }
         };
     }
 
