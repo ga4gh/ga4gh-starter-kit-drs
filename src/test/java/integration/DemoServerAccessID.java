@@ -46,11 +46,11 @@ public class DemoServerAccessID
                 "2506f0e1-29e4-4132-9b37-f7452dc8a89b",
                 "Mundhofir-2013-FGFR2-Patient_1.json",
             },
-            {
-                LOCAL_PUBLIC_URL,
-                "456e9ee0-5b60-4f38-82b5-83ba5d338038",
-                "Lalani-2016-TANGO2-Subject_1.json",
-            },               
+            // {
+            //     LOCAL_PUBLIC_URL,
+            //     "456e9ee0-5b60-4f38-82b5-83ba5d338038",
+            //     "Lalani-2016-TANGO2-Subject_1.json",
+            // },               
         };
     }
 
