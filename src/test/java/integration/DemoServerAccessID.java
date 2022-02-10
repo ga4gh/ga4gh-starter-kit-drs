@@ -113,8 +113,8 @@ public class DemoServerAccessID
             else if(accessType.equals("s3"))
             {
                 String accessURL = method.getJSONObject("access_url").get("url").toString(); // "s3://<path>"
-                String rawDataPath = accessURL.substring(accessURL.lastIndexOf("//") + 1); // <path> // String objectURL = "ga4gh-demo-data/phenopackets/Zhang-2009-EDA-proband.json";
-                String region = method.get("region").toString(); // "us-east-2"
+                String rawDataPath = accessURL.substring(accessURL.lastIndexOf("//") + 1); // <path>
+                String region = method.get("region").toString(); // example: "us-east-2"
 
                 // Resolve the s3 access URL into a http URL
                 String baseURL = "https://s3." + region + ".amazonaws.com/";
