@@ -23,7 +23,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class DemoServerAccessID
+public class DemoServerAccessIDTest
 {
     // Define variables and constants
     private static final String LOCAL_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";

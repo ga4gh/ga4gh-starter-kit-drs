@@ -23,10 +23,11 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class DemoServerCheckExpand
+public class DemoServerGetDrsObjectsTests 
 {
     // Define variables and constants
     private static final String LOCAL_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";
+    private static final String LOCAL_ADMIN_URL = "http://localhost:4501/admin/ga4gh/drs/v1/objects/";
 
     // DRS Object directory
     private static final String OBJ_DIR = "/responses/objects/getObjectById/";
@@ -36,29 +37,37 @@ public class DemoServerCheckExpand
     {
         return new Object[][] 
         {
+            {   // Getting a DrsObject
+                LOCAL_PUBLIC_URL,
+                "697907bf-d5bd-433e-aac2-1747f1faf366",
+                "00.json"
+            },  
             {
                 LOCAL_PUBLIC_URL,
-                "b8cd0667-2c33-4c9f-967b-161b905932c9",
-                "04.json",
-                false
+                "456e9ee0-5b60-4f38-82b5-83ba5d338038",
+                "02.json"
             },  
             {
                 LOCAL_PUBLIC_URL,
                 "b8cd0667-2c33-4c9f-967b-161b905932c9",
-                "05.json",
-                true
-            },          
+                "04.json"
+            },
+            { 
+                LOCAL_ADMIN_URL,
+                "697907bf-d5bd-433e-aac2-1747f1faf366",
+                "06.json"
+            },             
         };
     }
 
     @Test(dataProvider = "cases")
-    public void testDemoServerCheckexpand(String requestURL, String drsObjectId, String expFileName, Boolean expand) throws Exception 
+    public void testDemoServerGetDrsObjects(String requestURL, String drsObjectId, String expFileName) throws Exception 
     {
         HttpClient client = HttpClient.newHttpClient();
 
         Builder requestBuilder = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create(requestURL + drsObjectId + "?expand=" + String.valueOf(expand))); //Ask for the object
+            .uri(URI.create(requestURL + drsObjectId)); //Ask for the object
 
         HttpRequest request = requestBuilder.build();
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
