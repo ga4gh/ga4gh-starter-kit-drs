@@ -26,7 +26,8 @@ import org.testng.annotations.Test;
 public class DemoServerAccessIDTest
 {
     // Define variables and constants
-    private static final String LOCAL_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";
+    private static final String DEFAULT_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";
+    private static final String CUSTOM_PUBLIC_URL = "http://localhost:7000/ga4gh/drs/v1/objects/";
 
     // Raw phenopacket data directory
     private static final String OBJ_DIR = "/data/phenopackets/";
@@ -37,20 +38,35 @@ public class DemoServerAccessIDTest
         return new Object[][] 
         {
             { 
-                LOCAL_PUBLIC_URL,
+                DEFAULT_PUBLIC_URL,
                 "697907bf-d5bd-433e-aac2-1747f1faf366",
                 "Zhang-2009-EDA-proband.json",
             },   
             {
-                LOCAL_PUBLIC_URL,
+                DEFAULT_PUBLIC_URL,
                 "2506f0e1-29e4-4132-9b37-f7452dc8a89b",
                 "Mundhofir-2013-FGFR2-Patient_1.json",
             },
             {
-                LOCAL_PUBLIC_URL,
+                DEFAULT_PUBLIC_URL,
                 "456e9ee0-5b60-4f38-82b5-83ba5d338038",
                 "Lalani-2016-TANGO2-Suject_1.json",
-            },               
+            },  
+            { 
+                CUSTOM_PUBLIC_URL,
+                "697907bf-d5bd-433e-aac2-1747f1faf366",
+                "Zhang-2009-EDA-proband.json",
+            },   
+            {
+                CUSTOM_PUBLIC_URL,
+                "2506f0e1-29e4-4132-9b37-f7452dc8a89b",
+                "Mundhofir-2013-FGFR2-Patient_1.json",
+            },
+            {
+                CUSTOM_PUBLIC_URL,
+                "456e9ee0-5b60-4f38-82b5-83ba5d338038",
+                "Lalani-2016-TANGO2-Suject_1.json",
+            }              
         };
     }
 
@@ -64,7 +80,7 @@ public class DemoServerAccessIDTest
         String drsObjectExpFile = OBJ_DIR + expFileName;
         String expResponseBody = ResourceLoader.load(drsObjectExpFile);
         JSONObject exp_JSON = new JSONObject(expResponseBody);
-    
+ 
         requestedRawData.add(exp_JSON.toString());
         
         // (2) Request to get the access methods
@@ -129,6 +145,18 @@ public class DemoServerAccessIDTest
                 HttpResponse<String> responseRawData = client.send(requestRawData, BodyHandlers.ofString());
 
                 requestedRawData.add(responseRawData.body()); // Store the raw data
+            }
+            else if(accessType.equals("file"))
+            {
+                String accessURL = method.getJSONObject("access_url").get("url").toString(); // "file://./src/test/resources<path>"
+                String removedPath = "/src/test/resources";
+
+                String directory = accessURL.substring(accessURL.lastIndexOf(removedPath) + removedPath.length()); // <path>
+       
+                // Load local file containing expected response and assert
+                String loadedFile = ResourceLoader.load(directory);
+                JSONObject loaded_JSON = new JSONObject(loadedFile);
+                requestedRawData.add(loaded_JSON.toString()); // Store the raw data
             }
         }
         

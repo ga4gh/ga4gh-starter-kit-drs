@@ -28,6 +28,8 @@ public class DemoServerGetDrsObjectsTests
     // Define variables and constants
     private static final String LOCAL_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";
     private static final String LOCAL_ADMIN_URL = "http://localhost:4501/admin/ga4gh/drs/v1/objects/";
+    private static final String CUSTOM_PUBLIC_URL = "http://localhost:7000/ga4gh/drs/v1/objects/";
+    private static final String CUSTOM_ADMIN_URL = "http://localhost:7001/admin/ga4gh/drs/v1/objects/";
 
     // DRS Object directory
     private static final String OBJ_DIR = "/responses/objects/getObjectById/";
@@ -56,7 +58,27 @@ public class DemoServerGetDrsObjectsTests
                 LOCAL_ADMIN_URL,
                 "697907bf-d5bd-433e-aac2-1747f1faf366",
                 "06.json"
-            },             
+            },     
+            {  
+                CUSTOM_PUBLIC_URL,
+                "697907bf-d5bd-433e-aac2-1747f1faf366",
+                "00-custom.json"
+            },  
+            {
+                CUSTOM_PUBLIC_URL,
+                "456e9ee0-5b60-4f38-82b5-83ba5d338038",
+                "02-custom.json"
+            },  
+            {
+                CUSTOM_PUBLIC_URL,
+                "b8cd0667-2c33-4c9f-967b-161b905932c9",
+                "04-custom.json"
+            },
+            { 
+                CUSTOM_ADMIN_URL,
+                "697907bf-d5bd-433e-aac2-1747f1faf366",
+                "06.json"
+            },       
         };
     }
 

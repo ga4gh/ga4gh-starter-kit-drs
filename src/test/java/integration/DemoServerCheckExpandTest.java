@@ -26,7 +26,8 @@ import org.testng.annotations.Test;
 public class DemoServerCheckExpandTest
 {
     // Define variables and constants
-    private static final String LOCAL_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";
+    private static final String DEFAULT_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";
+    private static final String CUSTOM_PUBLIC_URL = "http://localhost:7000/ga4gh/drs/v1/objects/";
 
     // DRS Object directory
     private static final String OBJ_DIR = "/responses/objects/getObjectById/";
@@ -37,17 +38,29 @@ public class DemoServerCheckExpandTest
         return new Object[][] 
         {
             {
-                LOCAL_PUBLIC_URL,
+                DEFAULT_PUBLIC_URL,
                 "b8cd0667-2c33-4c9f-967b-161b905932c9",
                 "04.json",
                 false
             },  
             {
-                LOCAL_PUBLIC_URL,
+                DEFAULT_PUBLIC_URL,
                 "b8cd0667-2c33-4c9f-967b-161b905932c9",
                 "05.json",
                 true
-            },          
+            },   
+            {
+                CUSTOM_PUBLIC_URL,
+                "b8cd0667-2c33-4c9f-967b-161b905932c9",
+                "04-custom.json",
+                false
+            },  
+            {
+                CUSTOM_PUBLIC_URL,
+                "b8cd0667-2c33-4c9f-967b-161b905932c9",
+                "05-custom.json",
+                true
+            }         
         };
     }
 
@@ -82,6 +95,12 @@ public class DemoServerCheckExpandTest
         
         requestedObj = req_JSON.toString();
         expResponseBody = exp_JSON.toString();
+
+        System.out.print("-----BEGIN-------\n");
+        System.out.print(requestedObj + "\n");
+        System.out.print("-----------------\n");
+        System.out.print(expResponseBody + "\n");
+        System.out.print("------END--------\n");
 
         Assert.assertEquals(requestedObj, expResponseBody);
     }

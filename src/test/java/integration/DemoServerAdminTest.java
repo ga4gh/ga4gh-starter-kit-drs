@@ -39,8 +39,8 @@ public class DemoServerAdminTest
     */
 
     // Define variables and constants
-    private static final String LOCAL_PUBLIC_URL = "http://localhost:4500/ga4gh/drs/v1/objects/";
-    private static final String LOCAL_ADMIN_URL = "http://localhost:4501/admin/ga4gh/drs/v1/objects/";
+    private static final String DEFAULT_ADMIN_URL = "http://localhost:4501/admin/ga4gh/drs/v1/objects/";
+    private static final String CUSTOM_ADMIN_URL = "http://localhost:7001/admin/ga4gh/drs/v1/objects/";
 
     // DRS Object directory
     private static final String OBJ_DIR = "/responses/objects/getObjectById/";
@@ -51,23 +51,41 @@ public class DemoServerAdminTest
         return new Object[][] 
         {
             { 
-                LOCAL_ADMIN_URL,
+                DEFAULT_ADMIN_URL,
                 "697907bf-d5bd-433e-aac2-1747f1faf366",
                 "New Test Name 1",
                 "10000000-test-test-test-000000000000"
             },  
             {
-                LOCAL_ADMIN_URL,
+                DEFAULT_ADMIN_URL,
                 "456e9ee0-5b60-4f38-82b5-83ba5d338038",
                 "New Test Name 2",
                 "20000000-test-test-test-000000000000"
             },  
             {
-                LOCAL_ADMIN_URL,
+                DEFAULT_ADMIN_URL,
                 "b8cd0667-2c33-4c9f-967b-161b905932c9",
                 "New Test Name 3",
                 "30000000-test-test-test-000000000000"
-            },            
+            },
+            { 
+                CUSTOM_ADMIN_URL,
+                "697907bf-d5bd-433e-aac2-1747f1faf366",
+                "New Test Name 1",
+                "10000000-test-test-test-000000000000"
+            },  
+            {
+                CUSTOM_ADMIN_URL,
+                "456e9ee0-5b60-4f38-82b5-83ba5d338038",
+                "New Test Name 2",
+                "20000000-test-test-test-000000000000"
+            },  
+            {
+                CUSTOM_ADMIN_URL,
+                "b8cd0667-2c33-4c9f-967b-161b905932c9",
+                "New Test Name 3",
+                "30000000-test-test-test-000000000000"
+            }              
         };
     }
 
