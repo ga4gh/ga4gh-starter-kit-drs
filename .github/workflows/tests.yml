@@ -134,8 +134,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: test-tag-name
-          release_name: test-release-name
+          tag_name: test-tag-name 
+          release_name: test-release-name v${{ env.version }} 
           # tag_name: v${{ env.version }} #will be v0.2.2 for example
           # release_name: GA4GH Starter Kit - DRS v${{ env.version }}
           draft: false
