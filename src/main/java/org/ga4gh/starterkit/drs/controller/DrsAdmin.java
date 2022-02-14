@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * entities
  */
 @RestController
-@RequestMapping(ADMIN_DRS_API_V1 + "/objects")
+@RequestMapping(ADMIN_DRS_API_V1 + "/objects") // /admin/ga4gh/drs/v1
 public class DrsAdmin {
 
     @Autowired

@@ -237,8 +237,7 @@ public class DrsAdminTest extends AbstractTestNGSpringContextTests {
             .andReturn();
         genericAdminApiRequestTest(result, true, "index", "success-00.json", null);
     }
-
-
+    
     @Test(dataProvider = "showDrsObjectCases", groups = "show")
     public void testShowDrsObject(String objectId, ResultMatcher expStatus, boolean expSuccess, String expFilename, String expMessage) throws Exception {
         MvcResult result = mockMvc.perform(get(API_PREFIX + "/" + objectId))
