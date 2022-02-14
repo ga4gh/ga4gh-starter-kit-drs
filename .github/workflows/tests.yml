@@ -110,7 +110,7 @@ jobs:
         file: ./Dockerfile
         push: true
         # tags: ga4gh/ga4gh-starter-kit-drs:${{ env.version }} #Using the correct version as the tag
-        tags: test-tag-${{ env.version }}
+        tags: ga4gh/ga4gh-starter-kit-drs:TEST-${{ env.version }}
         build-args: VERSION=${{ env.version }}
         cache-from: type=gha #GitHub Actions Cache Exporter
         cache-to: type=gha,mode=max
