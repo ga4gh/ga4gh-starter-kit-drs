@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 [![Java 11+](https://img.shields.io/badge/java-11+-blue.svg?style=flat-square)](https://www.java.com)
-[![Gradle 6.1+](https://img.shields.io/badge/gradle-6.1+-blue.svg?style=flat-square)](https://gradle.org/)
-[![Travis (.org) branch](https://img.shields.io/travis/ga4gh/ga4gh-starter-kit-drs/master.svg?style=flat-square)](https://travis-ci.org/ga4gh/ga4gh-starter-kit-drs)
+[![Gradle 7.3.2+](https://img.shields.io/badge/gradle-7.3.2+-blue.svg?style=flat-square)](https://gradle.org/)
+[![GitHub Actions](https://img.shields.io/github/workflow/status/ga4gh/ga4gh-starter-kit-drs/Standard%20Tests)](https://github.com/ga4gh/ga4gh-starter-kit-drs/actions)
 ![Codecov](https://img.shields.io/codecov/c/github/ga4gh/ga4gh-starter-kit-drs?style=flat-square)
 
 # GA4GH Starter Kit DRS
@@ -35,7 +35,7 @@ docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-start
 
 The service can also be installed locally in cases where docker deployments are not possible, or for development of the codebase. Native installations require:
 * Java 11+
-* Gradle 6.1.1+
+* Gradle 7.3.2+
 * SQLite (for creating the dev database)
 
 First, clone the repository from Github:
