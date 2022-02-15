@@ -36,7 +36,7 @@ configurations.all {
 
 archivesBaseName = 'ga4gh-starter-kit-drs'
 group 'org.ga4gh'
-version '0.2.2'
+version '0.2.3' // will be changed back to 0.2.2 after
 
 repositories {
     // Use jcenter for resolving dependencies.
