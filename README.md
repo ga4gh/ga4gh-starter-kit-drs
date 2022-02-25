@@ -4,7 +4,7 @@
 [![Java 11+](https://img.shields.io/badge/java-11+-blue.svg?style=flat-square)](https://www.java.com)
 [![Gradle 7.3.2+](https://img.shields.io/badge/gradle-7.3.2+-blue.svg?style=flat-square)](https://gradle.org/)
 [![GitHub Actions](https://img.shields.io/github/workflow/status/ga4gh/ga4gh-starter-kit-drs/Standard%20Tests/main)](https://github.com/ga4gh/ga4gh-starter-kit-drs/actions)
-![Codecov](https://img.shields.io/codecov/c/github/ga4gh/ga4gh-starter-kit-drs?style=flat-square)
+[![Codecov](https://img.shields.io/codecov/c/github/ga4gh/ga4gh-starter-kit-drs?style=flat-square)](https://app.codecov.io/gh/ga4gh/ga4gh-starter-kit-drs)
 
 # GA4GH Starter Kit DRS
 
