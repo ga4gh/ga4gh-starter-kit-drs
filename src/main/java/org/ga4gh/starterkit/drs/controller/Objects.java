@@ -14,6 +14,7 @@ import org.ga4gh.starterkit.drs.model.BulkRequest;
 import org.ga4gh.starterkit.drs.model.BulkResponse;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
+import org.ga4gh.starterkit.drs.utils.passport.UserPassportMap;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class Objects implements ApplicationContextAware {
         @RequestParam(name = "expand", required = false) boolean expand
     ) {
         loggingUtil.debug("Public API request: DrsObject with id '" + objectId + "', expand=" + expand);
-        return objectRequestHandler.prepare(objectId, expand).handleRequest();
+        return objectRequestHandler.prepare(objectId, expand, null).handleRequest();
     }
 
     /**
@@ -87,6 +88,12 @@ public class Objects implements ApplicationContextAware {
     public BulkResponse getBulkObjects(
         @RequestBody BulkRequest bulkRequest
     ) {
+        // parse user passport
+        UserPassportMap userPassportMap = null;
+        if (bulkRequest.getPassports() != null) {
+            userPassportMap = new UserPassportMap(bulkRequest.getPassports());
+        }
+
         BulkResponse bulkResponse = new BulkResponse();
         int requested = 0;
         int resolved = 0;
@@ -96,7 +103,7 @@ public class Objects implements ApplicationContextAware {
             requested++;
             try {
                 ObjectRequestHandler handler = context.getBean(ObjectRequestHandler.class);
-                DrsObject drsObject = handler.prepare(drsObjectId, false).handleRequest();
+                DrsObject drsObject = handler.prepare(drsObjectId, false, userPassportMap).handleRequest();
                 bulkResponse.getResolvedDrsObject().add(drsObject);
                 resolved++;
             } catch (CustomException ex) {

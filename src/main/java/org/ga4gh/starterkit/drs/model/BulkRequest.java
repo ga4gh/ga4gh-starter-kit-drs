@@ -18,8 +18,10 @@ import lombok.Setter;
 @JsonView(SerializeView.Public.class)
 public class BulkRequest {
     private List<String> selection;
+    private List<String> passports;
 
     public BulkRequest() {
         selection = new ArrayList<>();
+        passports = new ArrayList<>();
     }
 }

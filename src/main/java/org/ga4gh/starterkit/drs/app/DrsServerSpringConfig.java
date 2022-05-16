@@ -22,6 +22,8 @@ import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 import org.ga4gh.starterkit.drs.model.FileAccessObject;
+import org.ga4gh.starterkit.drs.model.PassportBroker;
+import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
@@ -232,6 +234,8 @@ public class DrsServerSpringConfig {
         annotatedClasses.add(Checksum.class);
         annotatedClasses.add(FileAccessObject.class);
         annotatedClasses.add(AwsS3AccessObject.class);
+        annotatedClasses.add(PassportBroker.class);
+        annotatedClasses.add(PassportVisa.class);
         return annotatedClasses;
     }
 

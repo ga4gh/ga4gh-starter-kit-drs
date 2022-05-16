@@ -17,6 +17,10 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.lang.NonNull;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,6 +47,8 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "drs_object")
+@Setter
+@Getter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DrsObject implements HibernateEntity<String> {
@@ -176,6 +182,15 @@ public class DrsObject implements HibernateEntity<String> {
     @JsonManagedReference
     private List<AwsS3AccessObject> awsS3AccessObjects;
 
+    @ManyToMany
+    @JoinTable(
+        name = "drs_object_visa",
+        joinColumns = {@JoinColumn(name = "drs_object_id")},
+        inverseJoinColumns = {@JoinColumn(name = "visa_id")}
+    )
+    @JsonView(SerializeView.Admin.class)
+    private List<PassportVisa> passportVisas;
+
     /*
         Transient attributes produced from transforming database records. They
         are needed to conform to the DRS spec: selfURI, accessMethods, contents
@@ -211,25 +226,7 @@ public class DrsObject implements HibernateEntity<String> {
         checksums = new ArrayList<>();
         fileAccessObjects = new ArrayList<>();
         awsS3AccessObjects = new ArrayList<>();
-    }
-
-    /* Constructors */
-
-    /**
-     * Instantiates a new DrsObject with preconfigured attributes
-     * @param id DRSObject identifier
-     * @param selfURI self URI
-     * @param checksums checksum object list
-     * @param createdTime timestamp of DRSObject creation
-     * @param size size of file in bytes
-     */
-    public DrsObject(String id, URI selfURI, List<Checksum> checksums, LocalDateTime createdTime, Long size) {
-        super();
-        this.setId(id);
-        this.setSelfURI(selfURI);
-        this.setChecksums(checksums);
-        this.setCreatedTime(createdTime);
-        this.setSize(size);
+        passportVisas = new ArrayList<>();
     }
 
     /* Custom API methods */
@@ -244,287 +241,6 @@ public class DrsObject implements HibernateEntity<String> {
         Hibernate.initialize(getDrsObjectParents());
         Hibernate.initialize(getFileAccessObjects());
         Hibernate.initialize(getAwsS3AccessObjects());
-    }
-
-    /* Setters and Getters */
-
-    /**
-     * Assign id
-     * @param id DRSObject identifier
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * Retrieve id
-     * @return DRSObject identifier
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Assign description
-     * @param description DRSObject description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Retrieve description
-     * @return DRSObject description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Assign created time
-     * @param createdTime timestamp of object creation time
-     */
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    /**
-     * Retrieve created time
-     * @return timestamp of object creation time
-     */
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    /**
-     * Assign mimeType
-     * @param mimeType valid media type
-     */
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
-
-    /**
-     * Retrieve mimeType
-     * @return valid media type
-     */
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    /**
-     * Assign name
-     * @param name DRSObject name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Retrieve name
-     * @return DRSObject name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Assign size
-     * @param size DRSObject size
-     */
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    /**
-     * Retrieve size
-     * @return DRSObject size
-     */
-    public Long getSize() {
-        return size;
-    }
-
-    /**
-     * Assign updatedTime
-     * @param updatedTime timestamp of object last updated time
-     */
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
-    }
-
-    /**
-     * Retrieve updatedTime
-     * @return timestamp of object last updated time
-     */
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
-    }
-
-    /**
-     * Assign version
-     * @param version DRSObject version
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    /**
-     * Retrieve version
-     * @return DRSObject version
-     */
-    public String getVersion() {
-        return version;
-    }
-
-    /**
-     * Assign aliases
-     * @param aliases DRSObject aliases
-     */
-    public void setAliases(List<String> aliases) {
-        this.aliases = aliases;
-    }
-
-    /**
-     * Retrieve aliases
-     * @return DRSObject aliases
-     */
-    public List<String> getAliases() {
-        return aliases;
-    }
-
-    /**
-     * Assign checksums
-     * @param checksums checksum list
-     */
-    public void setChecksums(List<Checksum> checksums) {
-        this.checksums = checksums;
-    }
-
-    /**
-     * Retrieve checksums
-     * @return checksum list
-     */
-    public List<Checksum> getChecksums() {
-        return checksums;
-    }
-
-    public void setIsBundle(Boolean isBundle) {
-        this.isBundle = isBundle;
-    }
-
-    public Boolean getIsBundle() {
-        return isBundle;
-    }
-
-    /**
-     * Assign drsObjectChildren
-     * @param drsObjectChildren list of child DRS Objects 
-     */
-    public void setDrsObjectChildren(List<DrsObject> drsObjectChildren) {
-        this.drsObjectChildren = drsObjectChildren;
-    }
-
-    /**
-     * Retrieve drsObjectChildren
-     * @return list of child DRS Objects
-     */
-    public List<DrsObject> getDrsObjectChildren() {
-        return drsObjectChildren;
-    }
-
-    /**
-     * Assign drsObjectParents
-     * @param drsObjectParents list of parent DRS Objects
-     */
-    public void setDrsObjectParents(List<DrsObject> drsObjectParents) {
-        this.drsObjectParents = drsObjectParents;
-    }
-
-    /**
-     * Retrieve drsObjectParents
-     * @return list of parent DRS Objects
-     */
-    public List<DrsObject> getDrsObjectParents() {
-        return drsObjectParents;
-    }
-
-    /**
-     * Assign fileAccessObjects
-     * @param fileAccessObjects list of file-based access objects
-     */
-    public void setFileAccessObjects(List<FileAccessObject> fileAccessObjects) {
-        this.fileAccessObjects = fileAccessObjects;
-    }
-
-    /**
-     * Retrieve fileAccessObjects
-     * @return list of file-based access objects
-     */
-    public List<FileAccessObject> getFileAccessObjects() {
-        return fileAccessObjects;
-    }
-
-    /**
-     * Assign awsS3AccessObjects
-     * @param awsS3AccessObjects list of s3-based access objects
-     */
-    public void setAwsS3AccessObjects(List<AwsS3AccessObject> awsS3AccessObjects) {
-        this.awsS3AccessObjects = awsS3AccessObjects;
-    }
-
-    /**
-     * Retrieve awsS3AccessObjects
-     * @return list of s3-based access objects
-     */
-    public List<AwsS3AccessObject> getAwsS3AccessObjects() {
-        return awsS3AccessObjects;
-    }
-
-    /**
-     * Assign selfURI
-     * @param selfURI self-referencing DRS URI
-     */
-    public void setSelfURI(URI selfURI) {
-        this.selfURI = selfURI;
-    }
-
-    /**
-     * Retrieve selfURI
-     * @return self-referencing DRS URI
-     */
-    public URI getSelfURI() {
-        return selfURI;
-    }
-
-    /**
-     * Assign access methods
-     * @param accessMethods list of all valid access methods
-     */
-    public void setAccessMethods(List<AccessMethod> accessMethods) {
-        this.accessMethods = accessMethods;
-    }
-
-    /**
-     * Retrieve access methods
-     * @return list of all valid access methods
-     */
-    public List<AccessMethod> getAccessMethods() {
-        return accessMethods;
-    }
-
-    /**
-     * Assign contents
-     * @param contents list of contents objects representing sub/child DRS Objects
-     */
-    public void setContents(List<ContentsObject> contents) {
-        this.contents = contents;
-    }
-
-    /**
-     * Retrieve contents
-     * @return list of contents objects representing child DRS Objects
-     */
-    public List<ContentsObject> getContents() {
-        return contents;
+        Hibernate.initialize(getPassportVisas());
     }
 }
