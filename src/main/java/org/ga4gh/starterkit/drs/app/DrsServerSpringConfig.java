@@ -261,7 +261,7 @@ public class DrsServerSpringConfig {
      * @return drs object request handler
      */
     @Bean
-    @RequestScope
+    @Scope(DrsServerConstants.PROTOTYPE)
     public ObjectRequestHandler objectRequestHandler() {
         return new ObjectRequestHandler();
     }

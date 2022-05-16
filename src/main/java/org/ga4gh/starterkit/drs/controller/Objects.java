@@ -2,18 +2,27 @@ package org.ga4gh.starterkit.drs.controller;
 
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 
+import org.ga4gh.starterkit.common.exception.CustomException;
 import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.ga4gh.starterkit.drs.model.AccessURL;
+import org.ga4gh.starterkit.drs.model.BulkRequest;
+import org.ga4gh.starterkit.drs.model.BulkResponse;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import javax.annotation.Resource;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -22,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  */
 @RestController
 @RequestMapping(DRS_API_V1 + "/objects")
-public class Objects {
+public class Objects implements ApplicationContextAware {
 
     @Resource(name = "objectRequestHandler")
     private ObjectRequestHandler objectRequestHandler;
@@ -32,6 +41,8 @@ public class Objects {
 
     @Autowired
     private LoggingUtil loggingUtil;
+
+    private ApplicationContext context;
 
     // Standard endpoints
 
@@ -64,5 +75,39 @@ public class Objects {
     ) {
         loggingUtil.debug("Public API request: AccessURL for DRS id '" + objectId + "', access id '" + accessId + "'");
         return accessRequestHandler.prepare(objectId, accessId).handleRequest();
+    }
+
+    @PostMapping
+    @JsonView(SerializeView.Public.class)
+    public BulkResponse getBulkObjects(
+        @RequestBody BulkRequest bulkRequest
+    ) {
+        BulkResponse bulkResponse = new BulkResponse();
+        int requested = 0;
+        int resolved = 0;
+        int unresolved = 0;
+
+        for (String drsObjectId : bulkRequest.getSelection()) {
+            requested++;
+            try {
+                ObjectRequestHandler handler = context.getBean(ObjectRequestHandler.class);
+                DrsObject drsObject = handler.prepare(drsObjectId, false).handleRequest();
+                bulkResponse.getResolvedDrsObject().add(drsObject);
+                resolved++;
+            } catch (CustomException ex) {
+                int httpStatus = ex.getClass().getAnnotation(ResponseStatus.class).value().value();
+                bulkResponse.getUnresolvedDrsObject().put(drsObjectId, httpStatus);
+                unresolved++;
+            }
+        }
+        bulkResponse.getSummary().setRequested(requested);
+        bulkResponse.getSummary().setResolved(resolved);
+        bulkResponse.getSummary().setUnresolved(unresolved);
+
+        return bulkResponse;
+    }
+
+    public void setApplicationContext(ApplicationContext context) {
+        this.context = context;
     }
 }
