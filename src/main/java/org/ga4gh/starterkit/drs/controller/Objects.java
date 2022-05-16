@@ -2,9 +2,14 @@ package org.ga4gh.starterkit.drs.controller;
 
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ga4gh.starterkit.common.exception.CustomException;
 import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.ga4gh.starterkit.drs.model.AccessURL;
+import org.ga4gh.starterkit.drs.model.BulkAccessRequest;
+import org.ga4gh.starterkit.drs.model.BulkObjectAccessId;
 import org.ga4gh.starterkit.drs.model.BulkRequest;
 import org.ga4gh.starterkit.drs.model.BulkResponse;
 import org.ga4gh.starterkit.drs.model.DrsObject;
@@ -105,6 +110,25 @@ public class Objects implements ApplicationContextAware {
         bulkResponse.getSummary().setUnresolved(unresolved);
 
         return bulkResponse;
+    }
+
+    @PostMapping(path = "/access")
+    @JsonView(SerializeView.Public.class)
+    public List<AccessURL> getBulkAccessURLs(
+        @RequestBody BulkAccessRequest bulkAccessRequest
+    ) {
+        List<AccessURL> accessURLs = new ArrayList<>();
+        for (BulkObjectAccessId idPair : bulkAccessRequest.getSelection()) {
+            try {
+                AccessRequestHandler handler = context.getBean(AccessRequestHandler.class);
+                AccessURL accessURL = handler.prepare(idPair.getObjectId(), idPair.getAccessId()).handleRequest();
+                accessURLs.add(accessURL);
+            } catch (CustomException ex) {
+
+            }
+        }
+
+        return accessURLs;
     }
 
     public void setApplicationContext(ApplicationContext context) {
