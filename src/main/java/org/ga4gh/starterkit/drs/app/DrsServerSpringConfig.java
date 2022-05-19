@@ -28,6 +28,7 @@ import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
 import org.ga4gh.starterkit.drs.utils.passport.UserPassportMapVerifier;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
+import org.ga4gh.starterkit.drs.utils.requesthandler.AuthInfoRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -280,6 +281,12 @@ public class DrsServerSpringConfig {
     @RequestScope
     public AccessRequestHandler accessRequestHandler() {
         return new AccessRequestHandler();
+    }
+
+    @Bean
+    @RequestScope
+    public AuthInfoRequestHandler authInfoRequestHandler() {
+        return new AuthInfoRequestHandler();
     }
 
     /**
