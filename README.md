@@ -186,5 +186,10 @@ Multiple datasets are currently contained in this repo for development and testi
 
 ## Changelog
 
+### v0.3.0
+* DRS object batch requests
+* Passport support - Passport mediated auth to DRS objects (using Starter Kit implementation of Passports)
+* Auth info - Discover Passport broker(s) and visa(s) for requested controlled access DRS Objects (single object and bulk request)
+
 ### v0.2.2
 * patched log4j dependencies to v2.16.0 to avoid [Log4j Vulnerability](https://www.cisa.gov/uscert/apache-log4j-vulnerability-guidance)
