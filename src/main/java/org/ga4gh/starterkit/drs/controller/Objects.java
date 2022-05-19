@@ -4,7 +4,6 @@ import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.ga4gh.starterkit.common.exception.CustomException;
 import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.ga4gh.starterkit.drs.model.AccessURL;
@@ -13,8 +12,10 @@ import org.ga4gh.starterkit.drs.model.BulkObjectAccessId;
 import org.ga4gh.starterkit.drs.model.BulkRequest;
 import org.ga4gh.starterkit.drs.model.BulkResponse;
 import org.ga4gh.starterkit.drs.model.DrsObject;
+import org.ga4gh.starterkit.drs.model.PostSingleObjectRequestBody;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.passport.UserPassportMap;
+import org.ga4gh.starterkit.drs.utils.passport.UserPassportMapVerifier;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
 import javax.annotation.Resource;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -48,6 +48,9 @@ public class Objects implements ApplicationContextAware {
     @Autowired
     private LoggingUtil loggingUtil;
 
+    @Autowired
+    private UserPassportMapVerifier passportVerifier;
+
     private ApplicationContext context;
 
     // Standard endpoints
@@ -66,6 +69,20 @@ public class Objects implements ApplicationContextAware {
     ) {
         loggingUtil.debug("Public API request: DrsObject with id '" + objectId + "', expand=" + expand);
         return objectRequestHandler.prepare(objectId, expand, null).handleRequest();
+    }
+
+    @PostMapping(path = "/{object_id:.+}")
+    @JsonView(SerializeView.Public.class)
+    public DrsObject getObjectByIdViaPost(
+        @PathVariable(name = "object_id") String objectId,
+        @RequestBody PostSingleObjectRequestBody requestBody
+    ) {
+        UserPassportMap userPassportMap = null;
+        if (requestBody.getPassports() != null) {
+            userPassportMap = new UserPassportMap(requestBody.getPassports());
+            passportVerifier.verifyAll(userPassportMap);
+        }
+        return objectRequestHandler.prepare(objectId, requestBody.isExpand(), userPassportMap).handleRequest();
     }
 
     /**
@@ -92,6 +109,7 @@ public class Objects implements ApplicationContextAware {
         UserPassportMap userPassportMap = null;
         if (bulkRequest.getPassports() != null) {
             userPassportMap = new UserPassportMap(bulkRequest.getPassports());
+            passportVerifier.verifyAll(userPassportMap);
         }
 
         BulkResponse bulkResponse = new BulkResponse();

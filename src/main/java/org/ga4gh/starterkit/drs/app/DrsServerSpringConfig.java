@@ -26,6 +26,7 @@ import org.ga4gh.starterkit.drs.model.PassportBroker;
 import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
+import org.ga4gh.starterkit.drs.utils.passport.UserPassportMapVerifier;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
@@ -302,5 +303,10 @@ public class DrsServerSpringConfig {
     @Bean
     public AccessCache accessCache() {
         return new AccessCache();
+    }
+
+    @Bean
+    public UserPassportMapVerifier userPAssportMapVerifier() {
+        return new UserPassportMapVerifier();
     }
 }

@@ -5,12 +5,17 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.ga4gh.starterkit.drs.model.DrsObject;
+import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.BundleRecursiveChecksumCalculator;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 /**
  * Provides access to DRS entities/tables in the database, enabling access, creation,
@@ -107,5 +112,30 @@ public class DrsHibernateUtil extends HibernateUtil {
             endTransaction(session);
         }
         return entities;
+    }
+
+    public PassportVisa findPassportVisa(String visaName, String visaIssuer) {
+        Session session = newTransaction();
+        PassportVisa visa = null;
+        try {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<PassportVisa> cq = cb.createQuery(PassportVisa.class);
+            Root<PassportVisa> root = cq.from(PassportVisa.class);
+            Predicate[] predicates = new Predicate[2];
+            predicates[0] = cb.equal(root.get("name"), visaName);
+            predicates[1] = cb.equal(root.get("issuer"), visaIssuer);
+            cq.select(root).where(predicates);
+            Query<PassportVisa> query = session.createQuery(cq);
+            List<PassportVisa> results = query.getResultList();
+            if (results.size() != 1) {
+                throw new Exception("no unique visa found");
+            }
+            visa = results.get(0);
+        } catch (Exception ex) {
+
+        } finally {
+            endTransaction(session);
+        }
+        return visa;
     }
 }

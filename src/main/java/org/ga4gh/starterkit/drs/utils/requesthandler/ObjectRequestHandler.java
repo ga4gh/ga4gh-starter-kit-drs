@@ -21,6 +21,7 @@ import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCacheItem;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
+import org.ga4gh.starterkit.drs.utils.passport.UserPassport;
 import org.ga4gh.starterkit.drs.utils.passport.UserPassportMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -95,7 +96,17 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
             // need to verify at least 1 visa registered with the DRS Object
             boolean matchingVisaFound = false;
             for (PassportVisa drsObjectRegisteredVisa : drsObject.getPassportVisas()) {
-
+                String passportBrokerIss = drsObjectRegisteredVisa.getPassportBroker().getUrl();
+                String visaName = drsObjectRegisteredVisa.getName();
+                String visaIssuer = drsObjectRegisteredVisa.getIssuer();
+                UserPassport userPassport = userPassportMap.getMap().get(passportBrokerIss);
+                if (userPassport != null) {
+                    String visaKey = visaName + "@" + visaIssuer;
+                    String visaJwt = userPassport.getVisaJwtMap().get(visaKey);
+                    if (visaJwt != null)  {
+                        matchingVisaFound = true;
+                    }
+                }
             }
 
             if (! matchingVisaFound) {
