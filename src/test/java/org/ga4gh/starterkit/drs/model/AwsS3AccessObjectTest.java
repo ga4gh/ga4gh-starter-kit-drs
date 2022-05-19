@@ -14,7 +14,10 @@ public class AwsS3AccessObjectTest {
                 "us-east-1",
                 "ga4gh-demo-data",
                 "/path/to/the/file.bam",
-                new DrsObject("12345", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("12345");
+                    setSize(Long.valueOf(1L));
+                }},
                 "12345"
             },
             {
@@ -22,7 +25,10 @@ public class AwsS3AccessObjectTest {
                 "us-east-2",
                 "ga4gh-production-data",
                 "/data/phenopackets/0001.json",
-                new DrsObject("98765", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("98765");
+                    setSize(Long.valueOf(1L));
+                }},
                 "98765"
             },
         };
