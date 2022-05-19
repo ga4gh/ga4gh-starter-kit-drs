@@ -80,6 +80,11 @@ public class DrsObjectTest {
     }
 
     private void setters(DrsObject drsObject, TestCase testCase) {
+        drsObject.setId(testCase.id);
+        drsObject.setSelfURI(testCase.selfURI);
+        drsObject.setChecksums(testCase.checksums);
+        drsObject.setCreatedTime(testCase.createdTime);
+        drsObject.setSize(testCase.size);
         drsObject.setAccessMethods(testCase.accessMethods);
         drsObject.setAliases(testCase.aliases);
         drsObject.setContents(testCase.contents);
@@ -107,20 +112,8 @@ public class DrsObjectTest {
     }
 
     @Test(dataProvider = "cases")
-    public void testDrsObjectConstructor(TestCase testCase) {
-        DrsObject drsObject = new DrsObject(testCase.id, testCase.selfURI, testCase.checksums, testCase.createdTime, testCase.size);
-        setters(drsObject, testCase);
-        assertions(drsObject, testCase);
-    }
-
-    @Test(dataProvider = "cases")
-    public void testDrsObjectSetters(TestCase testCase) {
-        DrsObject drsObject = new DrsObject(null, null, null, null, Long.valueOf(0));
-        drsObject.setId(testCase.id);
-        drsObject.setSelfURI(testCase.selfURI);
-        drsObject.setChecksums(testCase.checksums);
-        drsObject.setCreatedTime(testCase.createdTime);
-        drsObject.setSize(testCase.size);
+    public void testDrsObject(TestCase testCase) {
+        DrsObject drsObject = new DrsObject();
         setters(drsObject, testCase);
         assertions(drsObject, testCase);
     }

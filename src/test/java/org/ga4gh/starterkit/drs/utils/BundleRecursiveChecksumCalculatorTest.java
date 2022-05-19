@@ -94,12 +94,7 @@ public class BundleRecursiveChecksumCalculatorTest {
 
     @Test(dataProvider = "cases")
     public void testRecursiveCalculateChecksums(DrsObject drsObject, Map<String, String> expChecksumMap) {
-        System.out.println(drsObject);
-        System.out.println(expChecksumMap);
-
-
         Map<String, String> checksumMap = BundleRecursiveChecksumCalculator.recursiveCalculateChecksums(drsObject);
-        System.out.println("DONE");
         Assert.assertEquals(checksumMap.size(), expChecksumMap.size());
 
         for (String key : expChecksumMap.keySet()) {

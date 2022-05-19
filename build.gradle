@@ -46,6 +46,9 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.0'
     implementation 'commons-cli:commons-cli:1.4'
@@ -62,7 +65,11 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.2.8'
     implementation 'org.springdoc:springdoc-openapi-ui:1.2.33'
     implementation 'org.xerial:sqlite-jdbc:3.8.11.2'
+    implementation 'com.auth0:java-jwt:3.19.1'
     implementation 'org.ga4gh:ga4gh-starter-kit-common:0.5.6'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     testImplementation 'org.testng:testng:7.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.0'

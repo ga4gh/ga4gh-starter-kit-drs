@@ -8,6 +8,8 @@ import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.common.requesthandler.RequestHandler;
 import org.ga4gh.starterkit.drs.config.DrsServiceProps;
+import org.ga4gh.starterkit.drs.exception.ForbiddenException;
+import org.ga4gh.starterkit.drs.exception.UnauthorizedException;
 import org.ga4gh.starterkit.drs.model.AccessMethod;
 import org.ga4gh.starterkit.drs.model.AccessType;
 import org.ga4gh.starterkit.drs.model.AccessURL;
@@ -15,9 +17,12 @@ import org.ga4gh.starterkit.drs.model.AwsS3AccessObject;
 import org.ga4gh.starterkit.drs.model.ContentsObject;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.model.FileAccessObject;
+import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCacheItem;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
+import org.ga4gh.starterkit.drs.utils.passport.UserPassport;
+import org.ga4gh.starterkit.drs.utils.passport.UserPassportMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -42,6 +47,8 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
 
     private boolean expand;
 
+    private UserPassportMap userPassportMap;
+
     /* Constructors */
 
     /**
@@ -57,9 +64,10 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
      * @param expand boolean indicating whether to return nested/recursive bundles under 'contents'
      * @return the prepared request handler
      */
-    public ObjectRequestHandler prepare(String objectId, boolean expand) {
+    public ObjectRequestHandler prepare(String objectId, boolean expand, UserPassportMap userPassportMap) {
         this.objectId = objectId;
         this.expand = expand;
+        this.userPassportMap = userPassportMap;
         return this;
     }
 
@@ -67,11 +75,43 @@ public class ObjectRequestHandler implements RequestHandler<DrsObject> {
      * Obtains information about a DRSObject and formats it to the DRS specification
      */
     public DrsObject handleRequest() {
-
         // Get DrsObject from db
         DrsObject drsObject = hibernateUtil.loadDrsObject(objectId, true);
         if (drsObject == null) {
             throw new ResourceNotFoundException("No DrsObject found by id: " + objectId);
+        }
+
+        // check if DrsObject requires auth, if so verify the client's passport
+        List<PassportVisa> requiredVisas = drsObject.getPassportVisas();
+        boolean requiresAuth = false;
+        if (requiredVisas != null && requiredVisas.size() > 0) {
+            requiresAuth = true;
+        }
+        boolean noPassport = userPassportMap == null || userPassportMap.getMap().size() == 0;
+        if (requiresAuth) {
+            if (noPassport) {
+                throw new UnauthorizedException("Request for controlled data is missing user passport(s)");
+            }
+
+            // need to verify at least 1 visa registered with the DRS Object
+            boolean matchingVisaFound = false;
+            for (PassportVisa drsObjectRegisteredVisa : drsObject.getPassportVisas()) {
+                String passportBrokerIss = drsObjectRegisteredVisa.getPassportBroker().getUrl();
+                String visaName = drsObjectRegisteredVisa.getName();
+                String visaIssuer = drsObjectRegisteredVisa.getIssuer();
+                UserPassport userPassport = userPassportMap.getMap().get(passportBrokerIss);
+                if (userPassport != null) {
+                    String visaKey = visaName + "@" + visaIssuer;
+                    String visaJwt = userPassport.getVisaJwtMap().get(visaKey);
+                    if (visaJwt != null)  {
+                        matchingVisaFound = true;
+                    }
+                }
+            }
+
+            if (! matchingVisaFound) {
+                throw new ForbiddenException("No suitable visa found in user passport(s) for requested DRS object");
+            }
         }
 
         // post query prep of response

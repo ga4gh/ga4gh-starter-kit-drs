@@ -538,3 +538,113 @@ INSERT INTO drs_object_bundle VALUES
     ("355a74bd-6571-4d4a-8602-a9989936717f", "8f40acc0-0c54-45c5-8c85-a6f5fb32a1a7"),
     ("355a74bd-6571-4d4a-8602-a9989936717f", "41898242-62a9-4129-9a2c-5a4e8f5f0afb"),
     ("355a74bd-6571-4d4a-8602-a9989936717f", "6b994f18-6189-4233-bb83-139686490d68");
+
+/* MINI DATASET FOR PASSPORTS AUTH */
+
+INSERT INTO passport_broker VALUES (
+    'https://ga4gh.org/',
+    'insecureSecretPleaseOverride'
+);
+
+INSERT INTO passport_visa VALUES
+(
+    0,
+    'StarterKitDatasetsControlledAccessGrants',
+    'https://datasets.starterkit.ga4gh.org/',
+    '87A3B5D68FD88197254D9889B4AAB',
+    'https://ga4gh.org/'
+);
+
+INSERT INTO drs_object (
+    id,
+    description,
+    created_time,
+    mime_type,
+    name,
+    size,
+    updated_time,
+    version,
+    is_bundle
+) VALUES
+    (
+        "e26f8428-1a5d-4465-b389-10998ba7b894",
+        "PASSPORT AUTH - Phenopackets, Cao Patient 1",
+        "2022-05-16 20:00:00.000",
+        "application/json",
+        "passport.phenopackets.cao.1",
+        4257,
+        "2022-05-16 20:00:00.000",
+        "1.0.0",
+        0
+    ),
+    (
+        "996ead07-8dfc-4c5d-b319-5b59bebb507e",
+        "PASSPORT AUTH - Phenopackets, Cao Patient 2",
+        "2022-05-16 20:00:00.000",
+        "application/json",
+        "passport.phenopackets.cao.2",
+        7401,
+        "2022-05-16 20:00:00.000",
+        "1.0.0",
+        0
+    ),
+    (
+        "81e8b499-1054-4846-8df4-d079ea32a44f",
+        "PASSPORT AUTH - Phenopackets, Cao Patient 3",
+        "2022-05-16 20:00:00.000",
+        "application/json",
+        "passport.phenopackets.cao.3",
+        4251,
+        "2022-05-16 20:00:00.000",
+        "1.0.0",
+        0
+    ),
+    (
+        "672d0425-137c-437f-ab12-29a3cce1ffc0",
+        "PASSPORT AUTH - Phenopackets, Cao Patient 4",
+        "2022-05-16 20:00:00.000",
+        "application/json",
+        "passport.phenopackets.cao.4",
+        9264,
+        "2022-05-16 20:00:00.000",
+        "1.0.0",
+        0
+    );
+
+INSERT INTO drs_object_alias VALUES
+    ("e26f8428-1a5d-4465-b389-10998ba7b894", "Passport-Cao-FBN1-1"),
+    ("996ead07-8dfc-4c5d-b319-5b59bebb507e", "Passport-Cao-FBN1-2"),
+    ("81e8b499-1054-4846-8df4-d079ea32a44f", "Passport-Cao-FBN1-3"),
+    ("672d0425-137c-437f-ab12-29a3cce1ffc0", "Passport-Cao-TGFBR2-4");
+
+INSERT INTO drs_object_checksum (drs_object_id, checksum, type) VALUES
+    ("e26f8428-1a5d-4465-b389-10998ba7b894", "f81ea43c74824cc72c77a39a92bf7b71", "md5"),
+    ("e26f8428-1a5d-4465-b389-10998ba7b894", "34880a6b8aa517a6999da912614753ffb0a837a8", "sha1"),
+    ("e26f8428-1a5d-4465-b389-10998ba7b894", "ec44e2ad7ec84c7c42ba57b205e67c7c7416ae1932029d8364cc053cef7abe58", "sha256"),
+    ("996ead07-8dfc-4c5d-b319-5b59bebb507e", "1cbab050aa20410dc14ce6906f0312fa", "md5"),
+    ("996ead07-8dfc-4c5d-b319-5b59bebb507e", "3f2f2133054faf71ca9d678fa1fd8918a521faec", "sha1"),
+    ("996ead07-8dfc-4c5d-b319-5b59bebb507e", "2709878797b4e8c6a7db824fa596f42885551cef730d1408b2b620c9eee43089", "sha256"),
+    ("81e8b499-1054-4846-8df4-d079ea32a44f", "45b61bbe53b13463cd602081613ad855", "md5"),
+    ("81e8b499-1054-4846-8df4-d079ea32a44f", "d3192e17ffd97f7255ffbe2c6f9b447568107612", "sha1"),
+    ("81e8b499-1054-4846-8df4-d079ea32a44f", "f60583aad0e25fc4805668663bcc3bef271f4f93ee98be4f57f6e8c3e26d9dba", "sha256"),
+    ("672d0425-137c-437f-ab12-29a3cce1ffc0", "7d3b0a967215523c29de61baff26bfa2", "md5"),
+    ("672d0425-137c-437f-ab12-29a3cce1ffc0", "ae6c744487ddf785976893d1bdce2f81c017921e", "sha1"),
+    ("672d0425-137c-437f-ab12-29a3cce1ffc0", "69dd919e14d162ebd0132a395cf1967346fd203210428287c354b11eebdda8b3", "sha256");
+
+INSERT INTO file_access_object (drs_object_id, path) VALUES
+    ("e26f8428-1a5d-4465-b389-10998ba7b894", "./src/test/resources/data/phenopackets/Cao-2018-FBN1-Patient_1.json"),
+    ("996ead07-8dfc-4c5d-b319-5b59bebb507e", "./src/test/resources/data/phenopackets/Cao-2018-FBN1-Patient_2.json"),
+    ("81e8b499-1054-4846-8df4-d079ea32a44f", "./src/test/resources/data/phenopackets/Cao-2018-FBN1-Patient_3.json"),
+    ("672d0425-137c-437f-ab12-29a3cce1ffc0", "./src/test/resources/data/phenopackets/Cao-2018-TGFBR2-Patient_4.json");
+
+INSERT INTO aws_s3_access_object (drs_object_id, region, bucket, key) VALUES
+    ("e26f8428-1a5d-4465-b389-10998ba7b894", "us-east-2", "ga4gh-demo-data", "/phenopackets/Cao-2018-FBN1-Patient_1.json"),
+    ("996ead07-8dfc-4c5d-b319-5b59bebb507e", "us-east-2", "ga4gh-demo-data", "/phenopackets/Cao-2018-FBN1-Patient_2.json"),
+    ("81e8b499-1054-4846-8df4-d079ea32a44f", "us-east-2", "ga4gh-demo-data", "/phenopackets/Cao-2018-FBN1-Patient_3.json"),
+    ("672d0425-137c-437f-ab12-29a3cce1ffc0", "us-east-2", "ga4gh-demo-data", "/phenopackets/Cao-2018-TGFBR2-Patient_4.json");
+
+INSERT INTO drs_object_visa VALUES
+    ("e26f8428-1a5d-4465-b389-10998ba7b894", 0),
+    ("996ead07-8dfc-4c5d-b319-5b59bebb507e", 0),
+    ("81e8b499-1054-4846-8df4-d079ea32a44f", 0),
+    ("672d0425-137c-437f-ab12-29a3cce1ffc0", 0);
