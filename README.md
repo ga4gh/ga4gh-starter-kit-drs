@@ -2,9 +2,9 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 [![Java 11+](https://img.shields.io/badge/java-11+-blue.svg?style=flat-square)](https://www.java.com)
-[![Gradle 6.1+](https://img.shields.io/badge/gradle-6.1+-blue.svg?style=flat-square)](https://gradle.org/)
-[![Travis (.org) branch](https://img.shields.io/travis/ga4gh/ga4gh-starter-kit-drs/master.svg?style=flat-square)](https://travis-ci.org/ga4gh/ga4gh-starter-kit-drs)
-![Codecov](https://img.shields.io/codecov/c/github/ga4gh/ga4gh-starter-kit-drs?style=flat-square)
+[![Gradle 7.3.2+](https://img.shields.io/badge/gradle-7.3.2+-blue.svg?style=flat-square)](https://gradle.org/)
+[![GitHub Actions](https://img.shields.io/github/workflow/status/ga4gh/ga4gh-starter-kit-drs/Standard%20Tests/main)](https://github.com/ga4gh/ga4gh-starter-kit-drs/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/ga4gh/ga4gh-starter-kit-drs?style=flat-square)](https://app.codecov.io/gh/ga4gh/ga4gh-starter-kit-drs)
 
 # GA4GH Starter Kit DRS
 
@@ -35,7 +35,7 @@ docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-start
 
 The service can also be installed locally in cases where docker deployments are not possible, or for development of the codebase. Native installations require:
 * Java 11+
-* Gradle 6.1.1+
+* Gradle 7.3.2+
 * SQLite (for creating the dev database)
 
 First, clone the repository from Github:
@@ -185,6 +185,11 @@ Multiple datasets are currently contained in this repo for development and testi
   - see the [datasets page](./DATASETS.md#Phenopackets) for a list of `DRS IDs` for `DrsObjects` in the Phenopackets dataset
 
 ## Changelog
+
+### v0.3.0
+* DRS object batch requests
+* Passport support - Passport mediated auth to DRS objects (using Starter Kit implementation of Passports)
+* Auth info - Discover Passport broker(s) and visa(s) for requested controlled access DRS Objects (single object and bulk request)
 
 ### v0.2.2
 * patched log4j dependencies to v2.16.0 to avoid [Log4j Vulnerability](https://www.cisa.gov/uscert/apache-log4j-vulnerability-guidance)

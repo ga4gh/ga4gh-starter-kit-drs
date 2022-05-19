@@ -12,19 +12,28 @@ public class FileAccessObjectTest {
             {
                 Long.valueOf(1L),
                 "/path/to/the/file.bam",
-                new DrsObject("12345", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("12345");
+                    setSize(Long.valueOf(1L));
+                }},
                 "12345"
             },
             {
                 Long.valueOf(200L),
                 "/data/phenopackets/0001.json",
-                new DrsObject("98765", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("98765");
+                    setSize(Long.valueOf(1L));
+                }},
                 "98765"
             },
             {
                 Long.valueOf(4000000L),
                 "./data/cram/myfile.cram",
-                new DrsObject("00001", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("00001");
+                    setSize(Long.valueOf(1L));
+                }},
                 "00001"
             }
         };

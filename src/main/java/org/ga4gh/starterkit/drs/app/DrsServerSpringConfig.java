@@ -22,9 +22,13 @@ import org.ga4gh.starterkit.drs.model.Checksum;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 import org.ga4gh.starterkit.drs.model.FileAccessObject;
+import org.ga4gh.starterkit.drs.model.PassportBroker;
+import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
+import org.ga4gh.starterkit.drs.utils.passport.UserPassportMapVerifier;
 import org.ga4gh.starterkit.drs.utils.requesthandler.AccessRequestHandler;
+import org.ga4gh.starterkit.drs.utils.requesthandler.AuthInfoRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.FileStreamRequestHandler;
 import org.ga4gh.starterkit.drs.utils.requesthandler.ObjectRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,6 +236,8 @@ public class DrsServerSpringConfig {
         annotatedClasses.add(Checksum.class);
         annotatedClasses.add(FileAccessObject.class);
         annotatedClasses.add(AwsS3AccessObject.class);
+        annotatedClasses.add(PassportBroker.class);
+        annotatedClasses.add(PassportVisa.class);
         return annotatedClasses;
     }
 
@@ -261,7 +267,7 @@ public class DrsServerSpringConfig {
      * @return drs object request handler
      */
     @Bean
-    @RequestScope
+    @Scope(DrsServerConstants.PROTOTYPE)
     public ObjectRequestHandler objectRequestHandler() {
         return new ObjectRequestHandler();
     }
@@ -275,6 +281,12 @@ public class DrsServerSpringConfig {
     @RequestScope
     public AccessRequestHandler accessRequestHandler() {
         return new AccessRequestHandler();
+    }
+
+    @Bean
+    @RequestScope
+    public AuthInfoRequestHandler authInfoRequestHandler() {
+        return new AuthInfoRequestHandler();
     }
 
     /**
@@ -298,5 +310,10 @@ public class DrsServerSpringConfig {
     @Bean
     public AccessCache accessCache() {
         return new AccessCache();
+    }
+
+    @Bean
+    public UserPassportMapVerifier userPAssportMapVerifier() {
+        return new UserPassportMapVerifier();
     }
 }

@@ -13,21 +13,30 @@ public class ChecksumTest {
                 Long.valueOf(1L),
                 "47a43e2f1981cef23dee95dd85fb8233",
                 "md5",
-                new DrsObject("12345", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("12345");
+                    setSize(Long.valueOf(1L));
+                }},
                 "12345"
             },
             {
                 Long.valueOf(200L),
                 "d3882df45306b4cc6f6e9227b54a6026",
                 "trunc512",
-                new DrsObject("98765", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("98765");
+                    setSize(Long.valueOf(1L));
+                }},
                 "98765"
             },
             {
                 Long.valueOf(4000000L),
                 "92f9760ae68487f8959d6e0e6a5f219e",
                 "crc32c",
-                new DrsObject("00001", null, null, null, Long.valueOf(1L)),
+                new DrsObject() {{
+                    setId("00001");
+                    setSize(Long.valueOf(1L));
+                }},
                 "00001"
             }
         };

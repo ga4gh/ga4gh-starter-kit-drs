@@ -48,3 +48,24 @@ CREATE TABLE drs_object_bundle (
     FOREIGN KEY(parent_id) REFERENCES drs_object(id),
     FOREIGN KEY(child_id) REFERENCES drs_object(id)
 );
+
+CREATE TABLE passport_broker (
+    url TEXT PRIMARY KEY,
+    secret TEXT
+);
+
+CREATE TABLE passport_visa (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    issuer TEXT,
+    secret TEXT,
+    passport_broker_url TEXT,
+    FOREIGN KEY (passport_broker_url) REFERENCES passport_broker(url)
+);
+
+CREATE TABLE drs_object_visa (
+    drs_object_id TEXT,
+    visa_id TEXT,
+    FOREIGN KEY(drs_object_id) REFERENCES drs_object(id),
+    FOREIGN KEY(visa_id) REFERENCES passport_visa(id)
+);
