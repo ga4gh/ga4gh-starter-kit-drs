@@ -177,5 +177,6 @@ public class DrsAdmin {
         drsObject.setAwsS3AccessObjects(null);
         drsObject.setDrsObjectChildren(null);
         drsObject.setDrsObjectParents(null);
+        drsObject.setPassportVisas(null);
     }
 }
