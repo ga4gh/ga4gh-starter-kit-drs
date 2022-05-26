@@ -59,6 +59,7 @@ public class PassportVisa implements HibernateEntity<Integer> {
                    CascadeType.DETACH, CascadeType.REFRESH}
     )
     @JoinColumn(name = "passport_broker_url")
+    @JsonView(SerializeView.Admin.class)
     private PassportBroker passportBroker;
 
     @ManyToMany
@@ -67,7 +68,7 @@ public class PassportVisa implements HibernateEntity<Integer> {
         joinColumns = {@JoinColumn(name = "visa_id")},
         inverseJoinColumns = {@JoinColumn(name = "drs_object_id")}
     )
-    @JsonView(SerializeView.Admin.class)
+    @JsonView(SerializeView.Never.class)
     private List<DrsObject> drsObjects;
 
     public PassportVisa() {
