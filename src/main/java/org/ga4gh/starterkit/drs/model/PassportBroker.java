@@ -47,7 +47,7 @@ public class PassportBroker implements HibernateEntity<String> {
         cascade = {CascadeType.ALL},
         orphanRemoval = true
     )
-    @JsonView(SerializeView.Admin.class)
+    @JsonView(SerializeView.Never.class)
     private List<PassportVisa> passportVisas;
 
     public PassportBroker() {

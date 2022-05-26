@@ -77,6 +77,7 @@ public class DrsAdmin {
      * @return persistent DRSObject saved with the requested attributes
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @JsonView(SerializeView.Admin.class)
     public DrsObject createDrsObject(
         @RequestBody DrsObject drsObject
     ) {
