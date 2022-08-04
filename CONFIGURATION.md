@@ -103,13 +103,13 @@ drs:
 A valid `serviceInfo` configuration may look like the following:
 
 ```
-wes:
+drs:
   serviceInfo:
-    id: com.genomics.wes
-    name: Genomics.com WES service
-    description: This service serves data according to the WES protocol...
+    id: com.genomics.drs
+    name: Genomics.com DRS service
+    description: This service serves data according to the DRS protocol...
     contactUrl: mailto:info@genomics.com
-    documentationUrl: https://wesdocs.genomics.com
+    documentationUrl: https://drsdocs.genomics.com
     createdAt: 2021-05-25T12:00:00Z
     updatedAt: 2021-05-26T12:00:00Z
     environment: production
@@ -123,11 +123,11 @@ wes:
 
 | Attribute | Description | Default |
 |-----------|-------------|---------|
-| id | unique identifier for the service in reverse domain name formant | org.ga4gh.starterkit.wes |
-| name | short, human readable service name | GA4GH Starter Kit WES Service |
-| description | longer, human readable description | An open source community-driven implementation of the GA4GH Data Repository Service (WES) API specification. |
+| id | unique identifier for the service in reverse domain name formant | org.ga4gh.starterkit.drs |
+| name | short, human readable service name | GA4GH Starter Kit DRS Service |
+| description | longer, human readable description | An open source community-driven implementation of the GA4GH Data Repository Service (DRS) API specification. |
 | contactUrl | URL/email address users should contact with questions or issues about the service | mailto:info@ga4gh.org |
-| documentationUrl | URL to where documentation about the service is hosted | https://github.com/ga4gh/ga4gh-starter-kit-wes |
+| documentationUrl | URL to where documentation about the service is hosted | https://github.com/ga4gh/ga4gh-starter-kit-drs |
 | createdAt | timestamp of when the service was first started | 2020-01-15T12:00:00Z |
 | updatedAt | timestamp of when the service was last updated | 2020-01-15T12:00:00Z |
 | environment | describes what environment the service is running in (e.g. dev, test, prod) | test |
