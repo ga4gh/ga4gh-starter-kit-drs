@@ -13,9 +13,11 @@ import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.BundleRecursiveChecksumCalculator;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.hibernate.HibernateUtil;
+import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Provides access to DRS entities/tables in the database, enabling access, creation,
@@ -31,6 +33,10 @@ public class DrsHibernateUtil extends HibernateUtil {
      * @return DRSObject with all necessary attributes loaded
      * @throws HibernateException if problem encountered while interacting with db
      */
+
+    @Autowired
+    private LoggingUtil loggingUtil;
+
     public DrsObject loadDrsObject(String id, boolean recursiveChildLoad) throws HibernateException {
         Session session = newTransaction();
         DrsObject drsObject = null;
@@ -49,8 +55,10 @@ public class DrsHibernateUtil extends HibernateUtil {
                 }
             }
         } catch (PersistenceException e) {
+            loggingUtil.error("Exception occurred: persistence exception" + e.getMessage());
             throw new HibernateException(e.getMessage());
         } catch (Exception e) {
+            loggingUtil.error("Exception occurred: persistence exception" + e.getMessage());
             throw new HibernateException(e.getMessage());
         } finally {
             endTransaction(session);
@@ -128,11 +136,13 @@ public class DrsHibernateUtil extends HibernateUtil {
             Query<PassportVisa> query = session.createQuery(cq);
             List<PassportVisa> results = query.getResultList();
             if (results.size() != 1) {
-                throw new Exception("no unique visa found");
+                Exception ex = new Exception("no unique visa found");
+                loggingUtil.error("Exception occurred: no unique visa found" + ex.getMessage());
+                throw ex;
             }
             visa = results.get(0);
         } catch (Exception ex) {
-
+            loggingUtil.error("Exception occurred: " + ex.getMessage());
         } finally {
             endTransaction(session);
         }

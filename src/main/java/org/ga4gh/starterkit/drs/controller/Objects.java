@@ -194,7 +194,7 @@ public class Objects implements ApplicationContextAware {
                 AccessURL accessURL = handler.prepare(idPair.getObjectId(), idPair.getAccessId()).handleRequest();
                 accessURLs.add(accessURL);
             } catch (CustomException ex) {
-
+                loggingUtil.error("Exception occurred: " + ex.getMessage());
             }
         }
 

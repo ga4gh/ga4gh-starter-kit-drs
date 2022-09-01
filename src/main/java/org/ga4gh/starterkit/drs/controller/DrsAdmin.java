@@ -64,7 +64,9 @@ public class DrsAdmin {
         loggingUtil.debug("Admin API request: DrsObject with id '" + id + "'");
         DrsObject drsObject = hibernateUtil.loadDrsObject(id, false);
         if (drsObject == null) {
-            throw new ResourceNotFoundException("No DrsObject found by id: " + id);
+            ResourceNotFoundException ex =  new ResourceNotFoundException("No DrsObject found by id: " + id);
+            loggingUtil.error("Exception occurred: could not find DrsObject by id" + ex.getMessage());
+            throw ex;
         }
         return getAdminFormattedDrsObject(id);
     }
@@ -87,6 +89,7 @@ public class DrsAdmin {
             hibernateUtil.createEntityObject(DrsObject.class, drsObject);
             return getAdminFormattedDrsObject(drsObject.getId());
         } catch (EntityExistsException ex) {
+            loggingUtil.error("Exception occurred: Entity exists exception" + ex.getMessage());
             throw new ConflictException(ex.getMessage());
         }
     }
@@ -108,8 +111,10 @@ public class DrsAdmin {
             hibernateUtil.updateEntityObject(DrsObject.class, id, drsObject);
             return getAdminFormattedDrsObject(id);
         } catch (EntityMismatchException ex) {
+            loggingUtil.error("Exception occurred: Entity mismatch exception" + ex.getMessage());
             throw new BadRequestException(ex.getMessage());
         } catch (EntityDoesntExistException ex) {
+            loggingUtil.error("Exception occurred: Entity mismatch exception" + ex.getMessage());
             throw new ConflictException(ex.getMessage());
         }
     }
@@ -128,8 +133,10 @@ public class DrsAdmin {
             hibernateUtil.deleteEntityObject(DrsObject.class, id);
             return hibernateUtil.readEntityObject(DrsObject.class, id, false);
         } catch (EntityDoesntExistException ex) {
+            loggingUtil.error("Exception occurred: entity doesnt exist exception" + ex.getMessage());
             throw new ConflictException(ex.getMessage());
         } catch (EntityExistsException ex) {
+            loggingUtil.error("Exception occurred: entity exists exception" + ex.getMessage());
             throw new ConflictException(ex.getMessage());
         }
     }
