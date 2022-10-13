@@ -64,9 +64,9 @@ public class DrsAdmin {
         loggingUtil.debug("Admin API request: DrsObject with id '" + id + "'");
         DrsObject drsObject = hibernateUtil.loadDrsObject(id, false);
         if (drsObject == null) {
-            ResourceNotFoundException ex =  new ResourceNotFoundException("No DrsObject found by id: " + id);
-            loggingUtil.error("Exception occurred: could not find DrsObject by id" + ex.getMessage());
-            throw ex;
+            String exceptionMessage = "No DrsObject found by id: " + id;
+            loggingUtil.error("Exception occurred: " + exceptionMessage);
+            throw new ResourceNotFoundException(exceptionMessage);
         }
         return getAdminFormattedDrsObject(id);
     }

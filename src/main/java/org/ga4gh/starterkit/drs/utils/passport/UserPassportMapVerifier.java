@@ -35,9 +35,9 @@ public class UserPassportMapVerifier {
                 String rawPassportJwt = userPassport.getPassportJwt();
                 PassportBroker passportBroker = hibernateUtil.readEntityObject(PassportBroker.class, passportIssKey, false);
                 if (passportBroker == null) {
-                    Exception ex = new Exception("Passports from issuer: '" + passportIssKey + "' are not accepted here.");
-                    loggingUtil.error("Exception occurred: passport broker is null " + ex.getMessage());
-                    throw ex;
+                    String exceptionMessage = "Passports from issuer: '" + passportIssKey + "' are not accepted here.";
+                    loggingUtil.error("Exception occurred: passport broker is null " + exceptionMessage);
+                    throw new Exception(exceptionMessage);
                 }
                 String passportBrokerSecret = passportBroker.getSecret();
                 JWTVerifier passportVerifier = JWT.require(Algorithm.HMAC256(passportBrokerSecret)).build();
@@ -49,9 +49,9 @@ public class UserPassportMapVerifier {
                     String visaIssuer = visaKey.split("@")[1];
                     PassportVisa registeredVisa = hibernateUtil.findPassportVisa(visaName, visaIssuer);
                     if (registeredVisa == null) {
-                        Exception ex = new Exception("The Visa you provided: '" + visaKey + "' is not accepted here.");
-                        loggingUtil.error("Exception occurred: registered visa is null " + ex.getMessage());
-                        throw ex;
+                        String exceptionMessage = "The Visa you provided: '" + visaKey + "' is not accepted here.";
+                        loggingUtil.error("Exception occurred: registered visa is null " + exceptionMessage);
+                        throw new Exception(exceptionMessage);
                     }
                     String visaSecret = registeredVisa.getSecret();
                     JWTVerifier visaVerifier = JWT.require(Algorithm.HMAC256(visaSecret)).build();

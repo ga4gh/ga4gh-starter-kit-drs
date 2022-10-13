@@ -135,10 +135,10 @@ public class DrsHibernateUtil extends HibernateUtil {
             cq.select(root).where(predicates);
             Query<PassportVisa> query = session.createQuery(cq);
             List<PassportVisa> results = query.getResultList();
-            if (results.size() != 1) {
-                Exception ex = new Exception("no unique visa found");
-                loggingUtil.error("Exception occurred: no unique visa found" + ex.getMessage());
-                throw ex;
+            if (results.size() != 1) {                
+                String exceptionMessage = "no unique visa found";
+                loggingUtil.error("Exception occurred: " + exceptionMessage);
+                throw new Exception(exceptionMessage);
             }
             visa = results.get(0);
         } catch (Exception ex) {
