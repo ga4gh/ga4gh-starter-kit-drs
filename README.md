@@ -109,7 +109,7 @@ Additional setup steps to run the DRS server in a local environment for developm
 
 ### Setup dev database
 
-A local SQLite database must be set up for running the DRS service in a development context. If `make` and `sqlite3` are already installed on the system `PATH`, this database can be created and populated with a dev dataset by simply running: 
+A local SQLite database must be set up **before** running the DRS service in a development context. If `make` and `sqlite3` are already installed on the system `PATH`, this database can be created and populated with a dev dataset by simply running: 
 
 ```
 make sqlite-db-refresh

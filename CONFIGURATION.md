@@ -60,8 +60,18 @@ drs:
 | Attribute | Description | Default |
 |-----------|-------------|---------|
 | scheme | The URL scheme/protocol by which the service can be accessed. (`http` or `https`). Allows `http` in dev/local deployments, but real-world deployments should use `https` | http |
-| hostname | The URL domain name (including subdomain and port) that this service is running at. Used to reference clients back to the service | localhost:4500 |
-| port | The port that the server will run on | 4500 |
+| hostname | The URL domain name (including subdomain and port) that this service is running at. Used to reference clients back to the service | localhost |
+| publicApiPort | The networking port that will be open to requests to the public API, that is, all API endpoints outlined in GA4GH specifications. | 4500 |
+| adminApiPort | The networking port that will be open to requests to the admin API, that is, API endpoints that are not outlined in GA4GH specs, but are required to create and edit data models. Traffic to the admin port should have stricter firewall rules compared to the public API port. | 4501 |
+| logLevel | The log severity level. The program will output log messages encountered at the specified log level or higher. | DEBUG |
+| logFile | Path to output file storing log output. If null, log output will be printed to console. | null |
+| publicApiCorsAllowedOrigins | Customizes the Cross Origin Resource Sharing (CORS) header `Access-Control-Allow-Origin` for requests made to any public API endpoint. Allows content returned from the API to be rendered only on trusted websites. | ["http://localhost"] |
+| publicApiCorsAllowedMethods | Customizes the CORS header `Access-Control-Allow-Methods` for requests made to any public API endpoint. Allows content returned from the API to be rendered only when a trusted HTTP method was used to request data. | [GET, POST, PUT, DELETE] |
+| publicApiCorsAllowedHeaders | Customizes the CORS header `Access-Control-Allow-Headers` for requests made to any public API endpoint. Allows API content to be rendered on a website only when trusted HTTP headers are sent to the server. | [] |
+| adminApiCorsAllowedOrigins | Customizes the Cross Origin Resource Sharing (CORS) header `Access-Control-Allow-Origin` for requests made to any admin API endpoint. Allows content returned from the API to be rendered only on trusted websites. | ["http://localhost"] |
+| adminApiCorsAllowedMethods | Customizes the CORS header `Access-Control-Allow-Methods` for requests made to any admin API endpoint. Allows content returned from the API to be rendered only when a trusted HTTP method was used to request data. | [GET, POST, PUT, DELETE] |
+| adminApiCorsAllowedHeaders | Customizes the CORS header `Access-Control-Allow-Headers` for requests made to any admin API endpoint. Allows API content to be rendered on a website only when trusted HTTP headers are sent to the server. | [] |
+| disableSpringLogging | If true, does not output the default startup messages for Spring Boot web apps to console (i.e. Spring logo) | false |
 
 ## databaseProps
 
@@ -70,28 +80,23 @@ A valid `databaseProps` configuration may look like the following:
 ```
 drs:
   databaseProps:
-    driverClassName: org.sqlite.JDBC
     url: jdbc:sqlite:./ga4gh-starter-kit.dev.db
     username: ga4ghuser
     password: mypa$$word123
     poolSize: 8
-    dialect: org.ga4gh.starterkit.common.hibernate.dialect.SQLiteDialect
     showSQL: true
-    dateClass: text
 ```
 
 `databaseProps` supports the following configurable attributes:
 
 | Attribute | Description | Default |
 |-----------|-------------|---------|
-| driverClassName | The driver class abstracting low-level particulars of the SQL database | org.sqlite.JDBC |
 | url | Java JDBC URL to the DRS database, indicating connection type and database location | jdbc:sqlite:./ga4gh-starter-kit.dev.db |
 | username | Username with full access credentials to the DRS database | |
 | password | Password for the above user | |
 | poolSize | Database connection pool size | 1 |
-| dialect | Hibernate API dialect | org.ga4gh.starterkit.common.hibernate.dialect.SQLiteDialect |
 | showSQL | If true, log SQL syntax for each database query | true |
-| dateClass | Indicates if dates are represented as text in the database, or by another format | text |
+
 
 ## serviceInfo
 
@@ -129,6 +134,7 @@ drs:
 | version | the service version | 0.1.0 |
 | organization.name | name of the organization hosting the service | Global Alliance for Genomics and Health |
 | organization.url | URL to organization homepage | https://ga4gh.org |
+
 
 ## drsServiceProps
 
