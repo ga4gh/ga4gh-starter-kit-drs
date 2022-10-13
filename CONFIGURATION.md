@@ -91,8 +91,8 @@ drs:
 
 | Attribute | Description | Default |
 |-----------|-------------|---------|
-| url | Java JDBC URL to the Data Connect database, indicating connection type and database location | jdbc:sqlite:./ga4gh-starter-kit.dev.db |
-| username | Username with full access credentials to the Data Connect database | |
+| url | Java JDBC URL to the DRS database, indicating connection type and database location | jdbc:sqlite:./ga4gh-starter-kit.dev.db |
+| username | Username with full access credentials to the DRS database | |
 | password | Password for the above user | |
 | poolSize | Database connection pool size | 1 |
 | showSQL | If true, log SQL syntax for each database query | true |
