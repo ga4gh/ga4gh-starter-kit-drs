@@ -94,7 +94,7 @@ Response:
     "type": {
         "group": "org.ga4gh",
         "artifact": "drs",
-        "version": "1.1.0"
+        "version": "1.3.0experimental"
     },
     "organization": {
         "name": "Global Alliance for Genomics and Health",
@@ -170,6 +170,10 @@ Response:
 **NOTE:** If running via docker, the dev database is already bundled within the container.
 
 **NOTE:** The unit and end-to-end test suite is predicated on a preconfigured database. The SQLite dev database must be present for tests to pass.
+
+## Admin Endpoints
+The endpoints that are made available at the admin port are beyond the DRS specification. 
+These endpoints provide the users of the Starter Kit (the data provider) with the functionalities of creating, updating and deleting DRS Objects from the DRS Starter Kit server.
 
 ## Configuration
 
