@@ -5,6 +5,7 @@ import org.ga4gh.starterkit.common.config.ServerProps;
 import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 import org.ga4gh.starterkit.common.exception.ResourceNotFoundException;
 import org.ga4gh.starterkit.common.requesthandler.RequestHandler;
+import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
 import org.ga4gh.starterkit.drs.model.AccessURL;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCacheItem;
@@ -21,6 +22,9 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
 
     @Autowired
     private AccessCache accessCache;
+
+    @Autowired
+    private LoggingUtil loggingUtil;
 
     private String objectId;
     private String accessId;
@@ -50,7 +54,9 @@ public class AccessRequestHandler implements RequestHandler<AccessURL> {
     public AccessURL handleRequest() {
         AccessCacheItem cacheItem = accessCache.get(objectId, accessId);
         if (cacheItem == null) {
-            throw new ResourceNotFoundException("invalid access_id/object_id");
+            String exceptionMessage = "invalid access_id/object_id " + accessId + '/' + objectId;
+            loggingUtil.error("Exception occurred: " + exceptionMessage);
+            throw new ResourceNotFoundException(exceptionMessage);
         }
 
         AccessURL accessURL = generateAccessURLForFile();

@@ -10,6 +10,10 @@
 
 Part of the GA4GH Starter Kit. Open source reference implementation of the GA4GH [Data Repository Service (DRS) specification](https://github.com/ga4gh/data-repository-service-schemas)
 
+### Note:
+The current Starter Kit DRS has some experimental features added to it. It does not match any published DRS Specification. We refer to this version as `1.3.0experimental` in the starter kit documentation.
+
+This starter Kit will be re-visited and updated once the new DRS specification is released.
 ## Running the DRS service
 
 ### Docker
@@ -94,7 +98,7 @@ Response:
     "type": {
         "group": "org.ga4gh",
         "artifact": "drs",
-        "version": "1.1.0"
+        "version": "1.3.0experimental"
     },
     "organization": {
         "name": "Global Alliance for Genomics and Health",
@@ -109,7 +113,7 @@ Additional setup steps to run the DRS server in a local environment for developm
 
 ### Setup dev database
 
-A local SQLite database must be set up for running the DRS service in a development context. If `make` and `sqlite3` are already installed on the system `PATH`, this database can be created and populated with a dev dataset by simply running: 
+A local SQLite database must be set up **before** running the DRS service in a development context. If `make` and `sqlite3` are already installed on the system `PATH`, this database can be created and populated with a dev dataset by simply running: 
 
 ```
 make sqlite-db-refresh
@@ -171,6 +175,10 @@ Response:
 
 **NOTE:** The unit and end-to-end test suite is predicated on a preconfigured database. The SQLite dev database must be present for tests to pass.
 
+## Admin Endpoints
+The endpoints that are made available at the admin port are beyond the DRS specification. 
+These endpoints provide the users of the Starter Kit (the data provider) with the functionalities of creating, updating and deleting DRS Objects from the DRS Starter Kit server.
+
 ## Configuration
 
 Please see the [Configuration page](./CONFIGURATION.md) for instructions on how to configure the DRS service with custom properties.
@@ -185,6 +193,9 @@ Multiple datasets are currently contained in this repo for development and testi
   - see the [datasets page](./DATASETS.md#Phenopackets) for a list of `DRS IDs` for `DrsObjects` in the Phenopackets dataset
 
 ## Changelog
+### v0.3.2
+
+* Update the DRS specification version from `1.1.0` to `1.3.0experimental` in the service-info response and in the documentation.
 
 ### v0.3.1
 

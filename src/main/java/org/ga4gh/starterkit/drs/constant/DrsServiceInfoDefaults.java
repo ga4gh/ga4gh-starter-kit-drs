@@ -54,7 +54,7 @@ public class DrsServiceInfoDefaults {
     /**
      * Default service version
      */
-    public static final String VERSION = "0.3.1";
+    public static final String VERSION = "0.3.2";
 
     /**
      * Default service organization name
@@ -79,5 +79,5 @@ public class DrsServiceInfoDefaults {
     /**
      * Default service type version
      */
-    public static final String SERVICE_TYPE_VERSION = "1.1.0";
+    public static final String SERVICE_TYPE_VERSION = "1.3.0experimental";
 }
