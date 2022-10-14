@@ -10,6 +10,10 @@
 
 Part of the GA4GH Starter Kit. Open source reference implementation of the GA4GH [Data Repository Service (DRS) specification](https://github.com/ga4gh/data-repository-service-schemas)
 
+### Note:
+The current Starter Kit DRS has some experimental features added to it. It does not match any published DRS Specification. We refer to this version as `1.3.0experimental` in the starter kit documentation.
+
+This starter Kit will be re-visited and updated once the new DRS specification is released.
 ## Running the DRS service
 
 ### Docker
@@ -189,6 +193,9 @@ Multiple datasets are currently contained in this repo for development and testi
   - see the [datasets page](./DATASETS.md#Phenopackets) for a list of `DRS IDs` for `DrsObjects` in the Phenopackets dataset
 
 ## Changelog
+### v0.3.2
+
+* Update the DRS specification version from `1.1.0` to `1.3.0experimental` in the service-info response and in the documentation.
 
 ### v0.3.1
 
