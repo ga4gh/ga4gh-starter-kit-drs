@@ -20,6 +20,18 @@ This starter Kit will be re-visited and updated once the new DRS specification i
 
 We recommend running the DRS service as a docker container for most contexts. Images can be downloaded from [docker hub](https://hub.docker.com/repository/docker/ga4gh/ga4gh-starter-kit-drs). To download the image and run a container:
 
+Issue (Mac M1):
+I had to specify the platform in order to pull an image without an arm version:
+```
+docker pull --platform linux/amd64 adoptopenjdk/openjdk12:jre-12.0.2_10-alpine
+```
+
+Build the image:
+Doesn't seem to work on Mac M1
+```
+docker build --platform linux/amd64 -f Dockerfile -t ga4gh/ga4gh-starter-kit-drs:latest .
+```
+
 Pull the image:
 ```
 docker pull ga4gh/ga4gh-starter-kit-drs:latest
@@ -28,6 +40,9 @@ docker pull ga4gh/ga4gh-starter-kit-drs:latest
 Run container with default settings:
 ```
 docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest
+
+# I had to use
+docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:0.3.2
 ```
 
 OR, run container with config file overriding defaults
@@ -113,7 +128,7 @@ Additional setup steps to run the DRS server in a local environment for developm
 
 ### Setup dev database
 
-A local SQLite database must be set up **before** running the DRS service in a development context. If `make` and `sqlite3` are already installed on the system `PATH`, this database can be created and populated with a dev dataset by simply running: 
+A local SQLite database must be set up **before** running the DRS service in a development context. If `make` and `sqlite3` are already installed on the system `PATH`, this database can be created and populated with a dev dataset by simply running:
 
 ```
 make sqlite-db-refresh
@@ -176,7 +191,7 @@ Response:
 **NOTE:** The unit and end-to-end test suite is predicated on a preconfigured database. The SQLite dev database must be present for tests to pass.
 
 ## Admin Endpoints
-The endpoints that are made available at the admin port are beyond the DRS specification. 
+The endpoints that are made available at the admin port are beyond the DRS specification.
 These endpoints provide the users of the Starter Kit (the data provider) with the functionalities of creating, updating and deleting DRS Objects from the DRS Starter Kit server.
 
 ## Configuration
