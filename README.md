@@ -29,6 +29,8 @@ docker pull --platform linux/amd64 adoptopenjdk/openjdk12:jre-12.0.2_10-alpine
 Build the image:
 Doesn't seem to work on Mac M1
 ```
+softwareupdate --install-rosetta
+
 docker build --platform linux/amd64 -f Dockerfile -t ga4gh/ga4gh-starter-kit-drs:latest .
 ```
 
