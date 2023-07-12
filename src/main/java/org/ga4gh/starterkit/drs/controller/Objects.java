@@ -41,7 +41,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  * Controller functions for accessing DRSObjects according to the DRS specification
  */
 @RestController
-@RequestMapping(DRS_API_V1 + "/objects")
+@RequestMapping(DRS_API_V1)
 public class Objects implements ApplicationContextAware {
 
     @Resource(name = "objectRequestHandler")
@@ -65,11 +65,11 @@ public class Objects implements ApplicationContextAware {
 
     /**
      * Show information about a DRS object
-     * @param objectId identifier of DRSObject of interest 
+     * @param objectId identifier of DRSObject of interest
      * @param expand if true, display recursive bundling under 'contents' property
      * @return DRSObject by the requested id
      */
-    @GetMapping(path = "/{object_id:.+}")
+    @GetMapping(path = "/objects/{object_id:.+}")
     @JsonView(SerializeView.Public.class)
     public DrsObject getObjectById(
         @PathVariable(name = "object_id") String objectId,
@@ -79,7 +79,7 @@ public class Objects implements ApplicationContextAware {
         return objectRequestHandler.prepare(objectId, expand, null).handleRequest();
     }
 
-    @PostMapping(path = "/{object_id:.+}")
+    @PostMapping(path = "/objects/{object_id:.+}")
     @JsonView(SerializeView.Public.class)
     public DrsObject getObjectByIdViaPost(
         @PathVariable(name = "object_id") String objectId,
@@ -93,7 +93,7 @@ public class Objects implements ApplicationContextAware {
         return objectRequestHandler.prepare(objectId, requestBody.isExpand(), userPassportMap).handleRequest();
     }
 
-    @RequestMapping(value = "/{object_id:.+}", method = RequestMethod.OPTIONS)
+    @RequestMapping(value = "/objects/{object_id:.+}", method = RequestMethod.OPTIONS)
     @JsonView(SerializeView.Public.class)
     public AuthInfo singleObjectAuthInfo(
         @PathVariable(name = "object_id") String objectId
@@ -107,7 +107,7 @@ public class Objects implements ApplicationContextAware {
      * @param accessId access identifier
      * @return a DRS-spec AccessURL indicating file bytes location
      */
-    @GetMapping(path = "/{object_id:.+}/access/{access_id:.+}")
+    @GetMapping(path = "/objects/{object_id:.+}/access/{access_id:.+}")
     public AccessURL getAccessURLById(
         @PathVariable(name = "object_id") String objectId,
         @PathVariable(name = "access_id") String accessId
@@ -182,7 +182,7 @@ public class Objects implements ApplicationContextAware {
         return response;
     }
 
-    @PostMapping(path = "/access")
+    @PostMapping(path = "/objects/access")
     @JsonView(SerializeView.Public.class)
     public List<AccessURL> getBulkAccessURLs(
         @RequestBody BulkAccessRequest bulkAccessRequest

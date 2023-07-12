@@ -128,6 +128,11 @@ Run with config file
 java -jar build/libs/ga4gh-starter-kit-drs-${VERSION}.jar --config path/to/config.yml
 ```
 
+Run Tests
+```
+./gradlew test --tests='org.*'
+```
+
 ### Confirm server is running
 
 Whether running via docker or natively on a local machine, confirm the DRS API is up running by visiting its `service-info` endpoint, you should receive a valid `ServiceInfo` response.
