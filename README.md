@@ -14,20 +14,15 @@ Part of the GA4GH Starter Kit. Open source reference implementation of the GA4GH
 The current Starter Kit DRS has some experimental features added to it. It does not match any published DRS Specification. We refer to this version as `1.3.0experimental` in the starter kit documentation.
 
 This starter Kit will be re-visited and updated once the new DRS specification is released.
+
 ## Running the DRS service
 
 ### Docker
 
 We recommend running the DRS service as a docker container for most contexts. Images can be downloaded from [docker hub](https://hub.docker.com/repository/docker/ga4gh/ga4gh-starter-kit-drs). To download the image and run a container:
 
-Issue (Mac M1):
-I had to specify the platform in order to pull an image without an arm version:
-```
-docker pull --platform linux/amd64 adoptopenjdk/openjdk12:jre-12.0.2_10-alpine
-```
+### Building on Debian VM
 
-Build the image:
-Doesn't seem to work on Mac M1
 ```
 # debian VM on google cloud
 # install docker
@@ -41,24 +36,36 @@ make docker-build
 
 # and this worked!
 
-# build the docker manually (don't do this, use Make)
+# build the docker manually (don't do this, use Make above)
 docker build -f Dockerfile -t ga4gh/ga4gh-starter-kit-drs:latest --build-arg VERSION=0.3.3 .
+```
+### Building on M1 Mac
 
-# M1 Mac (doesn't build)
+Build the image, lots of issues on M1 Mac:
+
+```
+# M1 Mac
+# I had to make sure Gradle 7 was using JDK 17 and not 20 (default), see https://docs.gradle.org/current/userguide/compatibility.html
 softwareupdate --install-rosetta
 brew install openjdk@17
 echo 'export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
-brew install sqlite3 make gradle
+brew install sqlite3 make gradle@7
 make docker-build
 
-# I updated build.gradle version number 
+# I updated build.gradle version number
 version '0.3.3'
 
 # I had to update the makefile to include --platform:
 docker-build: jar-build
 	docker build --platform linux/amd64 -t ${DOCKER_IMG} --build-arg VERSION=${DOCKER_TAG} .
 
+```
+
+And this worked, so I now have a way of building the docker image on M1 Mac.
+
+```
+ga4gh/ga4gh-starter-kit-drs                   0.3.3                  636c5e276e88   29 minutes ago   227MB
 ```
 
 Pull the image:
@@ -70,8 +77,8 @@ Run container with default settings:
 ```
 docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest
 
-# I had to use
-docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:0.3.2
+# I had to use the following to run my local built version on M1 Mac
+docker run --platform linux/amd64 -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:0.3.3
 ```
 
 OR, run container with config file overriding defaults
