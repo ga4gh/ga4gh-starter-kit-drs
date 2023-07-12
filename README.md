@@ -162,6 +162,14 @@ Response:
 
 Additional setup steps to run the DRS server in a local environment for development and testing.
 
+### Dev Testing
+
+What I'm doing to test on debian:
+
+```
+./gradlew test --tests='org.*'
+```
+
 ### Setup dev database
 
 A local SQLite database must be set up **before** running the DRS service in a development context. If `make` and `sqlite3` are already installed on the system `PATH`, this database can be created and populated with a dev dataset by simply running:
