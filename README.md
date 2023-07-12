@@ -29,9 +29,36 @@ docker pull --platform linux/amd64 adoptopenjdk/openjdk12:jre-12.0.2_10-alpine
 Build the image:
 Doesn't seem to work on Mac M1
 ```
-softwareupdate --install-rosetta
+# debian VM on google cloud
+# install docker
+https://docs.docker.com/engine/install/debian/
 
-docker build --platform linux/amd64 -f Dockerfile -t ga4gh/ga4gh-starter-kit-drs:latest .
+# setup dev environment
+sudo apt install default-jdk gradle sqlite3 make
+
+# build docker with make
+make docker-build
+
+# and this worked!
+
+# build the docker manually (don't do this, use Make)
+docker build -f Dockerfile -t ga4gh/ga4gh-starter-kit-drs:latest --build-arg VERSION=0.3.3 .
+
+# M1 Mac (doesn't build)
+softwareupdate --install-rosetta
+brew install openjdk@17
+echo 'export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+brew install sqlite3 make gradle
+make docker-build
+
+# I updated build.gradle version number 
+version '0.3.3'
+
+# I had to update the makefile to include --platform:
+docker-build: jar-build
+	docker build --platform linux/amd64 -t ${DOCKER_IMG} --build-arg VERSION=${DOCKER_TAG} .
+
 ```
 
 Pull the image:

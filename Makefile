@@ -67,7 +67,7 @@ jar-run:
 # build docker image
 .PHONY: docker-build
 docker-build: jar-build
-	docker build -t ${DOCKER_IMG} --build-arg VERSION=${DOCKER_TAG} .
+	docker build --platform linux/amd64 -t ${DOCKER_IMG} --build-arg VERSION=${DOCKER_TAG} .
 
 # push image to docker hub
 .PHONY: docker-publish
