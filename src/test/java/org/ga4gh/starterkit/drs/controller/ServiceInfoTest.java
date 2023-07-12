@@ -49,8 +49,8 @@ public class ServiceInfoTest extends AbstractTestNGSpringContextTests {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(API_PREFIX + "/service-info"))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
-        String responseBody = result.getResponse().getContentAsString();
-        String expResponseBody = ResourceLoader.load(serviceInfoFile);
+        String responseBody = result.getResponse().getContentAsString().trim();
+        String expResponseBody = ResourceLoader.load(serviceInfoFile).trim();
         Assert.assertEquals(responseBody, expResponseBody);
     }
 }
