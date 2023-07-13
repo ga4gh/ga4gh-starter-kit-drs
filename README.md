@@ -10,6 +10,13 @@
 
 Part of the GA4GH Starter Kit. Open source reference implementation of the GA4GH [Data Repository Service (DRS) specification](https://github.com/ga4gh/data-repository-service-schemas)
 
+### Brian's Notes
+
+* the post for bulk object access uses "selection" but that should be "bulk_object_ids" and also include an optional passport
+* what is the bulk access method like?  
+* is OPT implemented?
+* I don't see any use of passports in the DRS server...
+
 ### Note:
 The current Starter Kit DRS has some experimental features added to it. It does not match any published DRS Specification. We refer to this version as `1.3.0experimental` in the starter kit documentation.
 

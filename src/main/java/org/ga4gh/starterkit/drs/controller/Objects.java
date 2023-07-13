@@ -64,6 +64,20 @@ public class Objects implements ApplicationContextAware {
     // Standard endpoints
 
     /**
+    * - OPTS: info about an object: DONE
+    * - GET: info about a DrsObject: DONE
+    * - POST: get info about a DrsObject w/ POSTing passport: DONE
+    *   - TODO: how much verification gets done?
+    * - OPTS: info about multiple objects: DONE
+    *   - I think the selection object is wrong
+    * - POST: get info about multiple DRS objects w/ POSTing passport: DONE
+    *   - I think the selection object is wrong
+    * - GET: access to the bytes: DONE
+    * - POST: get access methods for multiple objects: DONE
+    *   - check to see if it's using the right selection object 
+    */
+
+    /**
      * Show information about a DRS object
      * @param objectId identifier of DRSObject of interest
      * @param expand if true, display recursive bundling under 'contents' property
@@ -93,6 +107,30 @@ public class Objects implements ApplicationContextAware {
         return objectRequestHandler.prepare(objectId, requestBody.isExpand(), userPassportMap).handleRequest();
     }
 
+    /**
+    * Get info about multiple objects with an optional passport
+    LEFT OFF HERE: need to rework this to support post of bulk object request
+    I think this is the /objects/access method
+
+    @PostMapping(path = "/objects")
+    @JsonView(SerializeView.Public.class)
+    public List<AccessURL> getBulkAccessURLs(
+        @RequestBody BulkAccessRequest bulkAccessRequest
+    ) {
+        List<AccessURL> accessURLs = new ArrayList<>();
+        for (BulkObjectAccessId idPair : bulkAccessRequest.getSelection()) {
+            try {
+                AccessRequestHandler handler = context.getBean(AccessRequestHandler.class);
+                AccessURL accessURL = handler.prepare(idPair.getObjectId(), idPair.getAccessId()).handleRequest();
+                accessURLs.add(accessURL);
+            } catch (CustomException ex) {
+                loggingUtil.error("Exception occurred: " + ex.getMessage());
+            }
+        }
+
+        return accessURLs;
+    }*/
+
     @RequestMapping(value = "/objects/{object_id:.+}", method = RequestMethod.OPTIONS)
     @JsonView(SerializeView.Public.class)
     public AuthInfo singleObjectAuthInfo(
@@ -116,7 +154,10 @@ public class Objects implements ApplicationContextAware {
         return accessRequestHandler.prepare(objectId, accessId).handleRequest();
     }
 
-    @PostMapping
+    /**
+    LEFT OFF WITH: I think this is the object endpoint for bulk
+    */
+    @PostMapping(path = "/objects")
     @JsonView(SerializeView.Public.class)
     public BulkResponse getBulkObjects(
         @RequestBody BulkRequest bulkRequest
@@ -153,7 +194,10 @@ public class Objects implements ApplicationContextAware {
         return bulkResponse;
     }
 
-    @RequestMapping(method = RequestMethod.OPTIONS)
+    /**
+    * Bulk access request, options bulk request
+    */
+    @RequestMapping(path = "/objects", method = RequestMethod.OPTIONS)
     @JsonView(SerializeView.Public.class)
     public BulkAuthInfoResponse getBulkAuthInfo(
         @RequestBody BulkAuthInfoRequest request
@@ -182,6 +226,9 @@ public class Objects implements ApplicationContextAware {
         return response;
     }
 
+    /**
+    * bulk access request
+    */
     @PostMapping(path = "/objects/access")
     @JsonView(SerializeView.Public.class)
     public List<AccessURL> getBulkAccessURLs(
