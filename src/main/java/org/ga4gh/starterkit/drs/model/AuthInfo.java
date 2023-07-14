@@ -26,8 +26,16 @@ public class AuthInfo {
     @JsonView(SerializeView.Always.class)
     private List<AuthIssuer> passportAuthIssuers;
 
+    @JsonView(SerializeView.Always.class)
+    private List<AuthIssuer> bearerAuthIssuers;
+
+    @JsonView(SerializeView.Always.class)
+    private String drsObjectId;
+
     public AuthInfo() {
+        drsObjectId = "";
         supportedTypes = new ArrayList<>();
         passportAuthIssuers = new ArrayList<>();
+        bearerAuthIssuers = new ArrayList<>();
     }
 }

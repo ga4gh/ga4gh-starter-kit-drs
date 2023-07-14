@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class AuthInfoRequestHandler implements RequestHandler<AuthInfo> {
-    
+
     @Autowired
     private DrsHibernateUtil hibernateUtil;
 
@@ -36,6 +36,9 @@ public class AuthInfoRequestHandler implements RequestHandler<AuthInfo> {
         if (drsObject == null) {
             throw new ResourceNotFoundException("No DrsObject found by id: " + objectId);
         }
+
+        // need to set an object ID 
+        authInfo.setDrsObjectId(objectId);
 
         if (drsObject.getPassportVisas().size() == 0) {
             authInfo.getSupportedTypes().add(AuthType.None);
