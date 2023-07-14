@@ -16,6 +16,9 @@ Part of the GA4GH Starter Kit. Open source reference implementation of the GA4GH
 * what is the bulk access method like?  
 * is OPT implemented?
 * I don't see any use of passports in the DRS server...
+* I setup a jupyter notebook running on a google host: "ssh -L 8888:localhost:8888 boconnor@35.233.50.110" for testing using the starterkit notebooks
+* I opened most UDP ports under http rule, need to remove that later...
+* mosh boconnor@35.233.50.110 
 
 ### Note:
 The current Starter Kit DRS has some experimental features added to it. It does not match any published DRS Specification. We refer to this version as `1.3.0experimental` in the starter kit documentation.
