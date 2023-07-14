@@ -74,7 +74,7 @@ public class Objects implements ApplicationContextAware {
     *   - I think the selection object is wrong
     * - GET: access to the bytes: DONE
     * - POST: get access methods for multiple objects: DONE
-    *   - check to see if it's using the right selection object 
+    *   - check to see if it's using the right selection object
     */
 
     /**
@@ -207,7 +207,7 @@ public class Objects implements ApplicationContextAware {
         int resolved = 0;
         int unresolved = 0;
 
-        for (String drsObjectId : request.getSelection()) {
+        for (String drsObjectId : request.getBulkObjectIds()) {
             requested++;
             try {
                 AuthInfoRequestHandler handler = context.getBean(AuthInfoRequestHandler.class);

@@ -16,9 +16,9 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonView(SerializeView.Public.class)
 public class BulkAuthInfoRequest {
-    private List<String> selection;
+    private List<String> bulkObjectIds;
 
     public BulkAuthInfoRequest() {
-        selection = new ArrayList<>();
+        bulkObjectIds = new ArrayList<>();
     }
 }
