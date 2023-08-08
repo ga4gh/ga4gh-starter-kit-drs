@@ -25,6 +25,21 @@ COPY Makefile Makefile
 COPY database/sqlite database/sqlite
 RUN make sqlite-db-refresh
 
+# INSTALL POSTGRESQL
+RUN wget https://ftp.postgresql.org/pub/source/v14.0/postgresql-14.0.tar.gz \
+    && tar -zxf postgresql-14.0.tar.gz \
+    && cd postgresql-14.0 \
+    && ./configure --without-readline --without-zlib\
+    && make \
+    && make install 
+
+# USER 'make' and 'psql' to create the dev database
+COPY Makefile Makefile
+COPY database/postgresql database/psql
+# TODO: psql not found error when running psql commands (uncomment below)
+# RUN make psql-db-refresh
+
+
 ##################################################
 # GRADLE CONTAINER
 ##################################################

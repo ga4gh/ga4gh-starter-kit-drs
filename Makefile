@@ -15,7 +15,7 @@ clean-sqlite:
 
 .PHONY: clean-psql
 clean-psql:
-	psql -c "drop database starter_kit_db;" -U postgres
+	@psql -c "drop database starter_kit_db;" -U postgres
 
 # remove local jar
 .PHONY: clean-jar
@@ -52,7 +52,7 @@ psql-db-populate:
 psql-db-build-populate: psql-db-build psql-db-populate
 
 .PHONY: psql-db-refresh
-psql-db-refresh: clean-psql psql-db-build-populate
+psql-db-refresh: psql-db-build-populate
 
 # create jar file
 .PHONY: jar-build
