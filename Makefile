@@ -24,7 +24,7 @@ clean-jar:
 
 # remove local dev db and jar
 .PHONY: clean-all
-clean-all: clean-sqlite clean-jar
+clean-all: clean-sqlite clean-psql clean-jar
 
 # create the sqlite database
 .PHONY: sqlite-db-build
@@ -52,7 +52,7 @@ psql-db-populate:
 psql-db-build-populate: psql-db-build psql-db-populate
 
 .PHONY: psql-db-refresh
-psql-db-refresh: psql-db-build-populate
+psql-db-refresh: clean-psql psql-db-build-populate
 
 # create jar file
 .PHONY: jar-build
