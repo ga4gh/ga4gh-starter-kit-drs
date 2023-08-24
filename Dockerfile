@@ -13,9 +13,9 @@ RUN apt update \
     && apt install build-essential -y
 
 # INSTALL SQLITE3
-RUN wget https://www.sqlite.org/2021/sqlite-autoconf-3340100.tar.gz \
-    && tar -zxf sqlite-autoconf-3340100.tar.gz \
-    && cd sqlite-autoconf-3340100 \
+RUN wget https://www.sqlite.org/2023/sqlite-autoconf-3420000.tar.gz \
+    && tar -zxf sqlite-autoconf-3420000.tar.gz \
+    && cd sqlite-autoconf-3420000 \
     && ./configure \
     && make \
     && make install
