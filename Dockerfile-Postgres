@@ -19,7 +19,7 @@ RUN wget https://ftp.postgresql.org/pub/source/v14.0/postgresql-14.0.tar.gz \
     && ./configure --without-readline --without-zlib\
     && make \
     && make install \
-    && export PATH="/usr/local/psql:${PATH}"
+    && export PATH="/usr/local/pgsql:${PATH}"
 
 # USER 'make' and 'psql' to create the dev database
 COPY Makefile Makefile
