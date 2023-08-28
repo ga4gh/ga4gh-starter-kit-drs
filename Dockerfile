@@ -14,8 +14,8 @@ RUN apt update \
 
 # INSTALL SQLITE3
 RUN wget https://www.sqlite.org/2021/sqlite-autoconf-3340100.tar.gz \
-    && tar -zxf 2021/sqlite-autoconf-3340100.tar.gz \
-    && cd 2021/sqlite-autoconf-3340100 \
+    && tar -zxf sqlite-autoconf-3340100.tar.gz \
+    && cd sqlite-autoconf-3340100 \
     && ./configure \
     && make \
     && make install
