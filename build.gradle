@@ -64,7 +64,7 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.2.10'
     implementation 'javax.xml.bind:jaxb-api:2.2.8'
     implementation 'org.springdoc:springdoc-openapi-ui:1.2.33'
-    implementation 'org.xerial:sqlite-jdbc:3.43.0.0'
+    implementation 'org.xerial:sqlite-jdbc:3.8.11.2'
     implementation 'com.auth0:java-jwt:3.19.1'
     implementation 'org.ga4gh:ga4gh-starter-kit-common:0.5.6'
 
