@@ -41,6 +41,3 @@ gradle.properties
 
 # Mac OS files
 **/.DS_Store
-
-# postgresql data
-postgres-data
