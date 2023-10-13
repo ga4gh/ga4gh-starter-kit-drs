@@ -50,3 +50,24 @@ create table drs_object_bundle (
     foreign key(parent_id) references drs_object(id),
     foreign key(child_id) references drs_object(id)
 );
+
+create table passport_broker (
+    url text PRIMARY KEY,
+    secret text
+);
+
+create table passport_visa (
+    id text primary key,
+    name text,
+    issuer text,
+    secret text,
+    passport_broker_url text,
+    foreign key (passport_broker_url) references passport_broker(url)
+);
+
+CREATE TABLE drs_object_visa (
+    drs_object_id text,
+    visa_id text,
+    foreign key(drs_object_id) references drs_object(id),
+    foreign key(visa_id) references passport_visa(id)
+);

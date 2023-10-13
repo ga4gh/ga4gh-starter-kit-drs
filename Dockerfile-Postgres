@@ -1,23 +1,4 @@
 ##################################################
-# BUILDER CONTAINER
-##################################################
-
-FROM openjdk:11.0.12 as builder
-
-USER root
-
-WORKDIR /usr/src/dependencies
-
-# INSTALL MAKE
-RUN apt update \
-    && apt install build-essential -y
-
-# USER 'make' and 'psql' to create the dev database
-COPY Makefile Makefile
-COPY database/postgresql database/psql
-RUN make psql-db-refresh
-
-##################################################
 # GRADLE CONTAINER
 ##################################################
 
