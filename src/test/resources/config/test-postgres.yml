@@ -1,21 +1,5 @@
 drs:
-  serverProps:
-    publicApiPort: 5000
-    adminApiPort: 5001
   databaseProps:
-    url: jdbc:postgresql://host.docker.internal:5432/starter_kit_db?user=postgres
+    url: jdbc:postgresql://host.docker.internal:5432/starter_kit_db
     username: postgres
     password: postgres
-  serviceInfo:
-    id: drs.starterkit.federatedgenomics.org
-    name: Federated Genomics DRS service
-    description: Data Repository Service (DRS) instance serving public genomics datasets. Deployment of the GA4GH Starter Kit.
-    contactUrl: mailto:nobody@federatedgenomics.org
-    documentationUrl: https://apidocs.federatedgenomics.org/drs
-    createdAt: "2022-07-10T09:00:00Z"
-    updatedAt: "2022-07-10T09:00:00Z"
-    environment: development
-    version: 1.0.0
-    organization:
-      name: Federated Genomics
-      url: https://this-is-not-a-site.federatedgenomics.org

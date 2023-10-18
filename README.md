@@ -18,6 +18,8 @@ This starter Kit will be re-visited and updated once the new DRS specification i
 
 ### Docker
 
+#### SQLite (Default)
+
 We recommend running the DRS service as a docker container for most contexts. Images can be downloaded from [docker hub](https://hub.docker.com/repository/docker/ga4gh/ga4gh-starter-kit-drs). To download the image and run a container:
 
 Pull the image:
@@ -34,6 +36,19 @@ OR, run container with config file overriding defaults
 ```
 docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-starter-kit-drs.jar -c path/to/config.yml
 ```
+
+#### PostgreSQL
+
+Postgres will be run on a separate container and simultaneously ran with Starter Kit DRS via `docker compose`:
+
+Clone this repo:
+```
+git clone https://github.com/ga4gh/ga4gh-starter-kit-drs.git
+```
+
+Navigate into the repo's root folder
+
+docker compose -f docker-compose-postgres.yml up -d
 
 ### Native
 
