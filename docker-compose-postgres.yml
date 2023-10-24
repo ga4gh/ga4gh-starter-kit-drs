@@ -19,7 +19,10 @@ services:
   # DRS
   drs:
     image: ga4gh/ga4gh-starter-kit-drs:0.3.2
-    # build: .
+    # build:  # uncomment build spec for better practice, but doesn't work atm :(
+    #   context: .
+    #   args: 
+    #     VERSION: 0.3.2
     container_name: drs
     environment:
       - VERSION=0.3.2
@@ -27,5 +30,6 @@ services:
       - "4500:4500" # public
       - "4501:4501" # admin
     volumes:
-      - "./src/test/resources/config:/config"
+      - "./src/test/resources/config:/config" # change to your "./path/to/config/directory:/config"
+
     command: -c /config/test-postgres.yml
