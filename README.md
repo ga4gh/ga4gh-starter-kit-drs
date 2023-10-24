@@ -39,7 +39,8 @@ docker run -p 4500:4500 ga4gh/ga4gh-starter-kit-drs:latest java -jar ga4gh-start
 
 #### PostgreSQL
 
-Postgres will be run on a separate container and simultaneously ran with Starter Kit DRS via `docker compose`:
+Postgres will be run on a separate container and simultaneously ran with Starter Kit DRS via `docker compose`.
+Postgres container is running on `port 5432`, while DRS is run on `port 4500` (`4501` for admin):
 
 Clone this repo:
 ```
@@ -48,7 +49,25 @@ git clone https://github.com/ga4gh/ga4gh-starter-kit-drs.git
 
 Navigate into the repo's root folder
 
-docker compose -f docker-compose-postgres.yml up -d
+`docker compose -f docker-compose-postgres.yml up -d`
+
+To ensure that both Starter-Kit DRS and Postgres containers are running:
+
+`docker ps`
+
+This command should list both containers with names `drs` and `postgres`
+
+From the DRS config file > databaseProps attribute, we map DRS to the PostgreSQL databse using its jdbc URL as well as Postgres credentials (username/password)
+`config-drs-postgres.yml`:
+```
+databaseProps:
+    url: jdbc:postgresql://host.docker.internal:5432/starter_kit_db
+    username: postgres
+    password: postgres
+```
+
+To shut down the services, enter the following command:
+`docker-compose -f docker-compose-postgres.yml down`
 
 ### Native
 
