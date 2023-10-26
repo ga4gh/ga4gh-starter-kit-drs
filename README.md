@@ -49,11 +49,15 @@ git clone https://github.com/ga4gh/ga4gh-starter-kit-drs.git
 
 Navigate into the repo's root folder
 
-`docker compose -f docker-compose-postgres.yml up -d`
+```
+docker compose -f docker-compose-postgres.yml up -d
+```
 
 To ensure that both Starter-Kit DRS and Postgres containers are running:
 
-`docker ps`
+```
+docker ps
+```
 
 This command should list both containers with names `drs` and `postgres`
 
@@ -67,7 +71,9 @@ databaseProps:
 ```
 
 To shut down the services, enter the following command:
-`docker-compose -f docker-compose-postgres.yml down`
+```
+docker-compose -f docker-compose-postgres.yml down
+```
 
 ### Native
 
