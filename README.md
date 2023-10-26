@@ -57,7 +57,7 @@ To ensure that both Starter-Kit DRS and Postgres containers are running:
 
 This command should list both containers with names `drs` and `postgres`
 
-From the DRS config file > databaseProps attribute, we map DRS to the PostgreSQL databse using its jdbc URL as well as Postgres credentials (username/password)
+From the DRS config file > databaseProps attribute, we map DRS to the PostgreSQL database using its jdbc URL as well as Postgres credentials (username/password)
 `config-drs-postgres.yml`:
 ```
 databaseProps:
