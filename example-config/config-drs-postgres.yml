@@ -1,0 +1,5 @@
+drs:
+  databaseProps:
+    url: jdbc:postgresql://host.docker.internal:5432/starter_kit_db
+    username: postgres
+    password: postgres

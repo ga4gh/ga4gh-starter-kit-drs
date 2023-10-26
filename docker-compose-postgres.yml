@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+
+  # PostgreSQL
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=starter_kit_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      # entrypoint initdb folder will run .sql files in alphabetical order on initialization
+      - "./database/postgresql/create-tables.sql:/docker-entrypoint-initdb.d/1-create-tables.sql"
+      - "./database/postgresql/add-dev-dataset.sql:/docker-entrypoint-initdb.d/2-add-dev-dataset.sql"
+ 
+  # DRS
+  drs:
+    image: ga4gh/ga4gh-starter-kit-drs:0.3.2
+    container_name: drs
+    environment:
+      - VERSION=0.3.2
+    ports:
+      - "4500:4500" # public
+      - "4501:4501" # admin
+    volumes:
+      - "./example-config:/config" # change to your "./path/to/config/directory:/config"
+
+    command: -c /config/config-drs-postgres.yml
