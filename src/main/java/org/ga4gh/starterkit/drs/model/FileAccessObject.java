@@ -1,16 +1,5 @@
 package org.ga4gh.starterkit.drs.model;
 
-import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -19,6 +8,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Inferred from DRS specification, indicates a byte source for a DRSObject with
@@ -61,6 +53,14 @@ public class FileAccessObject implements Serializable, HibernateEntity<Long> {
      */
     public FileAccessObject() {
 
+    }
+
+    /**
+     * Instantiates a new FileAccessObject with parameters
+     */
+    public FileAccessObject(DrsObject drsObject, String filePath) {
+        this.drsObject = drsObject;
+        this.path = filePath;
     }
 
     /**

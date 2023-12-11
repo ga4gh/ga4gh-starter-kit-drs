@@ -1,0 +1,7 @@
+drs:
+  databaseProps:
+    url: jdbc:mysql://localhost:3306/starter_kit_db
+    username: root
+    password: coolsummer
+    poolSize: 8
+    showSQL: false

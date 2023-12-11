@@ -21,7 +21,11 @@ public class DrsServer {
     public static void main(String[] args) {
         boolean setupSuccess = setup(args);
         if (setupSuccess) {
-            SpringApplication.run(DrsServer.class, args);
+            try {
+                SpringApplication.run(DrsServer.class, args);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } else {
             System.out.println("Application failed at initial setup phase, this is likely an error in the YAML config file. Exiting");
         }

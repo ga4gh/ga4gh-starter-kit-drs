@@ -8,21 +8,19 @@ import org.ga4gh.starterkit.common.hibernate.exception.EntityDoesntExistExceptio
 import org.ga4gh.starterkit.common.hibernate.exception.EntityExistsException;
 import org.ga4gh.starterkit.common.hibernate.exception.EntityMismatchException;
 import org.ga4gh.starterkit.common.util.logging.LoggingUtil;
-import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
-import java.util.List;
 import org.ga4gh.starterkit.drs.model.DrsObject;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.ADMIN_DRS_API_V1;
 
 /**
  * Controller functions for the administrative API, create and modify DRS-related
@@ -186,5 +184,23 @@ public class DrsAdmin {
         drsObject.setDrsObjectChildren(null);
         drsObject.setDrsObjectParents(null);
         drsObject.setPassportVisas(null);
+    }
+
+    /**
+     * Loads multiple DRS Objects into database
+     * @param file
+     * @return persistent DRSObject saved with the requested attributes
+     */
+    @PostMapping(path = "/bulkInsert")
+    @JsonView(SerializeView.Admin.class)
+    public ResponseEntity<String> bulkInsert(@RequestParam("file") MultipartFile file) {
+        loggingUtil.debug("Admin API request: bulk insert DRS objects");
+        try {
+            hibernateUtil.insertBulkDrsObjects(file);
+            return new ResponseEntity<>("File uploaded and data inserted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error processing the file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

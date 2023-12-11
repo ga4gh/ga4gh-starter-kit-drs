@@ -2,6 +2,7 @@ package org.ga4gh.starterkit.drs.app;
 
 import org.ga4gh.starterkit.common.config.DatabaseProps;
 import org.ga4gh.starterkit.common.config.ServerProps;
+import org.ga4gh.starterkit.drs.config.DrsDatabaseProps;
 import org.ga4gh.starterkit.drs.config.DrsServiceProps;
 import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 
@@ -13,7 +14,7 @@ import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
 public class DrsServerYamlConfig {
 
     private ServerProps serverProps;
-    private DatabaseProps databaseProps;
+    private DrsDatabaseProps databaseProps;
     private DrsServiceInfo serviceInfo;
     private DrsServiceProps drsServiceProps;
 
@@ -22,7 +23,7 @@ public class DrsServerYamlConfig {
      */
     public DrsServerYamlConfig() {
         serverProps = new ServerProps();
-        databaseProps = new DatabaseProps();
+        databaseProps = new DrsDatabaseProps();
         serviceInfo = new DrsServiceInfo();
         drsServiceProps = new DrsServiceProps();
     }
@@ -47,7 +48,7 @@ public class DrsServerYamlConfig {
      * Assign databaseProps
      * @param databaseProps DatabaseProps object
      */
-    public void setDatabaseProps(DatabaseProps databaseProps) {
+    public void setDatabaseProps(DrsDatabaseProps databaseProps) {
         this.databaseProps = databaseProps;
     }
 
