@@ -4,7 +4,7 @@ import org.ga4gh.starterkit.common.config.DatabaseProps;
 
 import java.util.Properties;
 
-import static org.ga4gh.starterkit.common.constant.DatabasePropsConstants.DEFAULT_CURRENT_SESSION_CONTEXT_CLASS;
+import static org.ga4gh.starterkit.common.constant.DatabasePropsConstants.*;
 
 /**
  * @author dashrath
@@ -49,17 +49,45 @@ public class DrsDatabaseProps extends DatabaseProps {
             case mysql:
                 assignMySQLProperties(props);
                 break;
+
+            case postrges:
+                assignPostgresProperties(props);
+                break;
+
+            case sqlite:
+                assignSqliteProperties(props);
+                break;
         }
 
         return props;
     }
 
     private DatabaseType getDatabaseTypeFromUrl(String url) {
+
+        if (url.startsWith("jdbc:sqlite")) {
+            return DatabaseType.sqlite;
+        }
+
+        if (url.startsWith("jdbc:postgresql")) {
+            return DatabaseType.postrges;
+        }
+
         if (url.startsWith("jdbc:mysql")) {
             return DatabaseType.mysql;
         }
 
         throw new IllegalArgumentException("Invalid JDBC URL: MUST be a valid 'sqlite', 'postgresql', or 'mysql' JDBC URL");
+    }
+
+    private void assignSqliteProperties(Properties props) {
+        props.setProperty("hibernate.connection.driver_class", SQLITE_DRIVER_CLASS);
+        props.setProperty("hibernate.dialect", SQLITE_DIALECT);
+        props.setProperty("hibernate.connection.date_class", SQLITE_DATE_CLASS);
+    }
+
+    private void assignPostgresProperties(Properties props) {
+        props.setProperty("hibernate.connection.driver_class", POSTGRES_DRIVER_CLASS);
+        props.setProperty("hibernate.dialect", POSTGRES_DIALECT);
     }
 
     private void assignMySQLProperties(Properties props) {

@@ -205,8 +205,9 @@ public class DrsHibernateUtil extends HibernateUtil {
         List<DrsObject> dataToInsert = new ArrayList<>();
         String row;
         reader.readLine();
+        DrsObject drsObject = null;
         while ((row = reader.readLine()) != null) {
-            DrsObject drsObject = createAndReturnDrsObject(row);
+            drsObject = createAndReturnDrsObject(row);
             dataToInsert.add(drsObject);
         }
         return dataToInsert;
