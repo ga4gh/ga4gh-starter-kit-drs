@@ -100,7 +100,7 @@ Run with config file
 ./gradlew bootRun --args="--config path/to/config.yml"
 ```
 
-Alternatively, the service can be built as a jar and run:
+Alternatively, the service can be built as a jar and/or war and run:
 
 Build jar:
 ```
@@ -115,6 +115,21 @@ java -jar build/libs/ga4gh-starter-kit-drs-${VERSION}.jar
 Run with config file
 ```
 java -jar build/libs/ga4gh-starter-kit-drs-${VERSION}.jar --config path/to/config.yml
+```
+
+Build war:
+```
+./gradlew bootWar
+```
+
+Run with all defaults
+```
+java -jar build/libs/ga4gh-starter-kit-drs-${VERSION}.war
+```
+
+Run with config file
+```
+java -jar build/libs/ga4gh-starter-kit-drs-${VERSION}.war --config path/to/config.yml
 ```
 
 ### Confirm server is running
