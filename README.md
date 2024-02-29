@@ -250,3 +250,7 @@ Multiple datasets are currently contained in this repo for development and testi
 ### v0.2.2
 
 * patched log4j dependencies to v2.16.0 to avoid [Log4j Vulnerability](https://www.cisa.gov/uscert/apache-log4j-vulnerability-guidance)
+
+## Maintainers
+
+* GA4GH Tech Team [ga4gh-tech-team@ga4gh.org](mailto:ga4gh-tech-team@ga4gh.org)
