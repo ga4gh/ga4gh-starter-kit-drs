@@ -386,8 +386,7 @@ public class DrsHibernateUtil extends HibernateUtil {
                                 failedBatch.add(object);
                             }
                         }
-
-                        loggingUtil.info("11");
+                        //loggingUtil.info("11");
                         session.flush();
                         session.clear();
                         tx.commit();
