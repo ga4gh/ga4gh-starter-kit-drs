@@ -199,8 +199,7 @@ public class DrsAdmin {
             hibernateUtil.insertBulkDrsObjects(file);
             return new ResponseEntity<>("File uploaded and data inserted successfully", HttpStatus.OK);
         } catch (Exception e) {
-            //e.printStackTrace();
-            //loggingUtil.debug("Error occured: ", e.printStackTrace());
+            loggingUtil.error("Error processing the file: " + e.getMessage()+ e);
             return new ResponseEntity<>("Error processing the file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

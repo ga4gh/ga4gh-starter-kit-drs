@@ -29,8 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -170,10 +169,12 @@ public class DrsHibernateUtil extends HibernateUtil {
         return visa;
     }
 
-    public void insertBulkDrsObjects(MultipartFile file) throws HibernateException {
+
+    public void insertBulkDrsObjects(MultipartFile file) throws Exception {
         List<DrsObject> dataToInsert = new ArrayList<DrsObject>();
         int totalSize = 0;
         int processedRecords = 0;
+        int successfulRecords = 0;
         List<DrsObject> failedRecords = new CopyOnWriteArrayList<>();
 
         try {
@@ -181,23 +182,27 @@ public class DrsHibernateUtil extends HibernateUtil {
                 dataToInsert = prepareDataForInsert(reader);
                 totalSize = dataToInsert.size();
             } catch (IOException ex) {
-                loggingUtil.error("Exception occurred: " + ex.getMessage());
+                loggingUtil.error("Exception occurred during read: " + ex);
             }
 
             int batchSize = 1000;
-            loggingUtil.info("Starting bulk insert for {} records"+ totalSize);
+            loggingUtil.info("Starting bulk insert for "+totalSize+" records.");
             for (int i = 0; i < totalSize; i += batchSize) {
                 int toIndex = Math.min(i + batchSize, totalSize);
                 List<DrsObject> batch = dataToInsert.subList(i, toIndex);
-                failedRecords = performParallelBulkInsert(batch, 8, batchSize, failedRecords);
+                failedRecords = performBulkInsertWithExecutor(batch, 8, batchSize, failedRecords);
+
+                int batchFailures = failedRecords.size(); // Capture failed count before next batch
+                successfulRecords += (batch.size() - batchFailures);
                 processedRecords += batch.size();
-                loggingUtil.info("Processed {} records"+ processedRecords);
+                loggingUtil.info("Processed "+processedRecords+" records out of "+totalSize);
             }
-            loggingUtil.info("Completed bulk insert for {} records"+ totalSize);
+            loggingUtil.info("Completed bulk insert for "+totalSize+" records.");
             loggingUtil.info("Inserted: "+ (totalSize - failedRecords.size()));
             loggingUtil.info("Failed to insert: "+ failedRecords.size());
         } catch (Exception ex) {
-            loggingUtil.error("Exception occurred: " + ex.getMessage());
+            loggingUtil.error("Exception during bulk insert: " + ex.getMessage()+ ex);
+            throw ex;
         }
     }
 
@@ -258,14 +263,15 @@ public class DrsHibernateUtil extends HibernateUtil {
                 .collect(Collectors.toList());
     }
 
+    // original code
     public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> performParallelBulkInsert(List<DrsObject> objectList, int numThreads, int batchSize, List<DrsObject> failedRecords) {
         ForkJoinPool forkJoinPool = new ForkJoinPool(numThreads);
 
         forkJoinPool.submit(() ->
                 objectList.parallelStream().forEach(object -> {
                     try (Session session = newTransaction()) {
+                        Transaction tx = session.beginTransaction();
                         try {
-                            Transaction tx = session.getTransaction();
                             session.save(object);
                             if (objectList.indexOf(object) % batchSize == 0) {
                                 session.flush();
@@ -273,12 +279,126 @@ public class DrsHibernateUtil extends HibernateUtil {
                             }
                             tx.commit();
                         } catch (HibernateException ex) {
-                            loggingUtil.error("HibernateException occurred: " + ex.getMessage());
+                            loggingUtil.error("HibernateException occurred"+ ex);
+                            tx.rollback();
                             failedRecords.add(object);
                         }
+                    } catch (Exception ex) {
+                        loggingUtil.error("Unexpected exception occurred"+ ex);
                     }
                 })
         ).join();
+
         return failedRecords;
+    }
+
+/*
+    public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> performParallelBulkInsert(
+            List<DrsObject> objectList, int numThreads, int batchSize, List<DrsObject> failedRecords) throws Exception {
+
+        ForkJoinPool forkJoinPool = new ForkJoinPool(numThreads);
+        ConcurrentLinkedQueue<DrsObject> failedQueue = new ConcurrentLinkedQueue<>(failedRecords);
+        AtomicInteger counter = new AtomicInteger(0);
+
+        Session session = null;
+        Transaction tx = null;
+
+        try {
+            session = hibernateUtil.newTransaction();
+            tx = session.beginTransaction();
+
+            Session finalSession = session;
+            forkJoinPool.submit(() -> {
+                objectList.parallelStream().forEach(object -> {
+                    try {
+                        finalSession.save(object);
+                        if (counter.incrementAndGet() % batchSize == 0) {
+                            finalSession.flush();
+                            finalSession.clear();
+                        }
+                    } catch (HibernateException ex) {
+                        loggingUtil.error("HibernateException occurred: " + ex);
+                        failedQueue.add(object);
+                    }
+                });
+            }).join();
+
+            tx.commit();
+        } catch (HibernateException ex) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            loggingUtil.error("Exception during bulk insert: " + ex);
+            throw ex;
+        } finally {
+            if (session != null) {
+                hibernateUtil.endTransaction(session);
+            }
+        }
+
+        return new ArrayList<>(failedQueue);
+    }
+    */
+    public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> performBulkInsertWithExecutor(
+            List<DrsObject> objectList, int numThreads, int batchSize, List<DrsObject> failedRecords) throws Exception {
+
+        loggingUtil.error("1");
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        List<Future<List<DrsObject>>> futures = new ArrayList<>();
+        int totalSize = objectList.size();
+
+        try {
+            loggingUtil.error("2");
+            for (int i = 0; i < totalSize; i += batchSize) {
+                loggingUtil.error("3");
+                List<DrsObject> batch = objectList.subList(i, Math.min(i + batchSize, totalSize));
+                futures.add(executor.submit(() -> {
+                    loggingUtil.error("4");
+                    List<DrsObject> failedBatch = new ArrayList<>();
+                    try (Session session = hibernateUtil.newTransaction()) {
+                        loggingUtil.error("5");
+                        Transaction tx = session.beginTransaction();
+                        loggingUtil.error("6");
+                        try {
+                            loggingUtil.error("7");
+                            for (DrsObject object : batch) {
+                                try {
+                                    loggingUtil.error("8");
+                                    session.save(object);
+                                    loggingUtil.error("9");
+                                } catch (HibernateException ex) {
+                                    loggingUtil.error("10");
+                                    loggingUtil.error("HibernateException occurred: " + ex);
+                                    failedBatch.add(object); // Add to failed records
+                                }
+                            }
+                            loggingUtil.error("11");
+                            session.flush();
+                            session.clear();
+                            tx.commit();
+                            loggingUtil.error("12");
+                        } catch (Exception ex) {
+                            loggingUtil.error("13");
+                            tx.rollback();
+                            loggingUtil.error("Transaction rolled back due to: " + ex);
+                            throw ex;
+                        }
+                    }
+                    loggingUtil.error("14");
+                    return failedBatch;
+                }));
+            }
+            loggingUtil.error("15");
+            List<DrsObject> allFailedRecords = new ArrayList<>();
+            for (Future<List<DrsObject>> future : futures) {
+                allFailedRecords.addAll(future.get());
+            }
+            loggingUtil.error("16");
+            return allFailedRecords;
+
+        } finally {
+            loggingUtil.error("17");
+            executor.shutdown();
+        }
     }
 }

@@ -24,6 +24,8 @@ plugins {
     id 'jacoco'
 
     id 'io.codearte.nexus-staging' version '0.30.0'
+
+    id 'war'
 }
 
 configurations.all {
