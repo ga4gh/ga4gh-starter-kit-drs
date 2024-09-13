@@ -10,6 +10,7 @@ import org.ga4gh.starterkit.drs.model.PassportVisa;
 import org.ga4gh.starterkit.drs.utils.BundleRecursiveChecksumCalculator;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ public class DrsHibernateUtil extends HibernateUtil {
 
     @Autowired
     private HibernateUtil hibernateUtil;
+
+    private SessionFactory sessionFactory;
 
     public DrsObject loadDrsObject(String id, boolean recursiveChildLoad) throws HibernateException {
         Session session = newTransaction();
@@ -339,66 +342,91 @@ public class DrsHibernateUtil extends HibernateUtil {
         return new ArrayList<>(failedQueue);
     }
     */
-    public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> performBulkInsertWithExecutor(
-            List<DrsObject> objectList, int numThreads, int batchSize, List<DrsObject> failedRecords) throws Exception {
+public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> performBulkInsertWithExecutor(
+        List<DrsObject> objectList, int numThreads, int batchSize, List<DrsObject> failedRecords) throws Exception {
 
-        loggingUtil.error("1");
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        List<Future<List<DrsObject>>> futures = new ArrayList<>();
-        int totalSize = objectList.size();
+    loggingUtil.error("1");
+    ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+    List<Future<List<DrsObject>>> futures = new ArrayList<>();
+    int totalSize = objectList.size();
 
-        try {
-            loggingUtil.error("2");
-            for (int i = 0; i < totalSize; i += batchSize) {
-                loggingUtil.error("3");
-                List<DrsObject> batch = objectList.subList(i, Math.min(i + batchSize, totalSize));
-                futures.add(executor.submit(() -> {
-                    loggingUtil.error("4");
-                    List<DrsObject> failedBatch = new ArrayList<>();
-                    try (Session session = hibernateUtil.newTransaction()) {
+    try {
+        loggingUtil.error("2");
+        for (int i = 0; i < totalSize; i += batchSize) {
+            loggingUtil.error("3");
+            List<DrsObject> batch = objectList.subList(i, Math.min(i + batchSize, totalSize));
+
+            futures.add(executor.submit(() -> {
+                loggingUtil.error("4");
+                List<DrsObject> failedBatch = new ArrayList<>();
+
+                // Use the existing getCurrentSession() method from hibernateUtil
+                Session session = hibernateUtil.getCurrentSession();
+                Transaction tx = null;
+
+                try {
+                    // Start a transaction if one is not already active
+                    if (!session.getTransaction().isActive()) {
                         loggingUtil.error("5");
-                        Transaction tx = session.beginTransaction();
-                        loggingUtil.error("6");
+                        tx = session.beginTransaction();  // Begin a new transaction
+                    }
+
+                    loggingUtil.error("7");
+                    for (DrsObject object : batch) {
                         try {
-                            loggingUtil.error("7");
-                            for (DrsObject object : batch) {
-                                try {
-                                    loggingUtil.error("8");
-                                    session.save(object);
-                                    loggingUtil.error("9");
-                                } catch (HibernateException ex) {
-                                    loggingUtil.error("10");
-                                    loggingUtil.error("HibernateException occurred: " + ex);
-                                    failedBatch.add(object); // Add to failed records
-                                }
-                            }
-                            loggingUtil.error("11");
-                            session.flush();
-                            session.clear();
-                            tx.commit();
-                            loggingUtil.error("12");
-                        } catch (Exception ex) {
-                            loggingUtil.error("13");
-                            tx.rollback();
-                            loggingUtil.error("Transaction rolled back due to: " + ex);
-                            throw ex;
+                            loggingUtil.error("8");
+                            session.save(object);  // Save object
+                            loggingUtil.error("9");
+                        } catch (HibernateException ex) {
+                            loggingUtil.error("10");
+                            loggingUtil.error("HibernateException occurred: " + ex);
+                            failedBatch.add(object);  // Add failed records
                         }
                     }
-                    loggingUtil.error("14");
-                    return failedBatch;
-                }));
-            }
-            loggingUtil.error("15");
-            List<DrsObject> allFailedRecords = new ArrayList<>();
-            for (Future<List<DrsObject>> future : futures) {
-                allFailedRecords.addAll(future.get());
-            }
-            loggingUtil.error("16");
-            return allFailedRecords;
 
-        } finally {
-            loggingUtil.error("17");
-            executor.shutdown();
+                    loggingUtil.error("11");
+                    session.flush();  // Flush the session to persist changes
+                    session.clear();  // Clear the session to free memory
+
+                    if (tx != null) {
+                        tx.commit();  // Commit the transaction
+                    }
+                    loggingUtil.error("12");
+
+                } catch (Exception ex) {
+                    loggingUtil.error("13");
+                    if (tx != null) {
+                        tx.rollback();  // Rollback transaction on error
+                    }
+                    loggingUtil.error("Transaction rolled back due to: " + ex);
+                    throw ex;
+
+                } finally {
+                    // Ensure session closure in case session is not bound to thread
+                    if (session.isOpen()) {
+                        session.close();  // Close session to avoid resource leaks
+                    }
+                }
+
+                loggingUtil.error("14");
+                return failedBatch;
+            }));
         }
+        loggingUtil.error("15");
+
+        // Collect results from all futures
+        List<DrsObject> allFailedRecords = new ArrayList<>();
+        for (Future<List<DrsObject>> future : futures) {
+            allFailedRecords.addAll(future.get());
+        }
+
+        loggingUtil.error("16");
+        return allFailedRecords;
+
+    } finally {
+        loggingUtil.error("17");
+        executor.shutdown();
     }
+}
+
 }
