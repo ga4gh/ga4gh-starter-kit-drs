@@ -360,16 +360,14 @@ public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> pe
                 loggingUtil.error("4");
                 List<DrsObject> failedBatch = new ArrayList<>();
 
-                // Use the existing getCurrentSession() method from hibernateUtil
-                Session session = hibernateUtil.getCurrentSession();
+                // Use openSession() to create a new session for each thread
+                Session session = null;
                 Transaction tx = null;
 
                 try {
-                    // Start a transaction if one is not already active
-                    if (!session.getTransaction().isActive()) {
-                        loggingUtil.error("5");
-                        tx = session.beginTransaction();  // Begin a new transaction
-                    }
+                    session = hibernateUtil.getSessionFactory().openSession();  // Create a new session for this thread
+                    tx = session.beginTransaction();  // Start a new transaction
+                    loggingUtil.error("5");
 
                     loggingUtil.error("7");
                     for (DrsObject object : batch) {
@@ -388,9 +386,7 @@ public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> pe
                     session.flush();  // Flush the session to persist changes
                     session.clear();  // Clear the session to free memory
 
-                    if (tx != null) {
-                        tx.commit();  // Commit the transaction
-                    }
+                    tx.commit();  // Commit the transaction
                     loggingUtil.error("12");
 
                 } catch (Exception ex) {
@@ -402,9 +398,8 @@ public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> pe
                     throw ex;
 
                 } finally {
-                    // Ensure session closure in case session is not bound to thread
-                    if (session.isOpen()) {
-                        session.close();  // Close session to avoid resource leaks
+                    if (session != null && session.isOpen()) {
+                        session.close();  // Ensure session closure to avoid resource leaks
                     }
                 }
 
