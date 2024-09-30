@@ -244,6 +244,8 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             // load local file containing expected response and assert
             String drsObjectExpFile = responseDir + expFilename;
             String expResponseBody = ResourceLoader.load(drsObjectExpFile);
+            System.out.println("E:"+finalResponseBody);
+            System.out.println("R:"+expResponseBody);
             Assert.assertEquals(finalResponseBody, expResponseBody);
         }
     }
