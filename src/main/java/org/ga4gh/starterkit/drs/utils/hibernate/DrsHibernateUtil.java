@@ -270,52 +270,39 @@ public class DrsHibernateUtil extends HibernateUtil {
     public <I extends Serializable, T extends HibernateEntity<I>> List<DrsObject> performBulkInsertWithExecutor(
             List<DrsObject> objectList, int numThreads, int batchSize, List<DrsObject> failedRecords) throws Exception {
 
-        //loggingUtil.info("1");
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         List<Future<List<DrsObject>>> futures = new ArrayList<>();
         int totalSize = objectList.size();
 
         try {
-            //loggingUtil.info("2");
             for (int i = 0; i < totalSize; i += batchSize) {
-                //loggingUtil.info("3");
                 List<DrsObject> batch = objectList.subList(i, Math.min(i + batchSize, totalSize));
 
                 futures.add(executor.submit(() -> {
-                    //loggingUtil.info("4");
                     List<DrsObject> failedBatch = new ArrayList<>();
 
                     Session session = null;
                     Transaction tx = null;
 
                     try {
-                        // Use reflection to access the private getSessionFactory() method
                         Method method = HibernateUtil.class.getDeclaredMethod("getSessionFactory");
                         method.setAccessible(true);  // Bypass private access
                         SessionFactory sessionFactory = (SessionFactory) method.invoke(hibernateUtil);
 
                         session = sessionFactory.openSession();
                         tx = session.beginTransaction();
-                        //loggingUtil.info("5");
-                        //loggingUtil.info("7");
                         for (DrsObject object : batch) {
                             try {
-                                //loggingUtil.info("8");
                                 session.save(object);
-                                //loggingUtil.info("9");
                             } catch (HibernateException ex) {
-                                //loggingUtil.info("10");
                                 loggingUtil.error("HibernateException occurred: " + ex);
                                 failedBatch.add(object);
                             }
                         }
-                        //loggingUtil.info("11");
                         session.flush();
                         session.clear();
                         tx.commit();
-                        //loggingUtil.info("12");
                     } catch (Exception ex) {
-                        //loggingUtil.info("13");
                         if (tx != null) {
                             tx.rollback();
                         }
@@ -327,21 +314,16 @@ public class DrsHibernateUtil extends HibernateUtil {
                             session.close();
                         }
                     }
-
-                    //loggingUtil.info("14");
                     return failedBatch;
                 }));
             }
-            //loggingUtil.info("15");
 
             List<DrsObject> allFailedRecords = new ArrayList<>();
             for (Future<List<DrsObject>> future : futures) {
                 allFailedRecords.addAll(future.get());
             }
-            //loggingUtil.info("16");
             return allFailedRecords;
         } finally {
-            //loggingUtil.info("17");
             executor.shutdown();
         }
     }

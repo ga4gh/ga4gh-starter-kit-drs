@@ -1,8 +1,9 @@
 package org.ga4gh.starterkit.drs.app;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.catalina.connector.Connector;
+import org.apache.commons.cli.Options;
+import org.ga4gh.starterkit.common.config.DatabaseProps;
+import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.common.util.CliYamlConfigLoader;
 import org.ga4gh.starterkit.common.util.DeepObjectMerger;
@@ -11,19 +12,9 @@ import org.ga4gh.starterkit.common.util.webserver.AdminEndpointsConnector;
 import org.ga4gh.starterkit.common.util.webserver.AdminEndpointsFilter;
 import org.ga4gh.starterkit.common.util.webserver.CorsFilterBuilder;
 import org.ga4gh.starterkit.common.util.webserver.TomcatMultiConnectorServletWebServerFactoryCustomizer;
-import org.apache.catalina.connector.Connector;
-import org.apache.commons.cli.Options;
-import org.ga4gh.starterkit.common.config.DatabaseProps;
-import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.drs.config.DrsServiceProps;
 import org.ga4gh.starterkit.drs.exception.DrsCustomExceptionHandling;
-import org.ga4gh.starterkit.drs.model.AwsS3AccessObject;
-import org.ga4gh.starterkit.drs.model.Checksum;
-import org.ga4gh.starterkit.drs.model.DrsObject;
-import org.ga4gh.starterkit.drs.model.DrsServiceInfo;
-import org.ga4gh.starterkit.drs.model.FileAccessObject;
-import org.ga4gh.starterkit.drs.model.PassportBroker;
-import org.ga4gh.starterkit.drs.model.PassportVisa;
+import org.ga4gh.starterkit.drs.model.*;
 import org.ga4gh.starterkit.drs.utils.cache.AccessCache;
 import org.ga4gh.starterkit.drs.utils.hibernate.DrsHibernateUtil;
 import org.ga4gh.starterkit.drs.utils.passport.UserPassportMapVerifier;
@@ -44,6 +35,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.filter.CorsFilter;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Contains Spring bean definitions that are to be loaded for the DRS service
@@ -283,7 +278,7 @@ public class DrsServerSpringConfig {
         return new AccessRequestHandler();
     }
 
-    @Bean
+        @Bean
     @RequestScope
     public AuthInfoRequestHandler authInfoRequestHandler() {
         return new AuthInfoRequestHandler();

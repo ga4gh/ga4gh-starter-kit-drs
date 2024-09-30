@@ -1,6 +1,6 @@
 name: Standard Tests
-#on: [push, pull_request, workflow_dispatch] #workflow_dispatch works only if its active in the main branch
-on: [pull_request, workflow_dispatch] #workflow_dispatch works only if its active in the main branch
+on: [push, pull_request, workflow_dispatch] #workflow_dispatch works only if its active in the main branch
+#on: [pull_request, workflow_dispatch] #workflow_dispatch works only if its active in the main branch
 jobs:
   Unit-Test:
     runs-on: ubuntu-latest
