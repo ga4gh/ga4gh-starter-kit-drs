@@ -63,7 +63,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "697907bf-d5bd-433e-aac2-1747f1faf366",
                 false,
-                null,
+                true,
                 true,
                 status().isOk(),
                 "00.json"
@@ -72,7 +72,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "2506f0e1-29e4-4132-9b37-f7452dc8a89b",
                 false,
-                null,
+                true,
                 true,
                 status().isOk(),
                 "01.json"
@@ -81,7 +81,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "456e9ee0-5b60-4f38-82b5-83ba5d338038",
                 false,
-                null,
+                true,
                 true,
                 status().isOk(),
                 "02.json"
@@ -117,7 +117,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "b8cd0667-2c33-4c9f-967b-161b905932c9",
                 false,
-                null,
+                true,
                 true,
                 status().isOk(),
                 "04.json"
@@ -244,8 +244,6 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             // load local file containing expected response and assert
             String drsObjectExpFile = responseDir + expFilename;
             String expResponseBody = ResourceLoader.load(drsObjectExpFile);
-            System.out.println("E:"+finalResponseBody);
-            System.out.println("R:"+expResponseBody);
             Assert.assertEquals(finalResponseBody, expResponseBody);
         }
     }
