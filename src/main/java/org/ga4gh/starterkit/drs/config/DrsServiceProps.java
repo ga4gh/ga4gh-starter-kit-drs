@@ -65,7 +65,7 @@ public class DrsServiceProps {
      * Initialize DRS service props with defaults
      */
     private void setAllDefaults() {
-        serveFileURLForFileObjects = true;
-        serveStreamURLForFileObjects = false;
+        serveFileURLForFileObjects = false;
+        serveStreamURLForFileObjects = true;
     }
 }
