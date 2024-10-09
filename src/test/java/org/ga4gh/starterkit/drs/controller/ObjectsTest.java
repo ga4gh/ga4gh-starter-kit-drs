@@ -27,6 +27,7 @@ import static org.ga4gh.starterkit.drs.constant.DrsApiConstants.DRS_API_V1;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @SpringBootTest
 @ContextConfiguration(classes={
     DrsServer.class,
@@ -64,7 +65,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "697907bf-d5bd-433e-aac2-1747f1faf366",
                 false,
-                true,
+                "true",
                 true,
                 status().isOk(),
                 "00.json"
@@ -73,7 +74,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "2506f0e1-29e4-4132-9b37-f7452dc8a89b",
                 false,
-                true,
+                "true",
                 true,
                 status().isOk(),
                 "01.json"
@@ -82,7 +83,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "456e9ee0-5b60-4f38-82b5-83ba5d338038",
                 false,
-                true,
+                "true",
                 true,
                 status().isOk(),
                 "02.json"
@@ -118,7 +119,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
             {
                 "b8cd0667-2c33-4c9f-967b-161b905932c9",
                 false,
-                true,
+                "true",
                 true,
                 status().isOk(),
                 "04.json"
