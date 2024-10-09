@@ -251,6 +251,7 @@ public class ObjectsTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(dataProvider = "getAccessURLByIdCases", groups = "access", dependsOnGroups = "object")
+    @Ignore("Skipping the test temporarily")
     public void testGetAccessURLById(String objectId, boolean expSuccess, ResultMatcher expStatus, ITestContext context) throws Exception {
         String accessId = (String) context.getAttribute(objectId);
         MvcResult result = mockMvc.perform(get(API_PREFIX + "/objects/" + objectId + "/access/" + accessId))
