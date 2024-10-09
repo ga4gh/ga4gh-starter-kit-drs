@@ -71,7 +71,7 @@ jobs:
         builder: ${{ steps.buildx.outputs.name }}
         file: ./Dockerfile
         push: true
-        tags: ga4gh/ga4gh-starter-kit-drs:test
+        tags: ga4gh/ga4gh-starter-kit-drs:${{ env.version }}
         build-args: VERSION=${{ env.version }}
         cache-from: type=gha #GitHub Actions Cache Exporter
         cache-to: type=gha,mode=max
