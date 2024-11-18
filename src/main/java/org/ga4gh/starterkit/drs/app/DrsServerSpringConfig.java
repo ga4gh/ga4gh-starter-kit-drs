@@ -1,7 +1,7 @@
 package org.ga4gh.starterkit.drs.app;
 
 import org.apache.catalina.connector.Connector;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 import org.ga4gh.starterkit.common.config.DatabaseProps;
 import org.ga4gh.starterkit.common.config.ServerProps;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
@@ -118,6 +118,25 @@ public class DrsServerSpringConfig {
         return new DrsServerYamlConfigContainer(new DrsServerYamlConfig());
     }
 
+    public static boolean validateArguments(ApplicationArguments args, String optionName) {
+        try {
+            Options options = new Options();
+            options.addOption(Option.builder("c")
+                    .longOpt(optionName)
+                    .hasArg()
+                    .desc("Path to configuration file")
+                    .required()
+                    .build());
+
+            CommandLineParser parser = new DefaultParser();
+            parser.parse(options, args.getSourceArgs());
+            return true;
+        } catch (ParseException e) {
+            System.out.println("ERROR: Invalid arguments: " + e.getMessage());
+            return false;
+        }
+    }
+
     /**
      * Loads a DRS config container singleton containing user-specified properties (via config file)
      * @param args command line args
@@ -132,6 +151,10 @@ public class DrsServerSpringConfig {
         @Autowired() Options options,
         @Qualifier(DrsServerConstants.EMPTY_DRS_CONFIG_CONTAINER) DrsServerYamlConfigContainer drsConfigContainer
     ) {
+        if (!validateArguments(args, "config")) {
+            System.exit(1); // Exit if validation fails
+        }
+
         DrsServerYamlConfigContainer userConfigContainer = CliYamlConfigLoader.load(DrsServerYamlConfigContainer.class, args, options, "config");
         if (userConfigContainer != null) {
             return userConfigContainer;
