@@ -125,7 +125,6 @@ public class DrsServerSpringConfig {
                     .longOpt(optionName)
                     .hasArg()
                     .desc("Path to configuration file")
-                    .required()
                     .build());
 
             CommandLineParser parser = new DefaultParser();
