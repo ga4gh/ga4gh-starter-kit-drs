@@ -69,6 +69,7 @@ jobs:
       with:
         context: .
         builder: ${{ steps.buildx.outputs.name }}
+        platforms: linux/amd64,linux/arm64,linux/arm/v7,windows/amd64,linux/arm64/v8
         file: ./Dockerfile
         push: true
         tags: ga4gh/ga4gh-starter-kit-drs:${{ env.version }}
@@ -110,6 +111,7 @@ jobs:
       with:
         context: .
         builder: ${{ steps.buildx.outputs.name }}
+        platforms: linux/amd64,linux/arm64,linux/arm/v7,windows/amd64,linux/arm64/v8
         file: ./Dockerfile
         push: true
         tags: ga4gh/ga4gh-starter-kit-drs:${{ env.version }} #Using the correct version as the tag
@@ -139,5 +141,6 @@ jobs:
         with:
           tag_name: v${{ env.version }} #will be v0.2.2 for example
           release_name: GA4GH Starter Kit - DRS v${{ env.version }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,windows/amd64,linux/arm64/v8
           draft: false
           prerelease: true
