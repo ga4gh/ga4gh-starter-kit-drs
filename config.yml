@@ -1,4 +1,8 @@
 drs:
+  serverProps:
+    scheme: http
+    publicApiPort: 8000
+    adminApiPort: 8001
   databaseProps:
     url: jdbc:mysql://localhost:3306/starter_kit_db
     username: root

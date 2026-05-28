@@ -5,6 +5,6 @@ package org.ga4gh.starterkit.drs.config;
  */
 public enum DatabaseType {
     mysql,
-    postrges,
+    postgres,
     sqlite
 }

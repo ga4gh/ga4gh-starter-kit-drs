@@ -50,7 +50,7 @@ public class DrsDatabaseProps extends DatabaseProps {
                 assignMySQLProperties(props);
                 break;
 
-            case postrges:
+            case postgres:
                 assignPostgresProperties(props);
                 break;
 
@@ -69,7 +69,7 @@ public class DrsDatabaseProps extends DatabaseProps {
         }
 
         if (url.startsWith("jdbc:postgresql")) {
-            return DatabaseType.postrges;
+            return DatabaseType.postgres;
         }
 
         if (url.startsWith("jdbc:mysql")) {
