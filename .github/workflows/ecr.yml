@@ -1,0 +1,46 @@
+# this workflow is triggered when a PR to the develop branch is merged.
+# the following steps are performed:
+#   - build docker image and push to ECR (image tag is the git describe output as well as 'latest')
+name: AWS ECR Build and Push
+on:
+  push:
+    branches:
+      - develop
+permissions:
+  id-token: write
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        id: checkout-code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: save command output
+        id: save-command-output
+        run: |
+          echo "DOCKER_REPO=ga4gh-starter-kit-drs" >> $GITHUB_ENV
+          echo "DOCKER_TAG=$(git describe --tags)" >> $GITHUB_ENV
+          source ci/set-docker-image-version.sh
+          echo "version=${DOCKER_IMG_VER}" >> $GITHUB_ENV
+
+      - name: build docker image
+        id: build-docker-image
+        run: docker build --build-arg VERSION=${{ env.version }} -t ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }} -t ${{ env.DOCKER_REPO }}:latest -t ${{ env.DOCKER_REPO }}:develop .
+
+      - name: configure aws credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: push to ecr
+        id: push-to-ecr
+        uses: jwalton/gh-ecr-push@v2
+        with:
+          region: ${{ secrets.AWS_REGION }}
+          local-image: ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }}
+          image: ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }}, ${{ env.DOCKER_REPO }}:latest, ${{ env.DOCKER_REPO }}:develop
