@@ -48,7 +48,7 @@ public class DrsServerYamlConfigContainerDefaultTest extends AbstractTestNGSprin
         Assert.assertEquals(drsServiceInfo.getContactUrl(), "mailto:info@ga4gh.org");
 
         DrsServiceProps drsServiceProps = drs.getDrs().getDrsServiceProps();
-        Assert.assertEquals(drsServiceProps.getServeFileURLForFileObjects(), false);
-        Assert.assertEquals(drsServiceProps.getServeStreamURLForFileObjects(), true);
+        Assert.assertEquals(drsServiceProps.getServeFileURLForFileObjects(), true);
+        Assert.assertEquals(drsServiceProps.getServeStreamURLForFileObjects(), false);
     }
 }

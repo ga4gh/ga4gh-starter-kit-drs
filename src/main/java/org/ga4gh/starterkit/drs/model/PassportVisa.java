@@ -1,31 +1,19 @@
 package org.ga4gh.starterkit.drs.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.hibernate.Hibernate;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "passport_visa")
@@ -33,13 +21,13 @@ import lombok.Setter;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PassportVisa implements HibernateEntity<Integer> {
+public class PassportVisa implements HibernateEntity<String> {
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
     @NonNull
     @JsonView(SerializeView.Admin.class)
-    private Integer id;
+    private String id;
 
     @Column(name = "name")
     @JsonView(SerializeView.Admin.class)

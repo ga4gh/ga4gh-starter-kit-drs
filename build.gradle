@@ -38,13 +38,16 @@ configurations.all {
 
 archivesBaseName = 'ga4gh-starter-kit-drs'
 group 'org.ga4gh'
-version '0.3.2'
+version '0.3.3-test'
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -66,16 +69,19 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.2.10'
     implementation 'javax.xml.bind:jaxb-api:2.2.8'
     implementation 'org.springdoc:springdoc-openapi-ui:1.2.33'
-    implementation 'org.xerial:sqlite-jdbc:3.8.11.2'
+    implementation 'org.xerial:sqlite-jdbc:3.43.0.0'
+    implementation 'com.mysql:mysql-connector-j:8.0.33'
     implementation 'com.auth0:java-jwt:3.19.1'
     implementation 'org.ga4gh:ga4gh-starter-kit-common:0.5.6'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    testImplementation 'org.testng:testng:7.0.0'
+    testImplementation 'org.testng:testng:7.7.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.0'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    //implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 jar {

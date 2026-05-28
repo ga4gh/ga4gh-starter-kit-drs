@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.Getter;
+import lombok.Setter;
 import org.ga4gh.starterkit.common.constant.DateTimeConstants;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
@@ -18,25 +20,11 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.lang.NonNull;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import javax.persistence.*;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * Directly from DRS specification, with modifications, contains all metadata for
@@ -242,5 +230,30 @@ public class DrsObject implements HibernateEntity<String> {
         Hibernate.initialize(getFileAccessObjects());
         Hibernate.initialize(getAwsS3AccessObjects());
         Hibernate.initialize(getPassportVisas());
+    }
+
+    @Override
+    public String toString() {
+        return "DrsObject{" +
+                "id='" + id + '\'' +
+                ", description='" + description + '\'' +
+                ", createdTime=" + createdTime +
+                ", mimeType='" + mimeType + '\'' +
+                ", name='" + name + '\'' +
+                ", size=" + size +
+                ", updatedTime=" + updatedTime +
+                ", version='" + version + '\'' +
+                ", aliases=" + aliases +
+                ", checksums=" + checksums +
+                ", isBundle=" + isBundle +
+                ", drsObjectChildren=" + drsObjectChildren +
+                ", drsObjectParents=" + drsObjectParents +
+                ", fileAccessObjects=" + fileAccessObjects +
+                ", awsS3AccessObjects=" + awsS3AccessObjects +
+                ", passportVisas=" + passportVisas +
+                ", selfURI=" + selfURI +
+                ", accessMethods=" + accessMethods +
+                ", contents=" + contents +
+                '}';
     }
 }

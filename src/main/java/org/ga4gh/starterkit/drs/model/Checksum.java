@@ -1,15 +1,5 @@
 package org.ga4gh.starterkit.drs.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -19,6 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.ga4gh.starterkit.common.hibernate.HibernateEntity;
 import org.ga4gh.starterkit.drs.utils.SerializeView;
 import org.springframework.lang.NonNull;
+
+import javax.persistence.*;
 
 /**
  * Directly from DRS specification, indicates a checksum value for a DrsObject's
@@ -82,6 +74,18 @@ public class Checksum implements HibernateEntity<Long> {
         this.id = id;
         this.checksum = checksum;
         this.type = type;
+    }
+
+    /**
+     * Instantiates a new Checksum with preconfigured checksum, type, and drsObject
+     * @param checksum checksum value
+     * @param type hashing algorithm
+     * @param drsObject drsObject to which checksum belongs
+     */
+    public Checksum(String checksum, String type, DrsObject drsObject) {
+        this.checksum = checksum;
+        this.type = type;
+        this.drsObject = drsObject;
     }
 
     /**

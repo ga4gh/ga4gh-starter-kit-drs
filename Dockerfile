@@ -37,6 +37,7 @@ COPY build.gradle build.gradle
 COPY gradlew gradlew
 COPY settings.gradle settings.gradle
 COPY src src
+COPY src/main/resources/application.yml /app/application.yml
 
 RUN gradle wrapper
 
