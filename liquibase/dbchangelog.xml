@@ -1,6 +1,17 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet author="jadams (generated)" id="1780580515278-1">
+    <changeSet author="jadams (generated)" id="1780584785862-1">
+        <createTable tableName="aws_s3_access_object">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="aws_s3_access_object_pkey"/>
+            </column>
+            <column name="drs_object_id" type="TEXT"/>
+            <column name="region" type="TEXT"/>
+            <column name="bucket" type="TEXT"/>
+            <column name="key" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-2">
         <createTable tableName="dataset">
             <column name="id" type="TEXT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="dataset_pkey"/>
@@ -13,7 +24,65 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="jadams (generated)" id="1780580515278-2">
+    <changeSet author="jadams (generated)" id="1780584785862-3">
+        <createTable tableName="dataset_tag">
+            <column name="dataset_id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dataset_tag_pkey"/>
+            </column>
+            <column name="tag_id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dataset_tag_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-4">
+        <createTable tableName="drs_object_alias">
+            <column name="drs_object_id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="drs_object_alias_pkey"/>
+            </column>
+            <column name="alias" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="drs_object_alias_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-5">
+        <createTable tableName="drs_object">
+            <column name="id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="drs_object_pkey"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="created_time" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="mime_type" type="TEXT"/>
+            <column name="name" type="TEXT"/>
+            <column name="size" type="BIGINT"/>
+            <column name="updated_time" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="version" type="TEXT"/>
+            <column name="dataset_id" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-6">
+        <createTable tableName="passport_user">
+            <column name="id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="passport_user_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-7">
+        <createTable tableName="passport_visa">
+            <column name="id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="passport_visa_pkey"/>
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dataset_id" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-8">
         <createTable tableName="tag">
             <column name="id" type="TEXT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tag_pkey"/>
@@ -23,7 +92,65 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="jadams (generated)" id="1780580515278-3">
+    <changeSet author="jadams (generated)" id="1780584785862-9">
+        <createTable tableName="drs_object_checksum">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="drs_object_checksum_pkey"/>
+            </column>
+            <column name="drs_object_id" type="TEXT"/>
+            <column name="checksum" type="TEXT"/>
+            <column name="type" type="DRS_CHECKSUM_TYPE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-10">
+        <createTable tableName="passport_user_visa_assertion">
+            <column name="user_id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="passport_user_visa_assertion_pkey"/>
+            </column>
+            <column name="visa_id" type="TEXT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="passport_user_visa_assertion_pkey"/>
+            </column>
+            <column name="current_status" type="PASSPORT_VISA_ASSERTION_STATUS"/>
+            <column name="current_status_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-11">
+        <addUniqueConstraint columnNames="dataset_id" constraintName="passport_visa_dataset_id_key" tableName="passport_visa"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-12">
+        <addUniqueConstraint columnNames="description" constraintName="passport_visa_description_key" tableName="passport_visa"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-13">
+        <addUniqueConstraint columnNames="name" constraintName="passport_visa_name_key" tableName="passport_visa"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-14">
         <addUniqueConstraint columnNames="tag" constraintName="tag_tag_key" tableName="tag"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-15">
+        <addForeignKeyConstraint baseColumnNames="drs_object_id" baseTableName="aws_s3_access_object" constraintName="aws_s3_access_object_drs_object_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drs_object" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-16">
+        <addForeignKeyConstraint baseColumnNames="dataset_id" baseTableName="dataset_tag" constraintName="dataset_tag_dataset_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="dataset" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-17">
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="dataset_tag" constraintName="dataset_tag_tag_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tag" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-18">
+        <addForeignKeyConstraint baseColumnNames="drs_object_id" baseTableName="drs_object_alias" constraintName="drs_object_alias_drs_object_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drs_object" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-19">
+        <addForeignKeyConstraint baseColumnNames="drs_object_id" baseTableName="drs_object_checksum" constraintName="drs_object_checksum_drs_object_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drs_object" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-20">
+        <addForeignKeyConstraint baseColumnNames="dataset_id" baseTableName="drs_object" constraintName="drs_object_dataset_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="dataset" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-21">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="passport_user_visa_assertion" constraintName="passport_user_visa_assertion_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="passport_user" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-22">
+        <addForeignKeyConstraint baseColumnNames="visa_id" baseTableName="passport_user_visa_assertion" constraintName="passport_user_visa_assertion_visa_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="passport_visa" validate="true"/>
+    </changeSet>
+    <changeSet author="jadams (generated)" id="1780584785862-23">
+        <addForeignKeyConstraint baseColumnNames="dataset_id" baseTableName="passport_visa" constraintName="passport_visa_dataset_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="dataset" validate="true"/>
     </changeSet>
 </databaseChangeLog>
