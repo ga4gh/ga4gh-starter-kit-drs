@@ -38,14 +38,13 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: build liquibase docker image
-        id: build-liquibase-docker-image
-        run: docker buildx build --platform linux/amd64,linux/arm64 --load -t ${{ env.DOCKER_REPO }}-liquibase:${{ env.DOCKER_TAG }} -t ${{ env.DOCKER_REPO }}-liquibase:latest -t ${{ env.DOCKER_REPO }}-liquibase:develop liquibase --push
-
-      - name: push predeploy image to ecr
-        id: push-liquibase-image-to-ecr
-        uses: jwalton/gh-ecr-push@v2
+      - name: Build and push to ECR with multiple tags
+        uses: docker/build-push-action@v6
         with:
-          region: ${{ secrets.AWS_REGION }}
-          local-image: ${{ env.DOCKER_REPO }}-liquibase:${{ env.DOCKER_TAG }}
-          image: ${{ env.DOCKER_REPO }}-liquibase:${{ env.DOCKER_TAG }}, ${{ env.DOCKER_REPO }}-liquibase:latest, ${{ env.DOCKER_REPO }}-liquibase:develop
+          context: liquibase
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ env.DOCKER_REPO }}-liquibase:${{ env.DOCKER_TAG }}
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ env.DOCKER_REPO }}-liquibase:develop
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ env.DOCKER_REPO }}-liquibase:latest
