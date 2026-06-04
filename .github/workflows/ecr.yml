@@ -40,7 +40,7 @@ jobs:
 
       - name: build liquibase docker image
         id: build-liquibase-docker-image
-        run: docker buildx build --platform linux/amd64,linux/arm64 --load -t ${{ env.DOCKER_REPO }}-liquibase:${{ env.DOCKER_TAG }} -t ${{ env.DOCKER_REPO }}-liquibase:latest -t ${{ env.DOCKER_REPO }}-liquibase:develop liquibase
+        run: docker buildx build --platform linux/amd64,linux/arm64 --load -t ${{ env.DOCKER_REPO }}-liquibase:${{ env.DOCKER_TAG }} -t ${{ env.DOCKER_REPO }}-liquibase:latest -t ${{ env.DOCKER_REPO }}-liquibase:develop liquibase --push
 
       - name: push predeploy image to ecr
         id: push-liquibase-image-to-ecr
