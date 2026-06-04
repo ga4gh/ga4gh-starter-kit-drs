@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - develop
-      - ja-iss-5-db-schema-and-liquibase # temporary branch for testing, to be removed once workflow is verified
 permissions:
   id-token: write
 jobs:
